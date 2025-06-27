@@ -370,8 +370,8 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         to: 'kenneth88877@gmail.com',
-        cc: 'kenneth.simbulan@mlhuillier.com',
-        // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
+        // cc: 'kenneth.simbulan@mlhuillier.com',
+        cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
         subject: 'Home Loan Application',
         text: `Applicant: ${firstName} ${lastName} ${lastName} ${suffix} <br/> `,
         htmlContent: htmlContent

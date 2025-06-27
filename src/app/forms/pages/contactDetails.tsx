@@ -45,7 +45,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [errorFirstName, setErrorFirstName] = useState('');
   const [errorLastName, setErrorLastName] = useState('');
   const contactRef = useRef<HTMLInputElement>(null);
-  let found = false;
+  const [found, setFound] = useState(false)
 
 
   const {
@@ -83,7 +83,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       setErrorContactNumber('');
       setBirthdateFromCKYC(ckycData.birthDate);
       setShow(true);
-      found = true;
+      setFound(true);
     }
   }, [isFetching, ckycData]);
 
@@ -165,7 +165,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   }
 
   return (
-    <Container>
+    <Container>::{found}
       <div className='form-fields'>
         <label className='readable medium'>Contact Details</label>
         <input placeholder="Enter mobile" ref={contactRef} className='form-control' value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} />
@@ -219,9 +219,9 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         <div className='form-fields'>
           <label className=''>&nbsp;</label>
           <div className='disabled-date-wrapper'>
-            <input className='disabled-date-fields form-control' type="text" value={data.birthdate.day} disabled />
-            <input className='disabled-date-fields form-control' type="text" value={data.birthdate.month} disabled />
-            <input className='disabled-date-fields form-control' type="text" value={data.birthdate.year} disabled />
+            <input className='disabled-date-fields form-control' type="text" value={birthdate?.day} disabled />
+            <input className='disabled-date-fields form-control' type="text" value={birthdate?.month} disabled />
+            <input className='disabled-date-fields form-control' type="text" value={birthdate?.year} disabled />
           </div>
         </div>
       )}
