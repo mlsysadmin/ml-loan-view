@@ -219,8 +219,8 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         <div className='form-fields'>
           <label className=''>&nbsp;</label>
           <div className='disabled-date-wrapper'>
-            <input className='disabled-date-fields form-control' type="text" value={birthdate?.day} disabled />
             <input className='disabled-date-fields form-control' type="text" value={birthdate?.month} disabled />
+            <input className='disabled-date-fields form-control' type="text" value={birthdate?.day} disabled />
             <input className='disabled-date-fields form-control' type="text" value={birthdate?.year} disabled />
           </div>
         </div>
