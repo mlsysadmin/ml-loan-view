@@ -1,64 +1,32 @@
-import React from 'react';
-import CollateralInformationPage from './components/CollateralInformation';
+'use client'
+import React, { useState } from 'react';
+import ContactDetails from './pages/contactDetails';
+import IdentityDetails from './pages/identityDetails';
 import { Container } from 'react-bootstrap';
 import './index.css';
 
 export default function FormPage() {
-    const steps = [
-        {
-            step: '1', 
-            active: true,
-            done: false,
-            subStep: [
-                {active: false},
-                {active: false},
-            ]
-        },
-        {
-            step: '2',
-            active: true,
-            done: false,
-            subStep: [
-                {active: false},
-                {active: false},
-            ]
-        },
-        {
-            step: '3',
-            active: true,
-            done: false,
-            subStep: [
-                {active: false},
-                {active: false},
-            ]
-        },
-        {
-            step: '4',
-            active: true,
-            done: false,
-            subStep: [
-                {active: false},
-                {active: false},
-            ]
-        },
-    ];
+
+    const [step, setStep] = useState(1);
+    const [formData, setFormData] = useState<any>({});
+
+    const goToNext = (data: any) => {
+        setFormData((prev: any) => ({ ...prev, ...data }));
+        setStep(step + 1);
+    };
+
+    const goBack = () => setStep(step - 1);
 
     return (
         <Container>
-            <div className='top-container'>
-                <div className='top-text'>
-                    Get Started with your <span className='red'>Home Loan</span>
-                </div>
-                <p>Complete the form to begin your home loan application process.</p>
-                <div className='step-container'>
-                    {steps.map(step =>
-                        <div key={step.step} className='steps {}'>
-                            {step.step}
-                        </div>
-                    )}
-                </div>
-            </div>
-            <CollateralInformationPage />
+            <br />
+            <div className="col-md-7">
+                <p className='medium title'> Let me get to know you better </p>
+                <span>Complete the form to begin your home loan application process.</span>
+            </div><br />
+            {step === 1 && <ContactDetails onNext={goToNext} />}
+            {step === 2 && <IdentityDetails data={formData} onBack={goBack} />}
+            {/* <IdentityDetails /> */}
         </Container>
     );
 }

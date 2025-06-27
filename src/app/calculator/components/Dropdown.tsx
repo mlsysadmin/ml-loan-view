@@ -1,28 +1,34 @@
-import Dropdown from 'react-bootstrap/Dropdown';
+'use client';
+import { Dropdown } from 'react-bootstrap';
 import '../index.css';
 
-const loanTypes = [
-    'Purchase of Vacant Lot', 
-    'Purchase of House & Lot', 
-    'Purchase of Condominium', 
-    'Construction of House', 
-    'Renovation House Improvement',
-    'Refinancing / Take-Out From', 
-    'Re-Imbursement of Acquisition Cost',
-    'Others'
+const propertyType = [
+  'House & Lot',
+  'Condominium',
+  'Lot only',
 ];
 
-function BasicExample() {
+interface PropertyTypeProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const PropertyDropdown: React.FC<PropertyTypeProps> = ({ value, onChange }) => {
   return (
-    <Dropdown className=''>
+    <Dropdown className='w-100'>
       <Dropdown.Toggle className='form-control form-input dropdown-text' variant="" id="dropdown-basic">
-        Select Loan Type
+        {value || 'Select Property Type'}
       </Dropdown.Toggle>
+
       <Dropdown.Menu className='dropdow-menu'>
-        {loanTypes.map(type => <Dropdown.Item className='dropdown-menu-item' key={type}>{type}</Dropdown.Item>)}
+        {propertyType.map(type => (
+          <Dropdown.Item className='dropdown-menu-item' key={type} onClick={() => onChange(type)}>
+            {type}
+          </Dropdown.Item>
+        ))}
       </Dropdown.Menu>
     </Dropdown>
   );
-}
+};
 
-export default BasicExample;
+export default PropertyDropdown;
