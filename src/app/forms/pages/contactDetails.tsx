@@ -165,7 +165,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   }
 
   return (
-    <Container>::{found}
+    <Container>
       <div className='form-fields'>
         <label className='readable medium'>Contact Details</label>
         <input placeholder="Enter mobile" ref={contactRef} className='form-control' value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} />
