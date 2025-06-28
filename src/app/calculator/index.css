@@ -1,18 +1,23 @@
 body {
     background-color: #ffffff;
-     overflow-x: hidden;
+    overflow-x: hidden;
 }
- 
 
 
-@media(max-width: 500px) { /* Mobile width */
-    @media(max-height: 740px) { /* Smaller phones */
-    
+
+@media(max-width: 500px) {
+
+    /* Mobile width */
+    @media(max-height: 740px) {
+        /* Smaller phones */
+
     }
-    
-    @media(min-height: 741px) {  /* Larger phones */
-    
+
+    @media(min-height: 741px) {
+        /* Larger phones */
+
     }
+
     .small {
         font-size: 14px !important;
     }
@@ -32,84 +37,122 @@ body {
     .readable {
         font-size: 18px;
     }
+
     .foot-note {
         font-size: 10px;
     }
+
+}
+
+@media(max-width: 770px) {
+
+    /* Mobile */
     .calculator-container {
         flex-direction: column;
-        max-width: calc(100vw - 20px);
+    }
+
+    .summary-container {
+        padding: 20px 30px;
     }
 }
 
-@media(min-width: 501px) { /* Web width*/
+
+@media(max-width: 992px) {
+    .summary-container {
+        padding: 20px
+    }
+}
+
+@media(min-width: 993px) {
+    .summary-container {
+        padding: 50px
+    }
+}
+
+
+/* @media(min-width: 780px) {
+    .calculator-container {
+        flex-direction: row;
+    }
+} */
+
+@media(min-width: 501px) {
+
+    /* Web width*/
     .small {
         font-size: 18px;
     }
+
     .regular {
         font-weight: 400;
     }
+
     .medium {
         font-weight: 700;
     }
+
     .title {
         font-size: 30px;
     }
+
     .readable {
         font-size: 20px;
     }
+
     .foot-note {
         font-size: 12px;
     }
+
     .calculator-container {
-        flex-direction: row;
+        /* flex-direction: row; */
         justify-content: space-between;
     }
 }
 
 
 .__radio-option {
-  gap: 10px;
-  display: flex;
-  align-items: stretch;
-  margin-bottom: 15px;
+    gap: 10px;
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 15px;
 }
 
 input[type=radio] {
-  display: none;
-  margin: 0.125em 0;
+    display: none;
+    margin: 0.125em 0;
 }
 
-input[type=radio] + .__radio {
-  height: 1.25em;
-  width: 1.25em;
-  -webkit-transition: border-color 0.2s;
-  -moz-transition: border-color 0.2s;
-  -ms-transition: border-color 0.2s;
-  -o-transition: border-color 0.2s;
-  transition: border-color 0.2s;
-  position: relative;
-  display: inline-block;
-  border: 1px solid #333333;
-  border-radius: 50%;
+input[type=radio]+.__radio {
+    height: 1.25em;
+    width: 1.25em;
+    -webkit-transition: border-color 0.2s;
+    -moz-transition: border-color 0.2s;
+    -ms-transition: border-color 0.2s;
+    -o-transition: border-color 0.2s;
+    transition: border-color 0.2s;
+    position: relative;
+    display: inline-block;
+    border: 1px solid #333333;
+    border-radius: 50%;
 }
 
-input[type=radio]:checked + .__radio {
-  border-color: #ff0000;
+input[type=radio]:checked+.__radio {
+    border-color: #ff0000;
 }
 
-input[type=radio]:checked > p {
-  color: #ff0000;
+input[type=radio]:checked>p {
+    color: #ff0000;
 }
 
-input[type=radio]:checked + .__radio > span {
-  position: absolute;
-  top: 14%;
-  left: 14%;
-  height: 75%;
-  width: 75%;
-  transform: translate(-4%, -4%);
-  background-color: #ff0000;
-  border-radius: 50%;
+input[type=radio]:checked+.__radio>span {
+    position: absolute;
+    top: 14%;
+    left: 14%;
+    height: 75%;
+    width: 75%;
+    transform: translate(-4%, -4%);
+    background-color: #ff0000;
+    border-radius: 50%;
 }
 
 
@@ -158,16 +201,15 @@ input[type=radio]:checked + .__radio > span {
     margin-bottom: 10px;
 }
 
-.title{
+/* .title{
     display: flex;
     justify-content: space-between;
     margin-bottom: -10px;
-}
+} */
 
-.summary-container { 
+.summary-container {
     color: #4f4f4f;
     background-color: #f5f5f5;
-    padding: 20px 30px;
     margin-top: 20px;
     border-radius: 15px;
 }
@@ -179,6 +221,7 @@ input[type=radio]:checked + .__radio > span {
     padding: 10px;
     margin-top: 20px;
 }
+
 .slider-card .details {
     display: flex;
     justify-content: space-between;
@@ -194,7 +237,7 @@ input[type=radio]:checked + .__radio > span {
     background-color: #ff0000;
 } */
 
-.form-btn-container {
+.form-btn-container-summary {
     display: flex;
     justify-content: flex-end;
     border-top: 1px solid #0000004a;
@@ -207,7 +250,7 @@ input[type=radio]:checked + .__radio > span {
     text-align: end;
 }
 
-.form-btn-container button {
+.form-btn-container-summary button {
     display: block;
     /* margin-left: auto; */
     margin-right: 0;

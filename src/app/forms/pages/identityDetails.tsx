@@ -52,7 +52,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   useEffect(() => {
     generateRandomString();
     if (data.ckycData) {
-      console.log('====', data.birthdate)
+      console.log('=== DATA+++++ =', data.birthdate)
       setBirthdate(data.birthdate);
       setCitizenship(data.ckycData.nationality);
       setSourceOfIncome(data.ckycData.occupation.sourceOfIncome);
@@ -370,8 +370,8 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         to: 'kenneth88877@gmail.com',
-        // cc: 'kenneth.simbulan@mlhuillier.com',
-        cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
+        cc: 'kenneth.simbulan@mlhuillier.com',
+        // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
         subject: 'Home Loan Application',
         text: `Applicant: ${firstName} ${lastName} ${lastName} ${suffix} <br/> `,
         htmlContent: htmlContent
@@ -464,29 +464,39 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
             </div>
           </div> */}
       <br />
-      <div className='form-fields'>
-        <label className='readable medium'>Income Details</label>
-        <div className='select'>
-          <select onChange={(e) => setSourceOfIncome(e.target.value)} className='select__field' value={sourceOfIncome}>
-            <option value="">Type of Income</option>
-            <option value="salary">Salary</option>
-            <option value="business">Business</option>
-            <option value="pension">Pension</option>
-            <option value="REGULAR REMITTANCE ABROAD">REGULAR REMITTANCE ABROAD</option>
-          </select>
+      <label className='readable medium'>Income Details</label>
+      <div className='details-wrapper'>
+        <div className='form-fields full-width'>
+          <div className='select'>
+            <select onChange={(e) => setSourceOfIncome(e.target.value)} className='select__field' value={sourceOfIncome}>
+              <option value="">Type of Income</option>
+              <option value="salary">Salary</option>
+              <option value="business">Business</option>
+              <option value="pension">Pension</option>
+              <option value="REGULAR REMITTANCE ABROAD">REGULAR REMITTANCE ABROAD</option>
+            </select>
+          </div>
+        </div>
+        <div className='form-fields full-width'>
+          <input type="text" className='form-control full-width' value={empOrBusiness || ""} onChange={(e) => setEmpOrBusiness(e.target.value)} placeholder='Employer / Business Name' />
         </div>
       </div>
-      <div className='form-fields'>
-        <label htmlFor="">&nbsp;</label>
-        <input type="text" className='form-control' value={empOrBusiness || ""} onChange={(e) => setEmpOrBusiness(e.target.value)} placeholder='Employer / Business Name' />
-      </div>
-      <div className='form-fields'>
-        <label htmlFor="">&nbsp;</label>
-        <input type="text" className='form-control' value={designation || ""} onChange={(e) => setDesignation(e.target.value)} placeholder='Position' />
-      </div>
-      <div className='form-fields'>
-        <label htmlFor="">&nbsp;</label>
-        <input type="number" className='form-control' value={grossMonthlyIncome} onChange={(e) => setGrossMonthlyIncome(e.target.value)} placeholder='Gross Monthly Income' />
+      <div className='details-wrapper'>
+        <div className='form-fields full-width'>
+          <input type="text" className='form-control full-width' value={designation || ""} onChange={(e) => setDesignation(e.target.value)} placeholder='Position' />
+        </div>
+        <div className='form-fields full-width'>
+          <input type="text" 
+          className='form-control full-width ' 
+          value={grossMonthlyIncome} 
+          onChange={(e) => {
+            const value = e.target.value;
+            if (/^\d*$/.test(value)) {
+              setGrossMonthlyIncome(value);
+            }
+          }}
+          placeholder='Gross Monthly Income' />
+        </div>
       </div>
       {/* <div className='form-fields'>
             <label htmlFor="">&nbsp;</label>

@@ -8,9 +8,10 @@ export default function AppWrapper({ children }: { children: React.ReactNode }) 
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const ua = navigator.userAgent;
-    setIsMobile(/iPhone|iPad|iPod|Android|Mobile|IEMobile|Opera Mini/i.test(ua));
+    const userAgent = navigator.userAgent;
+    setIsMobile(/iPhone|iPad|iPod|Android/i.test(userAgent));
   }, []);
+  
 
   return (
     <>

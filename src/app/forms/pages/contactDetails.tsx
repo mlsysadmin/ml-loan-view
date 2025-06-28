@@ -34,6 +34,11 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [barrangay, setBarrangay] = useState("");
   const [specAddress, setSpecAddress] = useState("");
 
+  const [sourceOfIncome, setSourceOfIncome] = useState("");
+  const [grossMonthlyIncome, setGrossMonthlyIncome] = useState("");
+  const [empOrBusiness, setEmpOrBusiness] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [yearsEmpOrBus, setYearsEmpOrBus] = useState("");
 
   // const [searchText, setSearchText] = useState("");
   const [confirmed, setConfirmed] = useState(false);
@@ -44,8 +49,17 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [errorEmail, setErrorEmail] = useState('');
   const [errorFirstName, setErrorFirstName] = useState('');
   const [errorLastName, setErrorLastName] = useState('');
+  const [errorCountry, setErrorCountry] = useState('');
+  const [errorCityMuni, setErrorCityMuni] = useState('');
+  const [errorBarrangay, setErrorBarrangay] = useState('');
+  const [errorSpecAdd, setErrorSpecAdd] = useState('');
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+
   const contactRef = useRef<HTMLInputElement>(null);
-  const [found, setFound] = useState(false)
+  const [found, setFound] = useState(false);
 
 
   const {
@@ -102,14 +116,21 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   };
 
   const dataHandle = () => {
-    if (contactNumber === '') setErrorContactNumber('Mobile number is required.')
-    else if (email === '') setErrorEmail('Email is required.')
-    else if (firstName === '') setErrorFirstName('First name is required.')
-    else if (lastName === '') setErrorLastName('Last name is required.')
+    if (contactNumber === '') setErrorContactNumber('Mobile number is required.');
+    if (email === '') setErrorEmail('Email is required.');
+    if (!isValidEmail) setErrorEmail('Invalid email.');
+    if (firstName === '') setErrorFirstName('First name is required.');
+    if (lastName === '') setErrorLastName('Last name is required.');
+    if (country === '') setErrorCountry('Country is required.');
+    if (cityOrMunicipality === '') setErrorCityMuni('City or Municipality is required.');
+    if (barrangay === '') setErrorBarrangay('Barrangay is required.');
+    if (specAddress === '') setErrorSpecAdd('House no. / Sitio / Purok is required.');
   }
 
   const handleContinue = () => {
-    if (firstName && lastName && contactNumber && email) {
+    setIsValidEmail(emailRegex.test(email));
+    
+    if (firstName && lastName && contactNumber && email && isValidEmail && country && cityOrMunicipality && barrangay && specAddress) {
       setFinalLoanData({
         contactNumber,
         email,
@@ -166,97 +187,146 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
 
   return (
     <Container>
+      <label className='readable medium'>Contact Details</label>
       <div className='form-fields'>
-        <label className='readable medium'>Contact Details</label>
-        <input placeholder="Enter mobile" ref={contactRef} className='form-control' value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} />
+        {/* <label className='readable medium'>Contact Details</label> */}
+
+        <input placeholder="Enter mobile"
+          ref={contactRef}
+          className='form-control'
+          value={contactNumber}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (/^\d*$/.test(value)) {
+              setErrorContactNumber('');
+              setContactNumber(value);
+            }
+          }}
+        />
         <small>{isFetching ? "Searching..." : ""}</small>
         <small className='red'>{errorContactNumber}</small>
       </div>
 
       <div className='form-fields'>
-        <label htmlFor="">&nbsp;</label>
-        <input className='form-control' value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder='Email Address (juan.d@gmail.com)' />
+        {/* <label htmlFor="">&nbsp;</label> */}
+        <input className='form-control' value={email} onChange={(e) => { setEmail(e.target.value); setErrorEmail(''); }} type="email" placeholder='Email Address (juan.d@gmail.com)' />
         <small className='red'>{errorEmail}</small>
       </div>
 
       <br />
 
-      <div className='form-fields'>
-        <label className='readable medium'>Personal Details</label>
-        <input type="text" className='form-control' value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder='First Name' />
-        <small className='red'>{errorFirstName}</small>
-      </div>
-      <div className='form-fields'>
-        <label htmlFor="">&nbsp;</label>
-        <input type="text" className='form-control' value={middleName} onChange={(e) => setmiddleName(e.target.value)} placeholder='Middle Name' />
-      </div>
-      <div className='form-fields'>
-        <label htmlFor="">&nbsp;</label>
-        <input type="text" className='form-control' value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder='Last Name' />
-        <small className='red'>{errorLastName}</small>
-      </div>
-      <div className='form-fields'>
-        <label htmlFor="">&nbsp;</label>
-        <div className='select'>
-          <select value={suffix} onChange={(e) => setSuffix(e.target.value)} className='select__field'>
-            <option value="">Suffix</option>
-            <option value="SR.">SR</option>
-            <option value="JR">JR</option>
-            <option value="II">II</option>
-            <option value="III">III</option>
-            <option value="IV">IV</option>
-            <option value="V">V</option>
-          </select>
+      <label className='readable medium'>Personal Details</label>
+      <div className='details-wrapper'>
+        <div className='form-fields full-width'>
+          {/* <label className='readable medium'>Personal Details</label> */}
+          <input type="text" className='form-control full-width' value={firstName} onChange={(e) => { setFirstName(e.target.value); setErrorFirstName(''); }} placeholder='First Name' />
+          <small className='red'>{errorFirstName}</small>
         </div>
-      </div>
-
-      {!found ? (
-        <div className='form-fields'>
-          <label className='readable medium'>&nbsp;</label>
-          <DatePicker onChange={handleDateChange} />
+        <div className='form-fields full-width'>
+          {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
+          <input type="text" className='form-control full-width' value={middleName} onChange={(e) => setmiddleName(e.target.value)} placeholder='Middle Name' />
         </div>
-      ) : (
-        <div className='form-fields'>
-          <label className=''>&nbsp;</label>
-          <div className='disabled-date-wrapper'>
-            <input className='disabled-date-fields form-control' type="text" value={birthdate?.month} disabled />
-            <input className='disabled-date-fields form-control' type="text" value={birthdate?.day} disabled />
-            <input className='disabled-date-fields form-control' type="text" value={birthdate?.year} disabled />
+        <div className='form-fields full-width'>
+          {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
+          <input type="text" className='form-control full-width' value={lastName} onChange={(e) => { setLastName(e.target.value); setErrorLastName(''); }} placeholder='Last Name' />
+          <small className='red'>{errorLastName}</small>
+        </div>
+        <div className='form-fields half-width'>
+          {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
+          <div className='select full-width'>
+            <select value={suffix} onChange={(e) => setSuffix(e.target.value)} className='select__field'>
+              <option value="">Suffix &nbsp;&nbsp;</option>
+              <option value="SR.">SR</option>
+              <option value="JR">JR</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV">IV</option>
+              <option value="V">V</option>
+            </select>
           </div>
         </div>
-      )}
-      <div className='form-fields'>
-        <label htmlFor="">&nbsp;</label>
-        <div className='select'>
-          <select onChange={(e) => setCitizenship(e.target.value)} id="" className='select__field' value={citizenship}>
-            <option value="">Citizenship</option>
-            <option value="FILIPINO">FILIPINO</option>
-            <option value="">Not Filipino</option>
-          </select>
+      </div>
+      <div className='details-wrapper'>
+        {!found ? (
+          <div className='form-fields date-wrapper'>
+            {/* <label className='readable medium'>&nbsp;</label> */}
+            <DatePicker onChange={handleDateChange} />
+          </div>
+        ) : (
+          <div className='form-fields'>
+            {/* <label className='readable medium'>&nbsp;</label> */}
+            <div className='disabled-date-wrapper'>
+              <input className='disabled-date-fields form-control' type="text" value={birthdate?.month} disabled />
+              <input className='disabled-date-fields form-control' type="text" value={birthdate?.day} disabled />
+              <input className='disabled-date-fields form-control' type="text" value={birthdate?.year} disabled />
+            </div>
+          </div>
+        )}
+        <div className='form-fields citizenship-wrapper'>
+          {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
+          <div className='select full-width-select'>
+            <select onChange={(e) => setCitizenship(e.target.value)} id="" className='select__field' value={citizenship}>
+              <option value="">Citizenship&nbsp;&nbsp;&nbsp;</option>
+              <option value="FILIPINO">FILIPINO</option>
+              <option value="">Not Filipino</option>
+            </select>
+          </div>
         </div>
       </div>
+
       <br />
-      <div className='form-fields'>
-        <label className='readable medium'>Address</label>
-        <input type="text" className='form-control' value={country} onChange={(e) => setCountry(e.target.value)} placeholder='Country' />
-        <small className='red'>{ }</small>
-      </div>
-      <div className='form-fields'>
-        <label className=''>&nbsp;</label>
-        <input type="text" className='form-control' value={cityOrMunicipality} onChange={(e) => setCityOrMunicipality(e.target.value)} placeholder='City / Municipality' />
-        <small className='red'>{ }</small>
-      </div>
-      <div className='form-fields'>
-        <label className=''>&nbsp;</label>
-        <input type="text" className='form-control' value={barrangay} onChange={(e) => setBarrangay(e.target.value)} placeholder='Barrangay' />
-        <small className='red'>{ }</small>
-      </div>
-      <div className='form-fields'>
-        <label className=''>&nbsp;</label>
-        <input type="text" className='form-control' value={specAddress} onChange={(e) => setSpecAddress(e.target.value)} placeholder='House no., Sitio/Purok' />
-        <small className='red'>{ }</small>
+      <label className='readable medium'>Address</label>
+      <div className='details-wrapper'>
+        <div className='form-fields full-width'>
+          {/* <label className='readable medium'>&nbsp;</label> */}
+          <input type="text" className='form-control full-width' value={country} onChange={(e) => { setCountry(e.target.value); setErrorCountry(''); }} placeholder='Country' />
+          <small className='red'>{errorCountry}</small>
+        </div>
+        <div className='form-fields full-width'>
+          {/* <label className='readable medium'>&nbsp;</label> */}
+          <input type="text" className='form-control full-width' value={cityOrMunicipality} onChange={(e) => { setCityOrMunicipality(e.target.value); setErrorCityMuni(''); }} placeholder='City / Municipality' />
+          <small className='red'>{errorCityMuni}</small>
+        </div>
+        <div className='form-fields full-width'>
+          {/* <label className='readable medium'>&nbsp;</label> */}
+          <input type="text" className='form-control full-width' value={barrangay} onChange={(e) => { setBarrangay(e.target.value); setErrorBarrangay(''); }} placeholder='Barrangay' />
+          <small className='red'>{errorBarrangay}</small>
+        </div>
+        <div className='form-fields full-width'>
+          {/* <label className='readable medium'>&nbsp;</label> */}
+          <input type="text" className='form-control full-width' value={specAddress} onChange={(e) => { setSpecAddress(e.target.value); setErrorSpecAdd(''); }} placeholder='House no., Sitio/Purok' />
+          <small className='red'>{errorSpecAdd}</small>
+        </div>
       </div>
 
+      {/* <div className='hide'>
+        <br />
+        <label className='readable medium'>Income Details</label>
+        <div className='details-wrapper'>
+          <div className='form-fields full-width'>
+            <div className='select'>
+              <select onChange={(e) => setSourceOfIncome(e.target.value)} className='select__field' value={sourceOfIncome}>
+                <option value="">Type of Income</option>
+                <option value="salary">Salary</option>
+                <option value="business">Business</option>
+                <option value="pension">Pension</option>
+                <option value="REGULAR REMITTANCE ABROAD">REGULAR REMITTANCE ABROAD</option>
+              </select>
+            </div>
+          </div>
+          <div className='form-fields full-width'>
+            <input type="text" className='form-control full-width' value={empOrBusiness || ""} onChange={(e) => setEmpOrBusiness(e.target.value)} placeholder='Employer / Business Name' />
+          </div>
+        </div>
+        <div className='details-wrapper'>
+          <div className='form-fields full-width'>
+            <input type="text" className='form-control full-width' value={designation || ""} onChange={(e) => setDesignation(e.target.value)} placeholder='Position' />
+          </div>
+          <div className='form-fields full-width'>
+            <input type="number" className='form-control full-width ' value={grossMonthlyIncome} onChange={(e) => setGrossMonthlyIncome(e.target.value)} placeholder='Gross Monthly Income' />
+          </div>
+        </div>
+      </div> */}
       <div className='form-btn-container'>
         <button className='__btn btn-white' onClick={() => router.push('/calculator')} >
           Back

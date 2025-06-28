@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useFinalLoanStore } from '@/app/store/dataStore';
 import moment from 'moment';
@@ -10,17 +10,16 @@ export default function PreApprovalPage() {
     const router = useRouter();
     const data = useFinalLoanStore((state) => state.data);
     const clearFinalLoanData = useFinalLoanStore((state) => state.clearFinalLoanData); // ← Grab the clear method
-
-    console.log('==data:::::::', data)
-    // let qualified = false;
-
-    // const birthdate = `${data?.birthdate.month}/${data?.birthdate.day}/${data?.birthdate.year}`;
-    // const age = moment().diff(moment(birthdate, "MM/DD/YYYY"), 'years');
-
-    // if (age > 21) {
-    //     qualified = true;
-    // }
-
+    const dataRef = data?.ref;
+    
+    useEffect(() => {
+        // const birthdate = `${data?.birthdate.month}/${data?.birthdate.day}/${data?.birthdate.year}`;
+        // const age = moment().diff(moment(birthdate, "MM/DD/YYYY"), 'years');
+        // if (age > 21) {
+            //     setQualified(true);
+            // }
+    });
+    
     function handleBtnAction(action: string) {
         clearFinalLoanData();
         action === 'home' ? router.push('/') : router.push('/calculator');
@@ -46,7 +45,7 @@ export default function PreApprovalPage() {
                         A loan officer will contact
                         <br/> you in 1 to 3 business days.
                     </p>
-                    <p className='readable medium'>Ref. No.: {data?.ref}</p>
+                    <p className='readable medium'>Ref. No.: {dataRef}</p>
                 </div>
                 <br /><br /><br />
                 <br /><br /><br />

@@ -2448,20 +2448,6 @@ pre code {
     border: 0
 }
 
-.form-control {
-    display: block;
-    width: 100%;
-    height: calc(2.25rem + 2px);
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
-}
 
 @media screen and (prefers-reduced-motion:reduce) {
     .form-control {
@@ -9697,6 +9683,13 @@ button.bg-dark:hover {
     text-align: center !important
 }
 
+.center-why {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
 @media(min-width: 576px) {
     .text-sm-left {
         text-align: left !important
@@ -11748,9 +11741,6 @@ footer .footer-links a:not(:first-of-type) {
         white-space: nowrap
     }
 
-    .hero-carousel .carousel-item .hero-image {
-        display: none
-    }
 }
 
 .banner-section {
@@ -14499,22 +14489,7 @@ a {
     font-weight: 400
 }
 
-.hero-image {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center
-}
 
-.hero-image img {
-    width: 320px;
-    max-width: 100%;
-    height: auto;
-    -o-object-fit: contain;
-    object-fit: contain;
-    max-height: 450px;
-    display: block
-}
 
 .hero-buttons {
     display: flex;
@@ -14577,17 +14552,6 @@ a {
         justify-content: center
     }
 
-    .hero-image {
-        padding-top: 25px
-    }
-
-    .hero-image img {
-        max-width: 100%;
-        height: auto;
-        max-height: 350px;
-        margin: 0 auto
-    }
-
     .business-categories .service-cards,
     .service-categories .service-cards {
         grid-template-columns: repeat(2, 1fr)
@@ -14606,10 +14570,6 @@ a {
         font-size: 36px
     }
 
-    .hero-image img {
-        max-width: 100%;
-        max-height: 250px
-    }
 
     .hero-buttons {
         flex-direction: column;
@@ -15530,8 +15490,13 @@ a {
     display: flex;
     flex-direction: column;
     background-color: #f5f5f5;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 20px 40px 40px 40px;
+}
+
+.car-categories {
+    padding: 10px;
+
 }
 
 .what-you-need {
@@ -15544,23 +15509,55 @@ a {
     gap: 10px;
 }
 
+.what-card {
+    padding: 30px 10px;
+}
+
 .what-you-need-card {
     /* width: 35%; */
-    max-width: 350px;
-    min-width: 300px;
     background-color: #ffffff;
-    border-radius: 10px;
-    padding: 30px 10px; 
+    border-radius: 20px;
 }
 
-.what-you-need-card .title {
+.home-card {
+    padding: 30px 10px;
+}
+
+.car-card {
+    /* padding: 7px 10px; */
+    margin: 20px 0px;
+    display: flex;
+    gap: 30px;
+    padding: 10px 30px;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 20px;
+}
+
+
+.what-you-need-card .card-title {
     text-align: center;
-    margin-bottom: 20px;
-    font-weight: bold;
 }
 
-.what-you-need-card li {
-    margin-bottom: 3px;
+@media(max-width: 1000px) {
+    .what-you-need-container {
+        margin-top: 50px;
+    }
+}
+
+.card-check-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #555555;
+}
+
+.card-check-list {
+    flex-direction: row;
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 35px;
 }
 
 .business-page .service-content {
@@ -15582,6 +15579,26 @@ a {
     .business-page .service-title {
         font-size: 2rem
     }
+    .car-card {
+        /* flex-direction: row; */
+        padding: 75px 15px;
+        flex-direction: column;
+    }
+}
+
+@media(max-width: 500px) {
+    .what-you-need-container {
+        margin: 50px -30px 10px;
+    }
+}
+
+@media(min-width: 501px) {
+    .what-you-need-container {
+        padding: 20px 40px 40px 40px;
+    }
+    /* .car-card {
+        flex-direction: column;
+    } */
 }
 
 .business-page .service-description {
@@ -15651,6 +15668,9 @@ a {
 @media(max-width: 991px) {
     .business-page .service-card {
         padding: 30px
+    }
+    .car-card {
+        /* padding: 7px 10px; */
     }
 }
 
@@ -15735,15 +15755,11 @@ a {
 
 .footer-logo {
     margin-left: -57px;
-  }
-  
-  .lahat-pwede {
+}
+
+.lahat-pwede {
     font-size: 1.5rem;
-  }
-  
-  .why {
-    padding: 120px 0;
-  }
+}
 
 .red {
     color: #FF0000
@@ -15771,9 +15787,3 @@ a {
     flex-direction: row;
     justify-content: space-between;
 }
-
-.banner-text {
-    font-size: 35px !important;
-    margin-bottom: 0px;
-}
-

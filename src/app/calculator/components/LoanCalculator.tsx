@@ -4,15 +4,23 @@ import SliderInput from './SliderInput';
 import SummaryPanel from './SummaryPanel';
 import PropertyDropdown from './Dropdown';
 import '../index.css';
+import { useSearchParams } from 'next/navigation';
+import { Dropdown } from 'react-bootstrap';
 
 const LoanCalculator: React.FC = () => {
+    const searchParams = useSearchParams();
+    const referrer = searchParams.get('type');
+
+    console.log('referrer:::::', referrer)
+
     const [purchasePrice, setPurchasePrice] = useState(10000000);
     const [downPaymentPercent, setDownPaymentPercent] = useState(30);
     const [loanTerm, setLoanTerm] = useState(48); // months
     const [downPaymentAmount, setDownPaymentAmount] = useState(0);
     const [monthlyPayment, setMonthlyPayment] = useState(0);
     const [ammountFinanced, setammountFinanced] = useState(0);
-    const [loanOption, setOption] = useState('Buy');
+    const [loanOption, setOption] = useState('');
+    const [porposeOption, setPorposeOption] = useState('');
     const [propertyType, setPropertyType] = useState('House & Lot');
     // const [errorPropertyType, setErrorPropertyType] = useState('');
 
@@ -34,11 +42,129 @@ const LoanCalculator: React.FC = () => {
         setOption(e.target.value)
     };
 
+    const [options, setOptions] = useState<typeof carOptions | typeof homeOptions | null>(null);
+
+    const [dropdownSelections, setDropdownSelections] = useState<Record<number, string>>({});
+
+    const homeOptions = {
+        radio: [
+            { type: 'Buy', displayText: 'Buy a Home' },
+            { type: 'Prenda', displayText: 'Prenda my Home' },
+        ],
+        dropdown: [
+            {
+                id: 0,
+                label: 'Property Type',
+                values: ['House & Lot', 'Condominium', 'Lot only'],
+            },
+        ],
+    };
+
+
+    const carOptions = {
+        radio: [
+            { type: 'Brand New', displayText: 'Brand New' },
+            { type: 'Second Hand', displayText: 'Second Hand' },
+        ],
+        dropdown: [
+            {
+                id: 0,
+                label: 'Purpose',
+                values: [
+                    'Acquisition or Purchase of Vehicle',
+                    'Refinancing or Re-Loan of Vehicle',
+                    'Equity Cash Reimbursement',
+                ],
+            },
+            {
+                id: 1,
+                label: 'Unit Type',
+                values: [
+                    'Sedan/SUV/Pickup/Van for private use',
+                    'Motorcycle for private use',
+                    'Truck / Pickup',
+                    'Van / MPV',
+                    'Motorcycle',
+                    'Electric Vehicle (EV)',
+                ],
+            },
+        ],
+    };
+
+
+    const dropdown = [
+        'Acquisition or Purchase of Vechicle',
+        'Refinancing or Re-Loan of Vehicle',
+        'Equity Cash Reimbursement'
+    ]
+
+    useEffect(() => {
+        if (referrer === 'car') setOptions(carOptions);
+        else if (referrer === 'home') setOptions(homeOptions);
+
+    }, [referrer]);
+
+    useEffect(() => {
+        if (options?.radio?.length && !loanOption) {
+            const firstOption = options.radio[0].type ?? '';
+            setOption(firstOption);
+        }
+    }, [options, loanOption]);
+
+    useEffect(() => {
+        if (options?.radio?.length && !loanOption) {
+            const secondOption = options.radio[1].type ?? '';
+            setPorposeOption(secondOption);
+        }
+    }, [options, loanOption]);
+
+
+    // MAKE FIRST VALUE AS DEFAULT/////////////////////
+    // useEffect(() => {
+    //     if (options?.radio?.length && !loanOption) {
+    //         const firstOption = options.radio[0].type ?? '';
+    //         setOption(firstOption);
+    //     }
+    //     if (referrer === 'car') {
+    //         setOptions(carOptions);
+    //         setDropdownSelections(
+    //             Object.fromEntries(
+    //                 carOptions.dropdown.map((item) => [item.id, item.values[0]])
+    //             )
+    //         );
+    //     } else if (referrer === 'home') {
+    //         setOptions(homeOptions);
+    //         setDropdownSelections(
+    //             Object.fromEntries(
+    //                 homeOptions.dropdown.map((item) => [item.id, item.values[0]])
+    //             )
+    //         );
+    //     }
+    // }, [referrer]);
+
+
     return (
         <div className="calculator-container">
             <div className="col-md-6">
-                <p className='medium title'>Loan Calculator</p>
-                <p> Please provide your property information </p>
+                ::::{referrer}
+                <span className='medium title'>Loan Calculator</span>
+                <p> Tell me about the property </p>
+                <div>
+                    {options?.radio.map((o, index) =>
+                        <label key={o.type} className="__radio-option">
+                            <input type="radio" checked={loanOption === o.type} onChange={selectOption} value={o.type} name="paymentOption" />
+                            <span className="__radio"><span></span></span>
+                            <span>{o.displayText}</span>
+                        </label>
+                    )}
+                </div>
+                {/* {options?.radio.map(option => 
+                    <div key={option.type}>
+                        {option.type}
+                    </div>
+                )} */}
+                {/* <span className='medium title'>Loan Calculator</span>
+                <p> Tell me about the property </p>
                 <div>
                     <label className="__radio-option">
                         <input type="radio" checked={loanOption === 'Buy'} onChange={selectOption} value="Buy" name="paymentOption" />
@@ -52,16 +178,54 @@ const LoanCalculator: React.FC = () => {
                         <span className="__radio"><span></span></span>
                         <span>Prenda my Home</span>
                     </label>
-                </div>
+                </div> */}
 
-                <PropertyDropdown value={propertyType} onChange={setPropertyType} />
-                
+                {options?.dropdown.map((item) => (
+                    <div key={item.id} className="mb-3">
+                        {/* <label className="form-label">{item.label}</label> */}
+                        <PropertyDropdown
+                            options={item.values}
+                            value={dropdownSelections[item.id] || ''}
+                            onChange={(selectedValue) =>
+                                setDropdownSelections((prev) => ({
+                                    ...prev,
+                                    [item.id]: selectedValue,
+                                }))
+                            }
+                            placeholder={`Select ${item.label}`}
+                        />
+                    </div>
+                ))}
+
+
+
+
+                {/* {options?.dropdown.map((d) =>
+                    <div key={d.id}>
+                        <PropertyDropdown
+                            options={dropdown}
+                            value={porposeOption}
+                            onChange={setPropertyType}
+                            placeholder="Select Property Type"
+                        />
+                    </div>
+                )} */}
+
+                {/* <PropertyDropdown
+                    options={dropdown}
+                    value={porposeOption}
+                    onChange={setPropertyType}
+                    placeholder="Select Property Type"
+                /> */}
+
+                {/* <PropertyDropdown value={propertyType} onChange={setPropertyType} /> */}
+
                 <div className='slider-card'>
 
                     <div className="mb-8">
                         {/* <h2 className="text-sm font-medium mb-4">Purchase of House & Lot</h2> */}
                         <SliderInput
-                            label={loanOption === 'Prenda' ? 'Estimated Price: ' : 'Price: '}
+                            label={loanOption === 'Prenda' ? 'Estimated Price: ₱' : 'Price: ₱'}
                             value={purchasePrice}
                             onChange={setPurchasePrice}
                             min={1000000}
@@ -76,7 +240,7 @@ const LoanCalculator: React.FC = () => {
                 <div className='slider-card'>
                     <div className="mb-8">
                         <SliderInput
-                            label={loanOption === 'Prenda' ? 'Amount to Borrow: ' : 'Down Payment: '}
+                            label={loanOption === 'Prenda' ? 'Amount to Borrow: ₱' : 'Down Payment: ₱'}
                             value={downPaymentPercent}
                             onChange={setDownPaymentPercent}
                             min={0}
@@ -115,16 +279,17 @@ const LoanCalculator: React.FC = () => {
                 </div>
 
             </div>
-
-            <SummaryPanel
-                ammountFinanced={ammountFinanced}
-                purchasePrice={purchasePrice}
-                downPayment={downPaymentAmount}
-                monthlyPayment={monthlyPayment}
-                loanTerm={loanTerm}
-                propertyType={propertyType} 
-                loanOption={loanOption}            
-            />
+            <div className="col-md-6">
+                <SummaryPanel
+                    ammountFinanced={ammountFinanced}
+                    purchasePrice={purchasePrice}
+                    downPayment={downPaymentAmount}
+                    monthlyPayment={monthlyPayment}
+                    loanTerm={loanTerm}
+                    propertyType={propertyType}
+                    loanOption={loanOption}
+                />
+            </div>
         </div>
     );
 };

@@ -106,23 +106,25 @@ const SliderInput: React.FC<SliderInputProps> = ({
           {isEditing ? (
             <input
               className="manual-input ml-1"
-              type="number"
+              type="text"
               value={editableAmountInstead && secondaryValue
                 ? Math.round((secondaryValue * value) / 100)  // PHP amount from %
                 : value
               }
               onChange={(e) => {
                 const raw = Number(e.target.value);
-                if (editableAmountInstead && secondaryValue) {
-                  // Convert PHP back to % and clamp within range
-                  const percent = Math.min(
-                    Math.max((raw / secondaryValue) * 100, min),
-                    max
-                  );
-                  onChange(Math.round(percent));
-                } else {
-                  const clamped = Math.min(Math.max(raw, min), max);
-                  onChange(clamped);
+                if (/^\d*$/.test(e.target.value)) {
+                  if (editableAmountInstead && secondaryValue) {
+                    // Convert PHP back to % and clamp within range
+                    const percent = Math.min(
+                      Math.max((raw / secondaryValue) * 100, min),
+                      max
+                    );
+                    onChange(Math.round(percent));
+                  } else {
+                    const clamped = Math.min(Math.max(raw, min), max);
+                    onChange(clamped);
+                  }
                 }
               }}
               onKeyDown={(e) => e.key === 'Enter' && setIsEditing(false)}
@@ -131,7 +133,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
           ) : (
             <span className="ml-1">
               {editableAmountInstead && secondaryValue
-                ? `₱ ${(secondaryValue * value / 100).toLocaleString()}`
+                ? `${(secondaryValue * value / 100).toLocaleString()}`
                 : formatValue(value)
               }
               {suffix}

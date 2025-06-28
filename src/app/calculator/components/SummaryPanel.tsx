@@ -28,7 +28,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
 
     function submitData() {
         let data = {
-            ammountFinanced, 
+            ammountFinanced,
             purchasePrice, // Estimate(prenda), ammountFinanced(buy)
             downPayment, // amount borrowed(prenda), downPayment(buy)
             monthlyPayment,
@@ -48,42 +48,38 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         console.log('==Caculator summary====', data)
     }
     return (
-        <div className="col lg-6">
-            <div className='summary-container'>
-                <p className='medium title red'>Summary</p>
-                <br />
-                <div className="space-y-4">
-                    <div className="details">
-                        <span className="text-gray-600">Ammount Financed</span>
-                        <span className="font-medium">₱ {ammountFinanced.toLocaleString()}</span>
-                    </div>
-
-                    <div className="details">
-                        <span className="text-gray-600">Down Payment</span>
-                        <span className="font-medium">₱ {downPayment.toLocaleString()}</span>
-                    </div>
-
-                    <div className="details">
-
-                        <span className="text-gray-600">Monthly Payment</span>
-                        <span className="font-medium">₱ {monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                    </div>
-
-                    <div className="details">
-                        <span className="text-gray-600">Loan Term <small></small></span>
-                        <span className="font-medium">{loanTerm} months</span>
-                    </div>
+        <div className='summary-container'>
+            <p className='medium title red'>Summary</p>
+            <br />
+            <div className="space-y-4">
+                <div className="details">
+                    <span className="text-gray-600">Ammount Financed</span>
+                    <span className="font-medium">₱ {ammountFinanced.toLocaleString()}</span>
                 </div>
-                <div className='form-btn-container'>
-                    <Link href="/forms">
-                        <button onClick={submitData} className="btn btn-continue">
-                            Continue
-                        </button>
-                    </Link>
+
+                <div className="details">
+                    <span className="text-gray-600">Down Payment</span>
+                    <span className="font-medium">₱ {downPayment.toLocaleString()}</span>
+                </div>
+
+                <div className="details">
+
+                    <span className="text-gray-600">Monthly Payment</span>
+                    <span className="font-medium">₱ {monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                </div>
+
+                <div className="details">
+                    <span className="text-gray-600">Loan Term <small></small></span>
+                    <span className="font-medium">{loanTerm} months</span>
                 </div>
             </div>
-            <br />
-            <br />
+            <div className='form-btn-container-summary'>
+                <Link href="/forms">
+                    <button onClick={submitData} className="btn btn-continue">
+                        Continue
+                    </button>
+                </Link>
+            </div>
         </div>
     );
 };

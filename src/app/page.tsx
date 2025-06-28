@@ -2,120 +2,132 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Col, Container, Row } from "react-bootstrap";
+import HomeLoanPage from './landing-pages/home-loan'
+import CarLoanPage from './landing-pages/car-loan'
+// import { usePathname, useSearchParams } from 'next/navigation';
 
 function homeContents() {
-    const whatYouNeed = [{
-        title: 'Requirements',
-        constents: [
-            'Government ID',
-            'Proof of Income (COE/ITR/Pay Slip)',
-            'Latest 3mos Bank statements',
-            'Proof of Address',
-            'Property Documents'
-        ]
-    }, {
-        title: 'Who can apply',
-        constents: [
-            '21 years old and up',
-            'Filipino / Permanent Resident',
-            'Stable source of income',
-            'No history of loan default or bankruptcy'
-        ]
-    }, {
-        title: 'Loan Details',
-        constents: [
-            'PHP 100,000 to PHP 10,000,000 (depending on income)',
-            'Loan tenure: 60 months(max)',
-            'Interest: 6.5% per annum',
-            'Monthly amortization',
-            'Residential property to be financed',
-            '5-15 business days upon submission'
-        ]
-    }];
 
-    const whyCard = [
-        {
-            title: 'Low Interest Rates', 
-            description: 'Enjoy competitive rates that make home-ownership more affordable.',
-            img: ''
-        },
-        {
-            title: 'Quick and Easy Application', 
-            description: 'Apply online in minutes with fast processing and approvals.',
-            img: ''
-        },
-        {
-            title: 'Flexible Payment Terms', 
-            description: 'Choose repayment periods that suit income and lifestyle.',
-            img: ''
-        }
-    ];
 
-    function whatYouNeedContents(contents: any[]) {
-        return contents.map(content => <li key={content}>{content}</li>)
-    }
+        // const pathname = usePathname();
+        // const searchParams = useSearchParams();
 
-    return (
-        <>  
-            <Container>
-                <div className="container home-banner">
-                    <div className="hero-content">
-                        <p className="banner-text">Match your dream <span className="red">Home</span><br/> with a <span className="red">Loan</span> that fits you.</p>
-                        <p>Your dream homeis just a few clicks away.</p>
-                        <div className="hero-buttons">
-                            <Link href="/calculator">
-                                <button className="btn btn-start-here">Start here &nbsp; <ArrowRight size={20} /></button>
-                            </Link>
-                        </div>  
-                    </div>
-                    <div className="hero-image">
-                        <Image
-                        src="/images/home-loan2.png"
+        // const fullURL = `${pathname}?${searchParams.toString()}`;
+        // console.log('=====:URL:::', fullURL)
+
+        const whatYouNeed = [{
+            title: 'Requirements',
+            constents: [
+                'Government ID',
+                'Proof of Income',
+                'Proof of Address',
+            ]
+        }, {
+            title: 'Who can apply',
+            constents: [
+                'At least 21 years old',
+                'Filipino Citizen*',
+                'Stable source of income'
+            ]
+        }, {
+            title: 'Loan Details',
+            constents: [
+                'Up to PHP 10,000,000',
+                'From 12 to 6 months',
+                'Quick approval',
+            ]
+        }];
+
+        const whyCard = [
+            {
+                title: 'Low Interest Rates',
+                description: 'Enjoy competitive rates that make home-ownership more affordable.',
+                img: 'low-interest'
+            },
+            {
+                title: 'Quick and Easy Application',
+                description: 'Apply online in minutes with fast processing and approvals.',
+                img: 'easy-apply'
+            },
+            {
+                title: 'Flexible Payment Terms',
+                description: 'Choose repayment periods that suit income and lifestyle.',
+                img: 'flexible-payment-terms'
+            }
+        ];
+
+        function whatYouNeedContents(contents: any[]) {
+            return contents.map(content =>
+                <div key={content} className="card-check-list">
+                    <Image
+                        className="check"
+                        src="/images/check.svg"
                         alt="MLhuillier logo"
-                        width={100}
-                        height={100}
-                        />
-                    </div>
+                        width={10}
+                        height={10}
+                    />
+                    {content}
                 </div>
-                <Col lg="12">
-                    <div className="what-you-need-container">
-                        <p className="banner-text">What you need</p>
-                        <Row className="what-you-need">
-                            {whatYouNeed.map(item => 
-                                <div key={item.title} className="what-you-need-card">
-                                    <div className="title">
-                                        {item.title}
+            )
+        }
+
+        return (
+            <>
+                <Container>
+                    <CarLoanPage/>
+                    {/* <Col lg="12">
+                        <div className="what-you-need-container">
+                            <p className="banner-text regular title">What you need</p>
+                            <br />
+                            <Row className="">
+                                {whatYouNeed.map(item =>
+                                    <div key={item.title} className="col-md-4 mb-5 mb-md-0 ">
+                                        <div className="what-you-need-card">
+                                            <div className="card-title  smaller regular">
+                                                {item.title}
+                                            </div>
+                                            <div className="card-check-list-wrapper">
+                                                {whatYouNeedContents(item.constents)}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <ul>
-                                        {whatYouNeedContents(item.constents)}
-                                    </ul>
+                                )}
+                            </Row>
+                            <br />
+                            <div className="text-muted regular">* Except for condominium (see details)</div>
+                        </div>
+                    </Col> */}
+                    <Container className="why">
+                        <div className="center-why">
+                            <span className="red banner-text regular title">Why M. Lhuillier</span> <br />
+                            <div className=" why-text">
+                                <span className="regular readable">We've reinvented the way you get a home loan because you deserve bettter.</span>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div className="row text-center">
+                            {whyCard.map(item =>
+                                <div key={item.title} className="col-md-4 mb-5 mb-md-0 order-md-1 order-2">
+                                    <div className="icon-wrapper mb-4">
+                                        <Image
+                                            src={'/images/' + item.img + '.svg'}
+                                            alt="MLhuillier logo"
+                                            width={50}
+                                            height={50}
+                                        />
+                                    </div>
+                                    <h6>
+                                        {item.title}
+                                    </h6>
+                                    <p>{item.description}</p>
                                 </div>
                             )}
-                        </Row>
-                    </div>
-                </Col>
-                <Container className="why">
-                    <p className="text-center">
-                        <span className="text-danger mb-5 banner-text">Why M. Lhuillier</span> <br />
-                        <span>We've reinvented the way you get a home loan <br /> because you deserve bettter.</span>
-                    </p>
-                    <div className="row text-center">
-                        {whyCard.map(item => 
-                            <div key={item.title} className="col-md-4 mb-5 mb-md-0 order-md-1 order-2">
-                                <div className="icon-wrapper mb-4">  
-                                    Image here
-                                </div>
-                                <h6>
-                                    {item.title}
-                                </h6>
-                                <p>{item.description}</p>
-                            </div>
-                        )}
-                    </div>
+                        </div>
+                    </Container>
                 </Container>
-            </Container>
-        </>
-    );
-}
+            </>
+        );
+    }
 
-export default homeContents;
+    export default homeContents;

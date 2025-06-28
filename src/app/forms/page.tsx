@@ -20,9 +20,9 @@ export default function FormPage() {
     return (
         <Container>
             <br />
-            <div className="col-md-7">
+            <div className="col-md-9">
                 <p className='medium title'> Let me get to know you better </p>
-                <span>Complete the form to begin your home loan application process.</span>
+                <span className='readable'>Complete the form to begin your home loan application process.</span>
             </div><br />
             {step === 1 && <ContactDetails onNext={goToNext} />}
             {step === 2 && <IdentityDetails data={formData} onBack={goBack} />}
