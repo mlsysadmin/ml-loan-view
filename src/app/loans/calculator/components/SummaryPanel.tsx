@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import React from 'react';
 import Link from "next/link";
 import '../index.css'
-import { useLoanStore } from '@/app/store/dataStore';
+import { useLoanStore } from '@/app/loans/store/dataStore';
 
 interface SummaryPanelProps {
     ammountFinanced: number,
@@ -10,8 +10,10 @@ interface SummaryPanelProps {
     downPayment: number;
     monthlyPayment: number;
     loanTerm: number;
-    propertyType: string;
     loanOption: string;
+    propertyType: string;
+    unitType: string;
+    purpose: string;
 }
 
 
@@ -21,8 +23,10 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
     downPayment,
     monthlyPayment,
     loanTerm,
+    loanOption,
     propertyType,
-    loanOption
+    unitType,
+    purpose,
 }) => {
     const setLoanData = useLoanStore((state) => state.setLoanData);
 
@@ -74,7 +78,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
                 </div>
             </div>
             <div className='form-btn-container-summary'>
-                <Link href="/forms">
+                <Link href="/loans/forms">
                     <button onClick={submitData} className="btn btn-continue">
                         Continue
                     </button>

@@ -85,6 +85,7 @@ class PartnersAPI {
     } = params
 
     try {
+      console.log('adasdasdasdasdasdsd')
       const headers = await this.getHeaders()
       const queryParams = new URLSearchParams(
         Object.entries({ ckycId, cellphoneNumber, firstName, lastName })

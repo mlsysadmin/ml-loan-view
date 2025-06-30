@@ -1,4 +1,4 @@
-import AppProvider from '.././../../providers/app-provider';
+import AppProvider from '../.././../../providers/app-provider';
 
 export default function FormLayout({
   children,

@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { useFinalLoanStore } from '@/app/store/dataStore';
+import { useFinalLoanStore } from '@/app/loans/store/dataStore';
 import moment from 'moment';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

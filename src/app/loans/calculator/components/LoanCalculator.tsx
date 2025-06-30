@@ -3,15 +3,14 @@ import React, { useState, useEffect } from 'react';
 import SliderInput from './SliderInput';
 import SummaryPanel from './SummaryPanel';
 import PropertyDropdown from './Dropdown';
-import '../index.css';
 import { useSearchParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
+import '../../index.css';
 import { Dropdown } from 'react-bootstrap';
 
 const LoanCalculator: React.FC = () => {
     const searchParams = useSearchParams();
     const referrer = searchParams.get('type');
-
-    console.log('referrer:::::', referrer)
 
     const [purchasePrice, setPurchasePrice] = useState(10000000);
     const [downPaymentPercent, setDownPaymentPercent] = useState(30);
@@ -20,8 +19,9 @@ const LoanCalculator: React.FC = () => {
     const [monthlyPayment, setMonthlyPayment] = useState(0);
     const [ammountFinanced, setammountFinanced] = useState(0);
     const [loanOption, setOption] = useState('');
-    const [porposeOption, setPorposeOption] = useState('');
-    const [propertyType, setPropertyType] = useState('House & Lot');
+    const [propertyType, setPropertyType] = useState(''); // for Home Loan
+    const [purpose, setPurpose] = useState(''); // for Car Loan
+    const [unitType, setUnitType] = useState(''); // for Car Loan
     // const [errorPropertyType, setErrorPropertyType] = useState('');
 
     // Calculate the loan details whenever inputs change
@@ -43,7 +43,6 @@ const LoanCalculator: React.FC = () => {
     };
 
     const [options, setOptions] = useState<typeof carOptions | typeof homeOptions | null>(null);
-
     const [dropdownSelections, setDropdownSelections] = useState<Record<number, string>>({});
 
     const homeOptions = {
@@ -91,16 +90,10 @@ const LoanCalculator: React.FC = () => {
         ],
     };
 
-
-    const dropdown = [
-        'Acquisition or Purchase of Vechicle',
-        'Refinancing or Re-Loan of Vehicle',
-        'Equity Cash Reimbursement'
-    ]
-
     useEffect(() => {
         if (referrer === 'car') setOptions(carOptions);
         else if (referrer === 'home') setOptions(homeOptions);
+        else notFound();
 
     }, [referrer]);
 
@@ -111,42 +104,37 @@ const LoanCalculator: React.FC = () => {
         }
     }, [options, loanOption]);
 
-    useEffect(() => {
-        if (options?.radio?.length && !loanOption) {
-            const secondOption = options.radio[1].type ?? '';
-            setPorposeOption(secondOption);
-        }
-    }, [options, loanOption]);
+    // useEffect(() => {
+    //     if (options?.radio?.length && !loanOption) {
+    //         const secondOption = options.radio[1].type ?? '';
+    //         setPurpose(secondOption);
+    //     }
+    // }, [options, loanOption]);
 
 
     // MAKE FIRST VALUE AS DEFAULT/////////////////////
-    // useEffect(() => {
-    //     if (options?.radio?.length && !loanOption) {
-    //         const firstOption = options.radio[0].type ?? '';
-    //         setOption(firstOption);
-    //     }
-    //     if (referrer === 'car') {
-    //         setOptions(carOptions);
-    //         setDropdownSelections(
-    //             Object.fromEntries(
-    //                 carOptions.dropdown.map((item) => [item.id, item.values[0]])
-    //             )
-    //         );
-    //     } else if (referrer === 'home') {
-    //         setOptions(homeOptions);
-    //         setDropdownSelections(
-    //             Object.fromEntries(
-    //                 homeOptions.dropdown.map((item) => [item.id, item.values[0]])
-    //             )
-    //         );
-    //     }
-    // }, [referrer]);
+    useEffect(() => {
+        if (referrer === 'car') {
+            setOptions(carOptions);
+            setDropdownSelections(
+                Object.fromEntries(
+                    carOptions.dropdown.map((item) => [item.id, item.label])
+                )
+            );
+        } else if (referrer === 'home') {
+            setOptions(homeOptions);
+            setDropdownSelections(
+                Object.fromEntries(
+                    homeOptions.dropdown.map((item) => [item.id, item.label])
+                )
+            );
+        }
+    }, [referrer]);
 
 
     return (
         <div className="calculator-container">
             <div className="col-md-6">
-                ::::{referrer}
                 <span className='medium title'>Loan Calculator</span>
                 <p> Tell me about the property </p>
                 <div>
@@ -158,31 +146,9 @@ const LoanCalculator: React.FC = () => {
                         </label>
                     )}
                 </div>
-                {/* {options?.radio.map(option => 
-                    <div key={option.type}>
-                        {option.type}
-                    </div>
-                )} */}
-                {/* <span className='medium title'>Loan Calculator</span>
-                <p> Tell me about the property </p>
-                <div>
-                    <label className="__radio-option">
-                        <input type="radio" checked={loanOption === 'Buy'} onChange={selectOption} value="Buy" name="paymentOption" />
-                        <span className="__radio"><span></span></span>
-                        <span>Buy a Home</span>
-                    </label>
-                </div>
-                <div>
-                    <label className="__radio-option">
-                        <input type="radio" checked={loanOption === 'Prenda'} onChange={selectOption} value="Prenda" name="paymentOption" />
-                        <span className="__radio"><span></span></span>
-                        <span>Prenda my Home</span>
-                    </label>
-                </div> */}
 
-                {options?.dropdown.map((item) => (
+                {/* {options?.dropdown.map((item) => (
                     <div key={item.id} className="mb-3">
-                        {/* <label className="form-label">{item.label}</label> */}
                         <PropertyDropdown
                             options={item.values}
                             value={dropdownSelections[item.id] || ''}
@@ -195,35 +161,45 @@ const LoanCalculator: React.FC = () => {
                             placeholder={`Select ${item.label}`}
                         />
                     </div>
-                ))}
+                ))} */}
 
 
-
-
-                {/* {options?.dropdown.map((d) =>
-                    <div key={d.id}>
+                {options?.dropdown.map((item) => (
+                    <div key={item.id} className="mb-3">
                         <PropertyDropdown
-                            options={dropdown}
-                            value={porposeOption}
-                            onChange={setPropertyType}
-                            placeholder="Select Property Type"
+                            options={item.values}
+                            value={dropdownSelections[item.id] || ''}
+                            onChange={(selectedValue) => {
+                                // update shared dropdownSelections
+                                setDropdownSelections((prev) => ({
+                                    ...prev,
+                                    [item.id]: selectedValue,
+                                }));
+
+                                // ALSO update individual specific state
+                                if (referrer === 'home') {
+                                    if (item.label === 'Property Type') {
+                                        setPropertyType(selectedValue);
+                                    }
+                                }
+
+                                if (referrer === 'car') {
+                                    if (item.label === 'Purpose') {
+                                        setPurpose(selectedValue);
+                                    }
+                                    if (item.label === 'Unit Type') {
+                                        setUnitType(selectedValue);
+                                    }
+                                }
+                            }}
+                            placeholder={`Select ${item.label}`}
                         />
                     </div>
-                )} */}
-
-                {/* <PropertyDropdown
-                    options={dropdown}
-                    value={porposeOption}
-                    onChange={setPropertyType}
-                    placeholder="Select Property Type"
-                /> */}
-
-                {/* <PropertyDropdown value={propertyType} onChange={setPropertyType} /> */}
+                ))}
 
                 <div className='slider-card'>
 
                     <div className="mb-8">
-                        {/* <h2 className="text-sm font-medium mb-4">Purchase of House & Lot</h2> */}
                         <SliderInput
                             label={loanOption === 'Prenda' ? 'Estimated Price: ₱' : 'Price: ₱'}
                             value={purchasePrice}
@@ -286,8 +262,10 @@ const LoanCalculator: React.FC = () => {
                     downPayment={downPaymentAmount}
                     monthlyPayment={monthlyPayment}
                     loanTerm={loanTerm}
-                    propertyType={propertyType}
                     loanOption={loanOption}
+                    propertyType={propertyType}
+                    unitType={unitType}
+                    purpose={purpose}
                 />
             </div>
         </div>

@@ -17,7 +17,7 @@ export default function CarLoanLandingPage() {
             option: 'Prenda',
             type: [
                 {
-                    type: 'Motorcycple',
+                    type: 'Motorcycle',
                     img: 'motorcycle',
                     width: 75,
                     hieght: 65
@@ -76,9 +76,9 @@ export default function CarLoanLandingPage() {
                     hieght: 65
                 }, {
                     type: 'Construction Vehicle',
-                    img: 'heavy-2',
-                    width: 85,
-                    hieght: 45
+                    img: 'heavy',
+                    width: 80,
+                    hieght: 65
                 }
 
             ]
@@ -123,10 +123,9 @@ export default function CarLoanLandingPage() {
         )
     }
 
-
     return (
         <>
-            <div className="container home-banner">
+            <div className="container car-banner">
                 <div className="banner-content-wrapper">
                     <div>
                         <p className="banner-text regular title">Own your dream <span className="red">Car</span> with a <span className="red">Loan</span> that works you.</p>
@@ -134,14 +133,14 @@ export default function CarLoanLandingPage() {
 
                     </div>
                     <div className="hero-buttons">
-                        <Link href={'/calculator?type=' + referrer}>
+                        <Link href={'/loans/calculator?type=' + referrer}>
                             <button className="btn btn-start-here">Start here &nbsp; <ArrowRight size={20} /></button>
                         </Link>
                     </div>
                 </div>
                 <div className="home-loan-img-wrapper">
                     <Image
-                        className="home-loan-img"
+                        className="car-loan-img"
                         src="/images/car-loan.svg"
                         alt="MLhuillier logo"
                         width={100}
@@ -164,7 +163,7 @@ export default function CarLoanLandingPage() {
                                                 <Image
                                                     className={item.img}
                                                     src={'/images/' + item.img + '.svg'}
-                                                    alt="MLhuillier logo"
+                                                    alt={item.img}
                                                     width={item.width}
                                                     height={item.hieght}
                                                 />
@@ -199,7 +198,7 @@ export default function CarLoanLandingPage() {
                         )}
                     </Row>
                     <br />
-                    <div className="text-muted regular">* Except for condominium (see details)</div>
+                    {/* <div className="text-muted regular">* Except for condominium (see details)</div> */}
                 </div>
             </Col>
         </>

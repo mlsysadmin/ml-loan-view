@@ -3,14 +3,14 @@ import { ArrowRight, Link, SquareUserRound } from 'lucide-react';
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Container, Modal, } from 'react-bootstrap';
 import PhoneInput from 'react-phone-input-2';
-import DatePicker from '@/app/components/date-picker';
+import DatePicker from '@/app/loans/components/date-picker';
 import 'react-phone-input-2/lib/style.css';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useSearchCKYC } from "../../hooks/use-search-ckyc";
-import AppProvider from '../../../../providers/app-provider';
+import AppProvider from '../../../../../providers/app-provider';
 import moment from 'moment';
-import { useFinalLoanStore } from '@/app/store/dataStore';
+import { useFinalLoanStore } from '@/app/loans/store/dataStore';
 // import { useLoader } from '../../contexts/LoaderContext';
 
 interface Props {

@@ -2,12 +2,12 @@
 import { ArrowRight, Link, SquareUserRound } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Container, Modal } from 'react-bootstrap';
-import DatePicker from '@/app/components/date-picker';
-import { useLoanStore, useFinalLoanStore } from '@/app/store/dataStore';
+import DatePicker from '@/app/loans/components/date-picker';
+import { useLoanStore, useFinalLoanStore } from '@/app/loans/store/dataStore';
 import 'react-phone-input-2/lib/style.css';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
-import PageLoader from '@/app/components/pageLoader';
+import PageLoader from '@/app/loans/components/pageLoader';
 // import 'react-phone-input-2/lib/material.css'
 // import SendEmailForm from '../../api/mailer/mailer-service';
 
@@ -428,7 +428,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
 
     setShow(true);
     await sendEmail()
-    router.push('/pre-approval');
+    router.push('/loans/pre-approval');
   }
 
   return (
