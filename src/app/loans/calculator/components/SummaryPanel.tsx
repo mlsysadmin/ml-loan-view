@@ -1,8 +1,9 @@
 import { ArrowRight } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from "next/link";
 import '../index.css'
 import { useLoanStore } from '@/app/loans/store/dataStore';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface SummaryPanelProps {
     ammountFinanced: number,
@@ -13,7 +14,10 @@ interface SummaryPanelProps {
     loanOption: string;
     propertyType: string;
     unitType: string;
-    purpose: string;
+    loanPurpose: string;
+    formError: string;
+    onConfirm: () => void;
+    canProceed: boolean;
 }
 
 
@@ -26,9 +30,19 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
     loanOption,
     propertyType,
     unitType,
-    purpose,
+    loanPurpose,
+    formError,
+    onConfirm,
+    canProceed
 }) => {
     const setLoanData = useLoanStore((state) => state.setLoanData);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (canProceed) {
+            submitData();
+        }
+    }, [canProceed]);
 
     function submitData() {
         let data = {
@@ -38,7 +52,9 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             monthlyPayment,
             loanTerm,
             propertyType,
-            loanOption
+            loanOption,
+            loanPurpose,
+            unitType
         }
         setLoanData({
             ammountFinanced,
@@ -47,9 +63,12 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             monthlyPayment,
             loanTerm,
             propertyType,
-            loanOption
+            loanOption,
+            loanPurpose,
+            unitType
         });
         console.log('==Caculator summary====', data)
+        router.push('/loans/forms');
     }
     return (
         <div className='summary-container'>
@@ -78,12 +97,21 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
                 </div>
             </div>
             <div className='form-btn-container-summary'>
-                <Link href="/loans/forms">
+                {/* <Link href="/loans/forms">
                     <button onClick={submitData} className="btn btn-continue">
-                        Continue
+                    Continue
                     </button>
-                </Link>
+                    </Link> */}
+                <button onClick={onConfirm} className="btn btn-continue">
+                    Continue
+                </button>
+
             </div>
+            {formError && (
+                <small className="red">
+                    {formError}
+                </small>
+            )}
         </div>
     );
 };

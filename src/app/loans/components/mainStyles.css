@@ -15579,27 +15579,30 @@ a {
     .business-page .service-title {
         font-size: 2rem
     }
+
     .car-card {
         /* flex-direction: row; */
-        padding: 15px 15px 35px  15px ;
+        padding: 15px 15px 35px 15px;
         flex-direction: column;
     }
+
     .car-card img {
         width: 120px;
         height: 120px;
     }
 }
 
-@media(max-width: 500px) {
+@media(max-width: 514px) {
     .what-you-need-container {
         margin: 50px -30px 10px;
     }
 }
 
-@media(min-width: 501px) {
+@media(min-width: 515px) {
     .what-you-need-container {
         padding: 20px 40px 40px 40px;
     }
+
     /* .car-card {
         flex-direction: column;
     } */
@@ -15673,6 +15676,7 @@ a {
     .business-page .service-card {
         padding: 30px
     }
+
     .car-card {
         /* padding: 7px 10px; */
     }
@@ -15790,4 +15794,55 @@ a {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.mobile-input-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    position: relative;
+}
+
+.mobile-input {
+    padding: 0.5rem;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 6px;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.country-code-dropdown {
+    display: flex;
+    align-items: center;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+}
+
+.country-code-dropdown-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 7px;
+}
+
+.country-code-dropdown-select {
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    background: rgb(255, 255, 255);
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 6px;
+    margin-top: 4px;
+    z-index: 10;
+}
+
+.country-code-dropdown-option {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    gap: 10px;
+    cursor: pointer;
 }

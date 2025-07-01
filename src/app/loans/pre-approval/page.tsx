@@ -11,15 +11,15 @@ export default function PreApprovalPage() {
     const data = useFinalLoanStore((state) => state.data);
     const clearFinalLoanData = useFinalLoanStore((state) => state.clearFinalLoanData); // ← Grab the clear method
     const dataRef = data?.ref;
-    
+
     useEffect(() => {
         // const birthdate = `${data?.birthdate.month}/${data?.birthdate.day}/${data?.birthdate.year}`;
         // const age = moment().diff(moment(birthdate, "MM/DD/YYYY"), 'years');
         // if (age > 21) {
-            //     setQualified(true);
-            // }
+        //     setQualified(true);
+        // }
     });
-    
+
     function handleBtnAction(action: string) {
         clearFinalLoanData();
         action === 'home' ? router.push('/') : router.push('/calculator');
@@ -43,7 +43,7 @@ export default function PreApprovalPage() {
                 <div className='pre-approval-text'>
                     <p className='readable regular'>
                         A loan officer will contact
-                        <br/> you in 1 to 3 business days.
+                        <br /> you in 1 to 3 business days.
                     </p>
                     <p className='readable medium'>Ref. No.: {dataRef}</p>
                 </div>

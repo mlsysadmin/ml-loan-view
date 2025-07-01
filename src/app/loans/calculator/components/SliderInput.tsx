@@ -198,7 +198,8 @@ const SliderInput: React.FC<SliderInputProps> = ({
                 className={`absolute ${value === mark.value ? 'font-bold color: red' : ''
                   }`}
               >
-                {mark.label} {value === mark.value && 'mons.'}
+                {/* {mark.label} {value === mark.value && 'mos.'} */}
+                {mark.label}
               </small>
             ))}
           </>

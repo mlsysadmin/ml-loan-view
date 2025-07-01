@@ -15671,7 +15671,7 @@ a {
   }
 }
 
-@media(max-width: 500px) {
+@media(max-width: 514px) {
 
   /* Mobile width */
   @media(max-height: 740px) {
@@ -15730,7 +15730,7 @@ a {
   }
 }
 
-@media(min-width: 501px) {
+@media(min-width: 515px) {
 
   /* Web width*/
   .small {

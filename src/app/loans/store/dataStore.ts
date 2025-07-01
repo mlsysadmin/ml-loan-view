@@ -8,6 +8,8 @@ interface LoanData {
     monthlyPayment: number;
     loanTerm: number;
     propertyType: string;
+    loanPurpose: string;
+    unitType: string;
     loanOption: string;
 }
 
@@ -32,8 +34,10 @@ interface FinalLoanData {
     suffix?: string;
     birthdate: any;
     country: string,
-    cityOrMunicipality: string,
+    provinceOrState: string,
+    cityOrTown: string,
     barrangay: string,
+    streetName: string,
     specAddress: string,
     citizenship: string;
     grossMonthlyIncome: number | string;

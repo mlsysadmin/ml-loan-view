@@ -2,7 +2,6 @@
 import { ArrowRight, Link, SquareUserRound } from 'lucide-react';
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Container, Modal, } from 'react-bootstrap';
-import PhoneInput from 'react-phone-input-2';
 import DatePicker from '@/app/loans/components/date-picker';
 import 'react-phone-input-2/lib/style.css';
 import { useRouter } from 'next/navigation';
@@ -12,12 +11,20 @@ import AppProvider from '../../../../../providers/app-provider';
 import moment from 'moment';
 import { useFinalLoanStore } from '@/app/loans/store/dataStore';
 // import { useLoader } from '../../contexts/LoaderContext';
+import PhoneInput from '@/app/loans/components/PhoneNumberInput';
 
 interface Props {
   onNext: (data: any) => void;
 };
 
 const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
+  const [laonType, setLoanType] = useState("");
+
+  useEffect(() => {
+    const stored = localStorage.getItem('loanType');
+    stored && setLoanType(JSON.parse(stored))
+  })
+
   const router = useRouter();
   const [show, setShow] = useState(false);
   const [contactNumber, setContactNumber] = useState('');
@@ -30,8 +37,10 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [birthdate, setBirthdate] = useState<{ day: number; month: number; year: number } | null>(null);
   const [birthdateFromCKYC, setBirthdateFromCKYC] = useState(Date);
   const [country, setCountry] = useState("");
-  const [cityOrMunicipality, setCityOrMunicipality] = useState("");
+  const [provinceOrState, setProvinceOrState] = useState("");
+  const [cityOrTown, setCityOrTown] = useState("");
   const [barrangay, setBarrangay] = useState("");
+  const [streetName, setStreetName] = useState("");
   const [specAddress, setSpecAddress] = useState("");
 
   const [sourceOfIncome, setSourceOfIncome] = useState("");
@@ -49,12 +58,18 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [errorEmail, setErrorEmail] = useState('');
   const [errorFirstName, setErrorFirstName] = useState('');
   const [errorLastName, setErrorLastName] = useState('');
+
   const [errorCountry, setErrorCountry] = useState('');
-  const [errorCityMuni, setErrorCityMuni] = useState('');
+  const [errorProvinceOrState, setErrorProvinceOrState] = useState('');
+  const [errorCityOrTown, setErrorCityOrTown] = useState('');
   const [errorBarrangay, setErrorBarrangay] = useState('');
+  const [errorStreet, setErrorStreet] = useState('');
   const [errorSpecAdd, setErrorSpecAdd] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const [phone, setPhone] = useState('');
+  const [countryCode, setCountryCode] = useState('+63');
 
 
 
@@ -85,7 +100,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       setSuffix(storedData.suffix || '');
       setBirthdate(storedData.birthdate || null);
       setCountry(storedData.country || '');
-      setCityOrMunicipality(storedData.cityOrMunicipality || '');
+      setCityOrTown(storedData.cityOrTown || '');
       setBarrangay(storedData.barrangay || '');
       setSpecAddress(storedData.specAddress || '');
     }
@@ -122,15 +137,15 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     if (firstName === '') setErrorFirstName('First name is required.');
     if (lastName === '') setErrorLastName('Last name is required.');
     if (country === '') setErrorCountry('Country is required.');
-    if (cityOrMunicipality === '') setErrorCityMuni('City or Municipality is required.');
+    if (cityOrTown === '') setErrorCityOrTown('City or Town is required.');
     if (barrangay === '') setErrorBarrangay('Barrangay is required.');
     if (specAddress === '') setErrorSpecAdd('House no. / Sitio / Purok is required.');
   }
 
   const handleContinue = () => {
     setIsValidEmail(emailRegex.test(email));
-    
-    if (firstName && lastName && contactNumber && email && isValidEmail && country && cityOrMunicipality && barrangay && specAddress) {
+
+    if (firstName && lastName && contactNumber && email && isValidEmail && country && cityOrTown && barrangay && specAddress) {
       setFinalLoanData({
         contactNumber,
         email,
@@ -140,7 +155,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         suffix,
         birthdate,
         country,
-        cityOrMunicipality,
+        cityOrTown,
         barrangay,
         specAddress,
         found: ckycData ? true : false,
@@ -155,7 +170,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         suffix,
         birthdate,
         country,
-        cityOrMunicipality,
+        cityOrTown,
         barrangay,
         specAddress,
         found: ckycData ? true : false,
@@ -178,7 +193,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       setEmail(ckycData?.email);
       setCitizenship(ckycData?.nationality);
       setCountry(ckycData?.addresses.current.addressL0Name)
-      setCityOrMunicipality(ckycData?.addresses.current.addressL2Name)
+      setCityOrTown(ckycData?.addresses.current.addressL2Name)
       setBarrangay(ckycData?.addresses.current.otherAddress)
       setConfirmed(true);
       handleClose();
@@ -188,30 +203,33 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   return (
     <Container>
       <label className='readable medium'>Contact Details</label>
-      <div className='form-fields'>
-        {/* <label className='readable medium'>Contact Details</label> */}
+      <br />
 
-        <input placeholder="Enter mobile"
-          ref={contactRef}
-          className='form-control'
-          value={contactNumber}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (/^\d*$/.test(value)) {
-              setErrorContactNumber('');
-              setContactNumber(value);
-            }
-          }}
-        />
-        <small>{isFetching ? "Searching..." : ""}</small>
-        <small className='red'>{errorContactNumber}</small>
+      <div>
+        <div className='form-fields'>
+          <small>{isFetching ? "Searching..." : ""}</small>
+          <PhoneInput
+            value={phone}
+            onChange={(formatted) => {
+              setPhone(formatted);
+              const unformatted = formatted.replace(/\D/g, '');
+              if (/^\d*$/.test(unformatted)) {
+                setErrorContactNumber('');
+                setContactNumber(0 + unformatted);
+              }
+            }}
+            country="PH"
+            onCountryChange={(code) => setCountryCode(code)}
+          />
+        </div>
+
+        <div className='form-fields'>
+          {/* <label htmlFor="">&nbsp;</label> */}
+          <input className='form-control' value={email} onChange={(e) => { setEmail(e.target.value); setErrorEmail(''); }} type="email" placeholder='Email Address (juan.d@gmail.com)' autoComplete="off" />
+          <small className='red'>{errorEmail}</small>
+        </div>
       </div>
 
-      <div className='form-fields'>
-        {/* <label htmlFor="">&nbsp;</label> */}
-        <input className='form-control' value={email} onChange={(e) => { setEmail(e.target.value); setErrorEmail(''); }} type="email" placeholder='Email Address (juan.d@gmail.com)' />
-        <small className='red'>{errorEmail}</small>
-      </div>
 
       <br />
 
@@ -225,6 +243,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         <div className='form-fields full-width'>
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
           <input type="text" className='form-control full-width' value={middleName} onChange={(e) => setmiddleName(e.target.value)} placeholder='Middle Name' />
+          <small>Leave blank if you legally don't have one</small>
         </div>
         <div className='form-fields full-width'>
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
@@ -275,6 +294,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       </div>
 
       <br />
+
       <label className='readable medium'>Address</label>
       <div className='details-wrapper'>
         <div className='form-fields full-width'>
@@ -284,17 +304,30 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         </div>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={cityOrMunicipality} onChange={(e) => { setCityOrMunicipality(e.target.value); setErrorCityMuni(''); }} placeholder='City / Municipality' />
-          <small className='red'>{errorCityMuni}</small>
+          <input type="text" className='form-control full-width' value={provinceOrState} onChange={(e) => { setProvinceOrState(e.target.value); setErrorProvinceOrState(''); }} placeholder='Province/State' />
+          <small className='red'>{errorProvinceOrState}</small>
         </div>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={barrangay} onChange={(e) => { setBarrangay(e.target.value); setErrorBarrangay(''); }} placeholder='Barrangay' />
+          <input type="text" className='form-control full-width' value={cityOrTown} onChange={(e) => { setCityOrTown(e.target.value); setErrorCityOrTown(''); }} placeholder='City/Town' />
+          <small className='red'>{errorCityOrTown}</small>
+        </div>
+      </div>
+
+      <div className='details-wrapper'>
+        <div className='form-fields full-width'>
+          {/* <label className='readable medium'>&nbsp;</label> */}
+          <input type="text" className='form-control full-width' value={barrangay} onChange={(e) => { setBarrangay(e.target.value); setErrorBarrangay(''); }} placeholder='Barrangay/District' />
           <small className='red'>{errorBarrangay}</small>
         </div>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={specAddress} onChange={(e) => { setSpecAddress(e.target.value); setErrorSpecAdd(''); }} placeholder='House no., Sitio/Purok' />
+          <input type="text" className='form-control full-width' value={streetName} onChange={(e) => { setStreetName(e.target.value); setErrorStreet(''); }} placeholder='Street Name' />
+          <small className='red'>{errorStreet}</small>
+        </div>
+        <div className='form-fields full-width'>
+          {/* <label className='readable medium'>&nbsp;</label> */}
+          <input type="text" className='form-control full-width' value={specAddress} onChange={(e) => { setSpecAddress(e.target.value); setErrorSpecAdd(''); }} placeholder='Unit/House No.' />
           <small className='red'>{errorSpecAdd}</small>
         </div>
       </div>
@@ -328,7 +361,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         </div>
       </div> */}
       <div className='form-btn-container'>
-        <button className='__btn btn-white' onClick={() => router.push('/calculator')} >
+        <button className='__btn btn-white' onClick={() => router.push('/loans/calculator?type=' + laonType)} >
           Back
         </button>
         <button className="__btn btn-black" onClick={handleContinue}>

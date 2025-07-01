@@ -13,8 +13,9 @@ function homeContents() {
     const searchParams = useSearchParams();
     const referrer = searchParams.get('type');
 
-    const [loanType, setLoanType] = useState("");
-
+    useEffect(() => {
+        localStorage.setItem('loanType', JSON.stringify(referrer));
+    })
 
     const whyCard = [
         {

@@ -102,7 +102,7 @@ body {
     text-align: center;
 }
 
-@media(max-width: 500px) {
+@media(max-width: 514px) {
 
     /* Mobile */
     .form-control {
@@ -116,9 +116,26 @@ body {
     .btn-wrapper {
         width: 90%;
     }
+    .date-wrapper {
+        width: 100%;
+    }
 }
 
-@media(min-width: 501px) {
+
+@media (min-width: 515px),
+(max-width: 990px) {
+    .date-wrapper {
+        width: 100%;
+    }
+}
+
+@media (min-width: 991px) {
+    .date-wrapper {
+        width: 35%;
+    }
+}
+
+@media(min-width: 515px) {
 
     /* Web */
     .form-control {
@@ -139,10 +156,6 @@ body {
     .half-width {
         max-width: 50%;
         width: 50%
-    }
-
-    .date-wrapper {
-        width: 35%;
     }
 
     .citizenship-wrapper {

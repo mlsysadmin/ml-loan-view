@@ -8,6 +8,7 @@ import 'react-phone-input-2/lib/style.css';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
 import PageLoader from '@/app/loans/components/pageLoader';
+import header from '../../components/navbar';
 // import 'react-phone-input-2/lib/material.css'
 // import SendEmailForm from '../../api/mailer/mailer-service';
 
@@ -17,6 +18,13 @@ interface Props {
 }
 
 const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
+  const [laonType, setLoanType] = useState("");
+
+  useEffect(() => {
+    const stored = localStorage.getItem('loanType');
+    stored && setLoanType(JSON.parse(stored))
+  })
+
   console.log('=====>>', data)
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -36,8 +44,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   const lastName = data.lastName;
   const suffix = data.suffix;
   const country = data.country;
-  const cityOrMunicipality = data.cityOrMunicipality;
+  const provinceOrState = data.provinceOrState;
+  const cityOrTown = data.cityOrTown;
   const barrangay = data.barrangay;
+  const streetName = data.streetName;
   const specAddress = data.specAddress;
 
   const [show, setShow] = useState(false);
@@ -75,14 +85,40 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     setRef(`(LEH)${result}`);
   }
 
+  let otherData = '';
+  let headerType = '';
+
+  if (laonType === 'home') {
+    otherData += `
+    <div class="detail-item">
+      <span class="detail-label">Property Type</span>
+      <span class="detail-value">${loanData?.propertyType}</span>
+    </div>
+  `;
+  headerType += `HOUSING `
+  }
+
+  if (laonType === 'car') {
+    otherData += `
+    <div class="detail-item">
+      <span class="detail-label">Loan Purpose</span>
+      <span class="detail-value">${loanData?.loanPurpose}</span>
+    </div>
+    <div class="detail-item">
+      <span class="detail-label">Preferred Type of Unit</span>
+      <span class="detail-value">${loanData?.unitType}</span>
+    </div>
+  `;
+  headerType += `CAR `
+  }
 
   const htmlContent = `
-  <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Housing Loan Application Document</title>
-    <style>
+ <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Housing Loan Application Document</title>
+      <style>
         * {
             margin: 0;
             padding: 0;
@@ -215,152 +251,148 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
             color: #e53e3e;
             font-weight: bold;
         }
+        .address {
+            justify-content: flex-start !important;
+            gap: 50px;
+        }
     </style>
-</head>
-<body>
-        <!-- Header -->
-        <div class="header">
-            <div class="logo-section">
-                <img src="https://mlhuillier.com/img/revamp/ml-logo-2.svg" alt="M Lhuillier Logo">
-            </div>
-            <div class="document-title">
-                <h2>HOUSING LOAN APPLICATION</h2>
-            </div>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-section">
+            <img src="https://mlhuillier.com/img/revamp/ml-logo-2.svg" alt="M Lhuillier Logo">
         </div>
-
-        <div class="content">
-            <!-- Loan Details Section -->
-            <section class="section">
-                <div class="section-title">Loan Details</div>
-                
-                <div class="details-grid">
-                    <div>
-                        <div class="detail-item">
-                            <span class="detail-label">Date & Time</span>
-                            <span class="detail-value">${moment(new Date()).format('MMMM Do YYYY, h:mm:ss a')}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Ref No</span>
-                            <span class="detail-value">${ref}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Loan Type</span>
-                            <span class="detail-value">${loanData?.loanOption}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Property Type</span>
-                            <span class="detail-value">${loanData?.propertyType}</span>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="detail-item">
-                            <span class="detail-label">Estimated Price</span>
-                            <span class="detail-value">PHP ${loanData?.ammountFinanced.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Amount Borrow</span>
-                            <span class="detail-value">PHP ${loanData?.ammountFinanced.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Term</span>
-                            <span class="detail-value">${Math.floor(Number(loanData?.loanTerm)) / 12}</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Summary Section -->
-            <section class="summary-section">
-                <div class="section-title">Summary</div>
-                
-                <div class="summary-grid">
-                    <div>
-                        <div class="summary-item">
-                            <span class="summary-label">Amount Financed</span>
-                            <span class="summary-value">PHP 6,800,000.00</span>
-                        </div>
-                        
-                        <div class="summary-item">
-                            <span class="summary-label">Down Payment</span>
-                            <span class="summary-value">PHP ${loanData?.downPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="summary-item">
-                            <span class="summary-label">Monthly Payment</span>
-                            <span class="summary-value">PHP ${loanData?.monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                        </div>
-                        
-                        <div class="summary-item">
-                            <span class="summary-label">Loan Term (months)</span>
-                            <span class="summary-value"> ${loanData?.loanTerm} </span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Applicant Details Section -->
-            <section class="section">
-                <div class="section-title">Applicant Details</div>
-                
-                <div class="details-grid">
-                    <div>
-                        <div class="detail-item">
-                            <span class="detail-label">Borrower</span>
-                            <span class="detail-value">${firstName} ${middleName && middleName} ${lastName} ${suffix && suffix}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Mobile Number</span>
-                            <span class="detail-value">${contactNumber}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Email Address</span>
-                            <span class="detail-value">${email}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Address</span>
-                            <span class="detail-value"> ${specAddress && specAddress}, ${barrangay && barrangay}, ${cityOrMunicipality && cityOrMunicipality}, ${country && country}</span>
-                        </div>
-                    </div>
-                    <div>
-                         <div class="detail-item">
-                            <span class="detail-label">Birthday</span>
-                            <span class="detail-value">${moment(`${birthdate?.year}-${birthdate?.month}-${birthdate?.day}`).format("MMM DD YYYY")}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Type of Income</span>
-                            <span class="detail-value">${sourceOfIncome ? sourceOfIncome : '---'}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Employer/Business Name</span>
-                            <span class="detail-value">${empOrBusiness ? empOrBusiness : '---'}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Role/Designation</span>
-                            <span class="detail-value">${designation ? designation : '---'}</span>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <span class="detail-label">Gross Monthly Income</span>
-                            <span class="detail-value"> ${grossMonthlyIncome ? 'PHP ' + grossMonthlyIncome : '---'}</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <div class="document-title">
+            <h1>${headerType} LOAN APPLICATION</h1>
+            <div class="detail-item">
+              <span class="detail-label">Ref No</span>
+              <h3 class="detail-value">${ref}</h3>
+            </div>
+            <span class="detail-value">${moment(new Date()).format('MMMM Do YYYY, h:mm:ss a')}</span>
         </div>
-</body>
-</html>
+    </div>
+
+    <div class="content">
+      <!-- Loan Details Section -->
+      <section class="section">
+        <div class="section-title">Loan Details</div>
+        
+        <div class="details-grid">
+          <div>
+            <div class="detail-item">
+              <span class="detail-label">Loan Type</span>
+              <span class="detail-value">${loanData?.loanOption}</span>
+            </div>
+            
+            ${otherData}
+          </div>
+          
+          <div>
+            <div class="detail-item">
+              <span class="detail-label">Estimated Price</span>
+              <span class="detail-value">PHP ${loanData?.ammountFinanced.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">Amount Borrow</span>
+              <span class="detail-value">PHP ${loanData?.ammountFinanced.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">Term</span>
+              <span class="detail-value">${Math.floor(Number(loanData?.loanTerm)) / 12}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Summary Section -->
+      <section class="summary-section">
+          <div class="section-title">Summary</div>
+          
+          <div class="summary-grid">
+            <div>
+              <div class="summary-item">
+                <span class="summary-label">Amount Financed</span>
+                <span class="summary-value">PHP 6,800,000.00</span>
+              </div>
+              
+              <div class="summary-item">
+                <span class="summary-label">Down Payment</span>
+                <span class="summary-value">PHP ${loanData?.downPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+            
+            <div>
+              <div class="summary-item">
+                <span class="summary-label">Monthly Payment</span>
+                <span class="summary-value">PHP ${loanData?.monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+              </div>
+              
+              <div class="summary-item">
+                <span class="summary-label">Loan Term (months)</span>
+                <span class="summary-value"> ${loanData?.loanTerm} </span>
+              </div>
+            </div>
+          </div>
+      </section>
+
+      <!-- Applicant Details Section -->
+      <section class="section">
+          <div class="section-title">Applicant Details</div>
+          
+          <div class="details-grid">
+            <div>
+              <div class="detail-item">
+                <span class="detail-label">Borrower</span>
+                <span class="detail-value">${firstName} ${middleName && middleName} ${lastName} ${suffix && suffix}</span>
+              </div>
+              
+              <div class="detail-item">
+                <span class="detail-label">Mobile Number</span>
+                <span class="detail-value">${contactNumber}</span>
+              </div>
+              
+              <div class="detail-item">
+                <span class="detail-label">Email Address</span>
+                <span class="detail-value">${email}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Birthday</span>
+                <span class="detail-value">${moment(`${birthdate?.year}-${birthdate?.month}-${birthdate?.day}`).format("MMM DD YYYY")}</span>
+              </div>
+            </div>
+            <div>
+              <div class="detail-item">
+                <span class="detail-label">Type of Income</span>
+                <span class="detail-value">${sourceOfIncome ? sourceOfIncome : '---'}</span>
+              </div>
+              
+              <div class="detail-item">
+                <span class="detail-label">Employer/Business Name</span>
+                <span class="detail-value">${empOrBusiness ? empOrBusiness : '---'}</span>
+              </div>
+              
+              <div class="detail-item">
+                <span class="detail-label">Role/Designation</span>
+                <span class="detail-value">${designation ? designation : '---'}</span>
+              </div>
+              
+              <div class="detail-item">
+                <span class="detail-label">Gross Monthly Income</span>
+                <span class="detail-value"> ${grossMonthlyIncome ? 'PHP ' + grossMonthlyIncome : '---'}</span>
+              </div>
+            </div>
+          </div>
+          <div class="detail-item address">
+            <span class="detail-label">Address</span>
+            <span class="detail-value"> ${specAddress && specAddress}, ${barrangay && barrangay}, ${cityOrTown && cityOrTown}, ${country && country}</span>
+          </div>
+      </section>
+    </div>
+  </body>
+  </html>
 `;
 
   const sendEmail = async () => {
@@ -420,8 +452,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       loanData,
       found: data.found,
       country,
-      cityOrMunicipality,
+      provinceOrState,
+      cityOrTown,
       barrangay,
+      streetName,
       specAddress
     });
 
@@ -470,9 +504,9 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
           <div className='select'>
             <select onChange={(e) => setSourceOfIncome(e.target.value)} className='select__field' value={sourceOfIncome}>
               <option value="">Type of Income</option>
-              <option value="salary">Salary</option>
-              <option value="business">Business</option>
-              <option value="pension">Pension</option>
+              <option value="SALARY">SALARY</option>
+              <option value="BUSINESS">BUSINESS</option>
+              <option value="PENSION">PENSION</option>
               <option value="REGULAR REMITTANCE ABROAD">REGULAR REMITTANCE ABROAD</option>
             </select>
           </div>
@@ -486,16 +520,16 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
           <input type="text" className='form-control full-width' value={designation || ""} onChange={(e) => setDesignation(e.target.value)} placeholder='Position' />
         </div>
         <div className='form-fields full-width'>
-          <input type="text" 
-          className='form-control full-width ' 
-          value={grossMonthlyIncome} 
-          onChange={(e) => {
-            const value = e.target.value;
-            if (/^\d*$/.test(value)) {
-              setGrossMonthlyIncome(value);
-            }
-          }}
-          placeholder='Gross Monthly Income' />
+          <input type="text"
+            className='form-control full-width '
+            value={grossMonthlyIncome}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d*$/.test(value)) {
+                setGrossMonthlyIncome(value);
+              }
+            }}
+            placeholder='Gross Monthly Income' />
         </div>
       </div>
       {/* <div className='form-fields'>

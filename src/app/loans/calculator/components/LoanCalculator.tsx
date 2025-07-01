@@ -3,15 +3,14 @@ import React, { useState, useEffect } from 'react';
 import SliderInput from './SliderInput';
 import SummaryPanel from './SummaryPanel';
 import PropertyDropdown from './Dropdown';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { notFound } from 'next/navigation';
 import '../../index.css';
-import { Dropdown } from 'react-bootstrap';
 
 const LoanCalculator: React.FC = () => {
     const searchParams = useSearchParams();
-    const referrer = searchParams.get('type');
-
+    const loanType = searchParams.get('type');
+    const router = useRouter();
     const [purchasePrice, setPurchasePrice] = useState(10000000);
     const [downPaymentPercent, setDownPaymentPercent] = useState(30);
     const [loanTerm, setLoanTerm] = useState(48); // months
@@ -22,7 +21,9 @@ const LoanCalculator: React.FC = () => {
     const [propertyType, setPropertyType] = useState(''); // for Home Loan
     const [purpose, setPurpose] = useState(''); // for Car Loan
     const [unitType, setUnitType] = useState(''); // for Car Loan
-    // const [errorPropertyType, setErrorPropertyType] = useState('');
+    const [formError, setFormError] = useState('');
+    const [dropdownErrors, setDropdownErrors] = useState<Record<number, string>>({});
+    const [canProceed, setCanProceed] = useState(false);
 
     // Calculate the loan details whenever inputs change
     useEffect(() => {
@@ -91,11 +92,11 @@ const LoanCalculator: React.FC = () => {
     };
 
     useEffect(() => {
-        if (referrer === 'car') setOptions(carOptions);
-        else if (referrer === 'home') setOptions(homeOptions);
+        if (loanType === 'car') setOptions(carOptions);
+        else if (loanType === 'home') setOptions(homeOptions);
         else notFound();
 
-    }, [referrer]);
+    }, [loanType]);
 
     useEffect(() => {
         if (options?.radio?.length && !loanOption) {
@@ -104,24 +105,15 @@ const LoanCalculator: React.FC = () => {
         }
     }, [options, loanOption]);
 
-    // useEffect(() => {
-    //     if (options?.radio?.length && !loanOption) {
-    //         const secondOption = options.radio[1].type ?? '';
-    //         setPurpose(secondOption);
-    //     }
-    // }, [options, loanOption]);
-
-
-    // MAKE FIRST VALUE AS DEFAULT/////////////////////
     useEffect(() => {
-        if (referrer === 'car') {
+        if (loanType === 'car') {
             setOptions(carOptions);
             setDropdownSelections(
                 Object.fromEntries(
                     carOptions.dropdown.map((item) => [item.id, item.label])
                 )
             );
-        } else if (referrer === 'home') {
+        } else if (loanType === 'home') {
             setOptions(homeOptions);
             setDropdownSelections(
                 Object.fromEntries(
@@ -129,7 +121,48 @@ const LoanCalculator: React.FC = () => {
                 )
             );
         }
-    }, [referrer]);
+    }, [loanType]);
+
+    const handleContinue = () => {
+        let errors: Record<number, string> = {};
+        let hasError = false;
+
+        if (loanType === 'car') {
+            const purposeId = carOptions.dropdown.find(item => item.label === 'Purpose')?.id;
+            const unitTypeId = carOptions.dropdown.find(item => item.label === 'Unit Type')?.id;
+
+            if (!purpose && purposeId !== undefined) {
+                errors[purposeId] = 'Loan Purpose is required.';
+                hasError = true;
+            }
+
+            if (!unitType && unitTypeId !== undefined) {
+                errors[unitTypeId] = 'Unit Type is required.';
+                hasError = true;
+            }
+        }
+
+        if (loanType === 'home') {
+            const propertyId = homeOptions.dropdown.find(item => item.label === 'Property Type')?.id;
+
+            if (!propertyType && propertyId !== undefined) {
+                errors[propertyId] = 'Property Type is required.';
+                hasError = true;
+            }
+        }
+
+        if (hasError) {
+            setDropdownErrors(errors);
+            setFormError('Please fill out all required fields.');
+            setCanProceed(false);
+            return;
+        }
+
+        // No errors
+        setFormError('');
+        // router.push('/loans/forms');
+        setCanProceed(true);
+    };
 
 
     return (
@@ -137,7 +170,7 @@ const LoanCalculator: React.FC = () => {
             <div className="col-md-6">
                 <span className='medium title'>Loan Calculator</span>
                 <p> Tell me about the property </p>
-                <div>
+                <div className='option-wrapper'>
                     {options?.radio.map((o, index) =>
                         <label key={o.type} className="__radio-option">
                             <input type="radio" checked={loanOption === o.type} onChange={selectOption} value={o.type} name="paymentOption" />
@@ -147,52 +180,37 @@ const LoanCalculator: React.FC = () => {
                     )}
                 </div>
 
-                {/* {options?.dropdown.map((item) => (
-                    <div key={item.id} className="mb-3">
-                        <PropertyDropdown
-                            options={item.values}
-                            value={dropdownSelections[item.id] || ''}
-                            onChange={(selectedValue) =>
-                                setDropdownSelections((prev) => ({
-                                    ...prev,
-                                    [item.id]: selectedValue,
-                                }))
-                            }
-                            placeholder={`Select ${item.label}`}
-                        />
-                    </div>
-                ))} */}
-
-
                 {options?.dropdown.map((item) => (
                     <div key={item.id} className="mb-3">
                         <PropertyDropdown
                             options={item.values}
                             value={dropdownSelections[item.id] || ''}
                             onChange={(selectedValue) => {
-                                // update shared dropdownSelections
+                                setFormError('');
+                                // update selected value
                                 setDropdownSelections((prev) => ({
                                     ...prev,
                                     [item.id]: selectedValue,
                                 }));
 
-                                // ALSO update individual specific state
-                                if (referrer === 'home') {
-                                    if (item.label === 'Property Type') {
-                                        setPropertyType(selectedValue);
-                                    }
+                                // clear error
+                                setDropdownErrors((prev) => ({
+                                    ...prev,
+                                    [item.id]: '',
+                                }));
+
+                                // update specific state
+                                if (loanType === 'home') {
+                                    if (item.label === 'Property Type') setPropertyType(selectedValue);
                                 }
 
-                                if (referrer === 'car') {
-                                    if (item.label === 'Purpose') {
-                                        setPurpose(selectedValue);
-                                    }
-                                    if (item.label === 'Unit Type') {
-                                        setUnitType(selectedValue);
-                                    }
+                                if (loanType === 'car') {
+                                    if (item.label === 'Purpose') setPurpose(selectedValue);
+                                    if (item.label === 'Unit Type') setUnitType(selectedValue);
                                 }
                             }}
                             placeholder={`Select ${item.label}`}
+                            error={dropdownErrors[item.id]}
                         />
                     </div>
                 ))}
@@ -240,7 +258,8 @@ const LoanCalculator: React.FC = () => {
                             min={12}
                             max={60}
                             step={12}
-                            formatValue={(value) => `${value / 12} ${value === 12 ? 'year' : 'years'}`}
+                            // formatValue={(value) => `${value / 12} ${value === 12 ? 'year' : 'years'}`}
+                            formatValue={(value) => `${value} months`}
                             // suffix=" mons."
                             customMarks={[
                                 { value: 12, label: '12' },
@@ -265,7 +284,10 @@ const LoanCalculator: React.FC = () => {
                     loanOption={loanOption}
                     propertyType={propertyType}
                     unitType={unitType}
-                    purpose={purpose}
+                    loanPurpose={purpose}
+                    onConfirm={handleContinue}
+                    formError={formError}
+                    canProceed={canProceed}
                 />
             </div>
         </div>
