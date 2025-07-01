@@ -27,6 +27,9 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
 
   const router = useRouter();
   const [show, setShow] = useState(false);
+  const storedData = useFinalLoanStore((state) => state.data);
+  const setFinalLoanData = useFinalLoanStore((state) => state.setFinalLoanData);
+  const [phone, setPhone] = useState(''); // formated value
   const [contactNumber, setContactNumber] = useState('');
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -48,17 +51,13 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [empOrBusiness, setEmpOrBusiness] = useState("");
   const [designation, setDesignation] = useState("");
   const [yearsEmpOrBus, setYearsEmpOrBus] = useState("");
-
-  // const [searchText, setSearchText] = useState("");
   const [confirmed, setConfirmed] = useState(false);
-  const storedData = useFinalLoanStore((state) => state.data);
-  const setFinalLoanData = useFinalLoanStore((state) => state.setFinalLoanData);
+
   const [errorContactNumber, setErrorContactNumber] = useState('');
   const [errorBdate, setErrorBdate] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [errorFirstName, setErrorFirstName] = useState('');
   const [errorLastName, setErrorLastName] = useState('');
-
   const [errorCountry, setErrorCountry] = useState('');
   const [errorProvinceOrState, setErrorProvinceOrState] = useState('');
   const [errorCityOrTown, setErrorCityOrTown] = useState('');
@@ -68,14 +67,8 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const [phone, setPhone] = useState('');
-  const [countryCode, setCountryCode] = useState('+63');
-
-
-
   const contactRef = useRef<HTMLInputElement>(null);
   const [found, setFound] = useState(false);
-
 
   const {
     data: ckycData,
@@ -116,13 +109,14 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     }
   }, [isFetching, ckycData]);
 
-  function maskStringExceptFirst(str: string) {
+  const maskStringExceptFirst = (str: string) => {
     if (!str || str.length === 0) return "";
     return str.charAt(0) + "*".repeat(str.length - 1);
-  }
+  };
 
   const handleClose = () => {
     setShow(false);
+    setFound(false);
   };
 
   const handleDateChange = (date: { day: number; month: number; year: number }) => {
@@ -142,7 +136,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     if (barrangay === '') setErrorBarrangay('Barrangay is required.');
     if (streetName === '') setErrorStreet('Street name is required.');
     if (specAddress === '') setErrorSpecAdd('House no. / Sitio / Purok is required.');
-  }
+  };
 
   const handleContinue = () => {
     setIsValidEmail(emailRegex.test(email));
@@ -156,12 +150,14 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         lastName,
         suffix,
         birthdate,
+        citizenship,
         country,
+        provinceOrState,
         cityOrTown,
         barrangay,
         specAddress,
         found: ckycData ? true : false,
-        ckycData: ckycData
+        ckycData
       });
       onNext({
         contactNumber,
@@ -171,7 +167,9 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         lastName,
         suffix,
         birthdate,
+        citizenship,
         country,
+        provinceOrState,
         cityOrTown,
         barrangay,
         specAddress,
@@ -200,7 +198,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       setConfirmed(true);
       handleClose();
     } else setErrorBdate('Birth date not matched.');
-  }
+  };
 
   return (
     <Container>
@@ -220,7 +218,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
               }
             }}
             country="PH"
-            onCountryChange={(code) => setCountryCode(code)}
+            // onCountryChange={(code) => setCountryCode(code)}
           />
           <small className='red'>{errorContactNumber}</small>
         </div>
@@ -252,7 +250,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         </div>
         <div className='form-fields half-width'>
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
-          <div className='select full-width'>
+          <div className='select one-third-width'>
             <select value={suffix} onChange={(e) => setSuffix(e.target.value)} className='select__field'>
               <option value="">Suffix &nbsp;&nbsp;</option>
               <option value="SR.">SR</option>
@@ -391,7 +389,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
                 <DatePicker onChange={handleDateChange} />
                 <small className='red text-center'>{errorBdate}</small>
                 <div className='modal-btn-wrapper'>
-                  <button className='btn-white modal-btn' onClick={() => handleContinue()}>This is not me</button>
+                  <button className='btn-white modal-btn' onClick={() => handleClose()}>This is not me</button>
                   <button className='btn-red modal-btn' onClick={comapreBirthdates}>Confirm</button>
                 </div>
               </div>

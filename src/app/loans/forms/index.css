@@ -109,6 +109,10 @@ body {
         width: 100%;
     }
 
+    .mobile-input {
+        width: 100%;
+    }
+
     .hide {
         display: none;
     }
@@ -116,6 +120,7 @@ body {
     .btn-wrapper {
         width: 90%;
     }
+
     .date-wrapper {
         width: 100%;
     }
@@ -140,6 +145,10 @@ body {
     /* Web */
     .form-control {
         width: 40%;
+    }
+
+    .mobile-input {
+        width: 30%;
     }
 
     .details-wrapper {

@@ -135,12 +135,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
               setManualAmount(computedPHP.toFixed(0));
             }}
           >
-            <Image
-              src="/images/edit.svg"
-              alt="Edit"
-              width={20}
-              height={20}
-            />
+            <Image src="/images/edit.svg" alt="Edit" width={20} height={20} />
           </span>
         )}
       </div>
@@ -157,10 +152,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
           className="slider w-full"
         />
         {showFloatingLabel && (
-          <div
-            className="slider-floating-label bottom"
-            style={{ left: `${percentage}%` }}
-          >
+          <div className="slider-floating-label bottom" style={{ left: `${percentage}%` }}>
             {label.toLowerCase().includes('down') || label.toLowerCase().includes('amount to borrow')
               ? `${value.toFixed(0)}%`
               : `${value}${suffix}`}
@@ -175,11 +167,8 @@ const SliderInput: React.FC<SliderInputProps> = ({
             {customMarks.map((mark) => (
               <small
                 key={mark.value}
-                style={{
-                  left: `${((mark.value - min) / (max - min)) * 100}%`,
-                }}
-                className={`absolute ${value === mark.value ? 'font-bold color: red' : ''
-                  }`}
+                style={{ left: `${((mark.value - min) / (max - min)) * 100}%` }}
+                className={`absolute ${value === mark.value ? 'font-bold color: red' : ''}`}
               >
                 {mark.label}
               </small>

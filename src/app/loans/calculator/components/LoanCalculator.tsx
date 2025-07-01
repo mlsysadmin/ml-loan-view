@@ -48,8 +48,13 @@ const LoanCalculator: React.FC = () => {
 
     const homeOptions = {
         radio: [
-            { type: 'Buy', displayText: 'Buy a Home' },
-            { type: 'Prenda', displayText: 'Prenda my Home' },
+            { 
+                type: 'Buy', 
+                displayText: 'Buy a Home' 
+            }, { 
+                type: 'Prenda', 
+                displayText: 'Prenda my Home' 
+            },
         ],
         dropdown: [
             {
@@ -63,8 +68,13 @@ const LoanCalculator: React.FC = () => {
 
     const carOptions = {
         radio: [
-            { type: 'Brand New', displayText: 'Brand New' },
-            { type: 'Second Hand', displayText: 'Second Hand' },
+            { 
+                type: 'Brand New', 
+                displayText: 'Brand New' 
+            }, { 
+                type: 'Second Hand', 
+                displayText: 'Second Hand' 
+            },
         ],
         dropdown: [
             {
