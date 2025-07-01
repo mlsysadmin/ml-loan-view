@@ -12,77 +12,85 @@ const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({ onChange }) => 
     'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'
   ];
 
-  const [month, setSelectedMonth] = useState(1); // Start at 1 (JAN)
-  const [day, setSelectedDay] = useState(1);
-  const [year, setSelectedYear] = useState(currentYear);
+  const [month, setSelectedMonth] = useState<number | null>(null);
+  const [day, setSelectedDay] = useState<number | null>(null);
+  const [year, setSelectedYear] = useState<number | null>(null);
   const [daysInMonth, setDaysInMonth] = useState<number[]>([]);
 
   const padNumber = (num: number) => num.toString().padStart(2, '0');
 
+  // Update days in month when both month and year are selected
   useEffect(() => {
-    const days = new Date(year, month, 0).getDate();
-    setDaysInMonth([...Array(days)].map((_, i) => i + 1));
+    if (month && year) {
+      const totalDays = new Date(year, month, 0).getDate();
+      setDaysInMonth([...Array(totalDays)].map((_, i) => i + 1));
 
-    if (day > days) {
-      setSelectedDay(days);
+      // Reset day if it exceeds new month’s limit
+      if (day && day > totalDays) {
+        setSelectedDay(totalDays);
+      }
+    } else {
+      setDaysInMonth([]);
+      setSelectedDay(null);
     }
+  }, [month, year]);
 
-    if (onChange) {
-      onChange({
-        month, // numeric, starts at 1
-        day,   // numeric
-        year,
-      });
+  // Trigger parent onChange only if all are selected
+  useEffect(() => {
+    if (month && day && year && onChange) {
+      onChange({ month, day, year });
     }
   }, [month, day, year]);
 
   return (
-    <div className="select-wrapper">
-      {/* Month Dropdown */}
+    <div className="select-wrapper" style={{ display: 'flex', gap: '0.5rem' }}>
+      {/* Year */}
       <div className="select">
         <select
           className="select__field"
-          value={month}
-          onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+          value={year ?? ''}
+          onChange={(e) => setSelectedYear(e.target.value ? parseInt(e.target.value) : null)}
         >
+          <option value="">Year</option>
+          {[...Array(100)].map((_, i) => {
+            const yearOption = currentYear - i;
+            return (
+              <option key={yearOption} value={yearOption}>
+                {yearOption}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+      {/* Month */}
+      <div className="select">
+        <select
+          className="select__field"
+          value={month ?? ''}
+          onChange={(e) => setSelectedMonth(e.target.value ? parseInt(e.target.value) : null)}
+        >
+          <option value="">Month</option>
           {months.map((label, index) => (
-            <option className="small regular" key={index + 1} value={index + 1}>
+            <option key={index + 1} value={index + 1}>
               {label}
             </option>
           ))}
         </select>
       </div>
-
-      {/* Day Dropdown */}
+      {/* Day */}
       <div className="select">
         <select
           className="select__field"
-          value={day}
-          onChange={(e) => setSelectedDay(parseInt(e.target.value))}
+          value={day ?? ''}
+          onChange={(e) => setSelectedDay(e.target.value ? parseInt(e.target.value) : null)}
+          disabled={!month || !year}
         >
+          <option value="">Day</option>
           {daysInMonth.map((d) => (
-            <option className="small regular" key={d} value={d}>
+            <option key={d} value={d}>
               {padNumber(d)}
             </option>
           ))}
-        </select>
-      </div>
-
-      {/* Year Dropdown */}
-      <div className="select">
-        <select
-          className="select__field"
-          value={year}
-          onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-        >
-          {[...Array(100)].map((_, i) => {
-            const yearOption = currentYear - i;
-            return (
-              <option className="small regular" key={yearOption} value={yearOption}>
-                {yearOption}
-              </option>
-            );
-          })}
         </select>
       </div>
     </div>

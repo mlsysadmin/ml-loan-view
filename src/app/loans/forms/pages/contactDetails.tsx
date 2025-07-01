@@ -137,8 +137,10 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     if (firstName === '') setErrorFirstName('First name is required.');
     if (lastName === '') setErrorLastName('Last name is required.');
     if (country === '') setErrorCountry('Country is required.');
+    if (provinceOrState === '') setErrorProvinceOrState('Province/State is required.');
     if (cityOrTown === '') setErrorCityOrTown('City or Town is required.');
     if (barrangay === '') setErrorBarrangay('Barrangay is required.');
+    if (streetName === '') setErrorStreet('Street name is required.');
     if (specAddress === '') setErrorSpecAdd('House no. / Sitio / Purok is required.');
   }
 
@@ -204,7 +206,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     <Container>
       <label className='readable medium'>Contact Details</label>
       <br />
-
       <div>
         <div className='form-fields'>
           <small>{isFetching ? "Searching..." : ""}</small>
@@ -221,15 +222,14 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
             country="PH"
             onCountryChange={(code) => setCountryCode(code)}
           />
+          <small className='red'>{errorContactNumber}</small>
         </div>
-
         <div className='form-fields'>
           {/* <label htmlFor="">&nbsp;</label> */}
           <input className='form-control' value={email} onChange={(e) => { setEmail(e.target.value); setErrorEmail(''); }} type="email" placeholder='Email Address (juan.d@gmail.com)' autoComplete="off" />
           <small className='red'>{errorEmail}</small>
         </div>
       </div>
-
 
       <br />
 

@@ -1,3 +1,4 @@
+'use client';
 import { SquarePen } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
@@ -16,7 +17,7 @@ interface SliderInputProps {
   step: number;
   formatValue: (value: number) => string;
   customMarks?: Mark[];
-  secondaryValue?: number; // for percent-based inputs (e.g. purchasePrice)
+  secondaryValue?: number;
   showFloatingLabel?: boolean;
   suffix?: string;
   editableAmountInstead?: boolean;
@@ -34,7 +35,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
   secondaryValue,
   showFloatingLabel = false,
   suffix = '',
-  editableAmountInstead = false, // used for Down Payment
+  editableAmountInstead = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [manualAmount, setManualAmount] = useState('');
@@ -43,6 +44,8 @@ const SliderInput: React.FC<SliderInputProps> = ({
     if (isEditing && editableAmountInstead && secondaryValue) {
       const computedPHP = (secondaryValue * value) / 100;
       setManualAmount(computedPHP.toFixed(0));
+    } else if (isEditing && !editableAmountInstead) {
+      setManualAmount(value.toFixed(0));
     }
   }, [value, secondaryValue, isEditing, editableAmountInstead]);
 
@@ -62,14 +65,14 @@ const SliderInput: React.FC<SliderInputProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (editRef.current && !editRef.current.contains(event.target as Node)) {
-        setIsEditing(false);
+        applyManualAmount();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Apply edited amount
+  // Apply manual input when editing ends
   const applyManualAmount = () => {
     if (!manualAmount) {
       setIsEditing(false);
@@ -77,72 +80,53 @@ const SliderInput: React.FC<SliderInputProps> = ({
     }
 
     const parsed = parseFloat(manualAmount.replace(/[^0-9.]/g, ''));
+    if (isNaN(parsed)) {
+      setIsEditing(false);
+      return;
+    }
 
     if (editableAmountInstead && secondaryValue) {
-      // Down Payment: convert PHP input → % with clamping
       const maxPHP = (secondaryValue * max) / 100;
       const minPHP = (secondaryValue * min) / 100;
       const clampedPHP = Math.min(Math.max(parsed, minPHP), maxPHP);
       const newPercent = (clampedPHP / secondaryValue) * 100;
       onChange(Number(newPercent.toFixed(2)));
-    } else {
-      // Price or other numeric inputs: clamp directly between min/max
-      const clamped = Math.min(Math.max(parsed, min), max);
-      onChange(Number(clamped.toFixed(0)));
     }
-
     setIsEditing(false);
   };
 
   return (
     <div className="mb-6">
-      <div
-        className="slider-value-wrapper"
-        ref={editRef}
-      >
+      <div className="slider-value-wrapper" ref={editRef}>
         <div className="text-sm font-medium text-gray-700">
           {label}
-          {/* Term: no value */}
           {isEditing ? (
             <input
               className="manual-input ml-1"
               type="text"
-              value={editableAmountInstead && secondaryValue
-                ? Math.round((secondaryValue * value) / 100)  // PHP amount from %
-                : value
-              }
+              value={manualAmount}
               onChange={(e) => {
-                const raw = Number(e.target.value);
-                if (/^\d*$/.test(e.target.value)) {
-                  if (editableAmountInstead && secondaryValue) {
-                    // Convert PHP back to % and clamp within range
-                    const percent = Math.min(
-                      Math.max((raw / secondaryValue) * 100, min),
-                      max
-                    );
-                    onChange(Math.round(percent));
-                  } else {
-                    const clamped = Math.min(Math.max(raw, min), max);
-                    onChange(clamped);
-                  }
+                const raw = e.target.value;
+                if (/^\d*$/.test(raw)) {
+                  setManualAmount(raw);
                 }
               }}
-              onKeyDown={(e) => e.key === 'Enter' && setIsEditing(false)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') applyManualAmount();
+              }}
+              onBlur={applyManualAmount}
               autoFocus
             />
           ) : (
             <span className="ml-1">
               {editableAmountInstead && secondaryValue
                 ? `${(secondaryValue * value / 100).toLocaleString()}`
-                : formatValue(value)
-              }
+                : formatValue(value)}
               {suffix}
             </span>
           )}
-
         </div>
 
-        {/* Show pen icon if editable */}
         {isEditable && (
           <span
             className="cursor-pointer"
@@ -151,10 +135,9 @@ const SliderInput: React.FC<SliderInputProps> = ({
               setManualAmount(computedPHP.toFixed(0));
             }}
           >
-            {/* <SquarePen size={18} strokeWidth={1.5} /> */}
             <Image
               src="/images/edit.svg"
-              alt="Logo"
+              alt="Edit"
               width={20}
               height={20}
             />
@@ -198,7 +181,6 @@ const SliderInput: React.FC<SliderInputProps> = ({
                 className={`absolute ${value === mark.value ? 'font-bold color: red' : ''
                   }`}
               >
-                {/* {mark.label} {value === mark.value && 'mos.'} */}
                 {mark.label}
               </small>
             ))}

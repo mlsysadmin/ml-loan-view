@@ -261,10 +261,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     <!-- Header -->
     <div class="header">
         <div class="logo-section">
-            <img src="https://mlhuillier.com/img/revamp/ml-logo-2.svg" alt="M Lhuillier Logo">
+            <img src="https://mlhuillier.com/img/revamp/ml-logo.svg" alt="M Lhuillier Logo">
         </div>
         <div class="document-title">
-            <h1>${headerType} LOAN APPLICATION</h1>
+            <h2>${headerType} LOAN APPLICATION</h2>
             <div class="detail-item">
               <span class="detail-label">Ref No</span>
               <h3 class="detail-value">${ref}</h3>
@@ -409,9 +409,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
         htmlContent: htmlContent
       }),
     });
-
     const data = await res.json();
-
     console.log('data::::::', data)
   };
 
@@ -458,8 +456,6 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       streetName,
       specAddress
     });
-
-
     setShow(true);
     await sendEmail()
     router.push('/loans/pre-approval');
@@ -467,36 +463,6 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
 
   return (
     <Container>
-      {!data.found ? (
-        <>
-          {/* <div className='form-fields'>
-                <label className='readable medium'>Identity Details</label>
-                <DatePicker onChange={handleDateChange} />
-              </div> */}
-        </>
-      ) : (
-        <>
-
-        </>
-        // <div className='form-fields'>
-        //   <label className='readable medium'>Identity Details</label>
-        //   <div className='disabled-date-wrapper'>
-        //     <input className='disabled-date-fields form-control' type="text" value={data.birthdate.day} disabled />
-        //     <input className='disabled-date-fields form-control' type="text" value={data.birthdate.month} disabled />
-        //     <input className='disabled-date-fields form-control' type="text" value={data.birthdate.year} disabled />
-        //   </div>
-        // </div>
-      )}
-      {/* <div className='form-fields'>
-            <label htmlFor="">&nbsp;</label>
-            <div className='select'>
-              <select onChange={(e) => setCitizenship(e.target.value)} id="" className='select__field' value={citizenship}>
-                <option value="">Citizenship</option>
-                <option value="FILIPINO">FILIPINO</option>
-                <option value="">Not Filipino</option>
-              </select>
-            </div>
-          </div> */}
       <br />
       <label className='readable medium'>Income Details</label>
       <div className='details-wrapper'>
