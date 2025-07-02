@@ -97,10 +97,7 @@ export default function CarLoanLandingPage() {
             <br />
             {/* <Col lg="12"> */}
             <div className='car-loan-type-container '>
-                <Container>
-                    
-                </Container>
-                <div className="car-loan-type-wrapper container ">
+                <div className="car-loan-type-wrapper container">
                     <p className="banner-text regular title">I want to..</p>
                     <div className="">
                         <Row>
@@ -119,7 +116,6 @@ export default function CarLoanLandingPage() {
                             )}
                         </Row>
                     </div>
-
 
                     <div className='form-btn-container'>
                         <button className='__btn btn-white' >

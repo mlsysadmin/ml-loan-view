@@ -75,23 +75,25 @@ export default function HomeLoanLandingPage() {
                 </div>
             </div>
 
-            <div className="what-you-need-container">
-                <p className="banner-text regular title">What you need</p>
-                <br />
-                <Row className="">
-                    {whatYouNeed.map(item =>
-                        <div key={item.title} className="col-md-4 mb-5 mb-md-0 ">
-                            <div className="what-you-need-card what-card">
-                                <div className="card-title  smaller regular">
-                                    {item.title}
-                                </div>
-                                <div className="card-check-list-wrapper">
-                                    {whatYouNeedContents(item.constents)}
+            <div className='container'>
+                <div className="what-you-need-container">
+                    <p className="banner-text regular title">What you need</p>
+                    <br />
+                    <Row className="">
+                        {whatYouNeed.map(item =>
+                            <div key={item.title} className="col-md-4 mb-5 mb-md-0 ">
+                                <div className="what-you-need-card what-card">
+                                    <div className="card-title  smaller regular">
+                                        {item.title}
+                                    </div>
+                                    <div className="card-check-list-wrapper">
+                                        {whatYouNeedContents(item.constents)}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
-                </Row>
+                        )}
+                    </Row>
+                </div>
             </div>
 
         </>
