@@ -226,7 +226,6 @@ const LoanCalculator: React.FC = () => {
                 ))}
 
                 <div className='slider-card'>
-
                     <div className="mb-8">
                         <SliderInput
                             label={loanOption === 'Prenda' ? 'Estimated Price: ₱' : 'Price: ₱'}

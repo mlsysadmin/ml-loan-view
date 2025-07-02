@@ -91,7 +91,11 @@ const SliderInput: React.FC<SliderInputProps> = ({
       const clampedPHP = Math.min(Math.max(parsed, minPHP), maxPHP);
       const newPercent = (clampedPHP / secondaryValue) * 100;
       onChange(Number(newPercent.toFixed(2)));
+    } else {
+      const clamped = Math.min(Math.max(parsed, min), max);
+      onChange(Number(clamped.toFixed(0)));
     }
+
     setIsEditing(false);
   };
 

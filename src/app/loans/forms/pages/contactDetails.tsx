@@ -1,17 +1,15 @@
 'use client'
-import { ArrowRight, Link, SquareUserRound } from 'lucide-react';
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Container, Modal, } from 'react-bootstrap';
-import DatePicker from '@/app/loans/components/date-picker';
+import DatePicker from '@/app/loans/components/DatePicker';
 import 'react-phone-input-2/lib/style.css';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useSearchCKYC } from "../../hooks/use-search-ckyc";
-import AppProvider from '../../../../../providers/app-provider';
 import moment from 'moment';
 import { useFinalLoanStore } from '@/app/loans/store/dataStore';
-// import { useLoader } from '../../contexts/LoaderContext';
 import PhoneInput from '@/app/loans/components/PhoneNumberInput';
+// import { useLoader } from '../../contexts/LoaderContext';
 
 interface Props {
   onNext: (data: any) => void;
@@ -30,6 +28,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const storedData = useFinalLoanStore((state) => state.data);
   const setFinalLoanData = useFinalLoanStore((state) => state.setFinalLoanData);
   const [phone, setPhone] = useState(''); // formated value
+  const [countryCode, setCountryCode] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -37,7 +36,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [citizenship, setCitizenship] = useState("");
   const [lastName, setLastName] = useState("");
   const [suffix, setSuffix] = useState("");
-  const [birthdate, setBirthdate] = useState<{ day: number; month: number; year: number } | null>(null);
+  const [birthdate, setBirthdate] = useState<{ month: number; day: number; year: number } | undefined>(undefined);
   const [birthdateFromCKYC, setBirthdateFromCKYC] = useState(Date);
   const [country, setCountry] = useState("");
   const [provinceOrState, setProvinceOrState] = useState("");
@@ -58,6 +57,8 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [errorEmail, setErrorEmail] = useState('');
   const [errorFirstName, setErrorFirstName] = useState('');
   const [errorLastName, setErrorLastName] = useState('');
+  const [errorBirthdate, setErrorBirthday] = useState('');
+  const [errorCitizenship, setErrorCitizenship] = useState('');
   const [errorCountry, setErrorCountry] = useState('');
   const [errorProvinceOrState, setErrorProvinceOrState] = useState('');
   const [errorCityOrTown, setErrorCityOrTown] = useState('');
@@ -85,17 +86,24 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
 
   useEffect(() => {
     if (storedData) {
+      setPhone(storedData.contactNumber.slice(1))
       setContactNumber(storedData.contactNumber || '');
       setEmail(storedData.email || '');
       setFirstName(storedData.firstName || '');
       setmiddleName(storedData.middleName || '');
       setLastName(storedData.lastName || '');
       setSuffix(storedData.suffix || '');
-      setBirthdate(storedData.birthdate || null);
+      if (storedData.birthdate) {
+        handleDateChange(storedData.birthdate);
+      }
+      setCitizenship(storedData.citizenship || '');
       setCountry(storedData.country || '');
+      setProvinceOrState(storedData.provinceOrState || '');
       setCityOrTown(storedData.cityOrTown || '');
       setBarrangay(storedData.barrangay || '');
+      setStreetName(storedData.streetName || '');
       setSpecAddress(storedData.specAddress || '');
+      setCountryCode(storedData.countryCode || '');
     }
   }, []);
 
@@ -127,9 +135,11 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const dataHandle = () => {
     if (contactNumber === '') setErrorContactNumber('Mobile number is required.');
     if (email === '') setErrorEmail('Email is required.');
-    if (!isValidEmail) setErrorEmail('Invalid email.');
+    if (!isValidEmail && email !== '') setErrorEmail('Invalid email.');
     if (firstName === '') setErrorFirstName('First name is required.');
     if (lastName === '') setErrorLastName('Last name is required.');
+    if (birthdate === null) setErrorBirthday('Birthday is required.');
+    if (citizenship === '') setErrorCitizenship('Citizenship is required.');
     if (country === '') setErrorCountry('Country is required.');
     if (provinceOrState === '') setErrorProvinceOrState('Province/State is required.');
     if (cityOrTown === '') setErrorCityOrTown('City or Town is required.');
@@ -144,6 +154,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     if (firstName && lastName && contactNumber && email && isValidEmail && country && cityOrTown && barrangay && specAddress) {
       setFinalLoanData({
         contactNumber,
+        countryCode,
         email,
         firstName,
         middleName,
@@ -155,12 +166,14 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         provinceOrState,
         cityOrTown,
         barrangay,
+        streetName,
         specAddress,
         found: ckycData ? true : false,
         ckycData
       });
       onNext({
         contactNumber,
+        countryCode,
         email,
         firstName,
         middleName,
@@ -172,6 +185,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         provinceOrState,
         cityOrTown,
         barrangay,
+        streetName,
         specAddress,
         found: ckycData ? true : false,
         ckycData: ckycData
@@ -214,11 +228,12 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
               const unformatted = formatted.replace(/\D/g, '');
               if (/^\d*$/.test(unformatted)) {
                 setErrorContactNumber('');
-                setContactNumber(0 + unformatted);
+                setContactNumber('0' + unformatted);
               }
             }}
-            country="PH"
-            // onCountryChange={(code) => setCountryCode(code)}
+            country="PH" // shoul have default
+            countryCode={countryCode}
+            onCountryChange={(code) => setCountryCode(code)}
           />
           <small className='red'>{errorContactNumber}</small>
         </div>
@@ -267,7 +282,11 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         {!found ? (
           <div className='form-fields date-wrapper'>
             {/* <label className='readable medium'>&nbsp;</label> */}
-            <DatePicker onChange={handleDateChange} />
+            <DatePicker
+              value={birthdate} 
+              onChange={handleDateChange}
+            />
+            <small className='red'>{errorBirthdate}</small>
           </div>
         ) : (
           <div className='form-fields'>
@@ -287,6 +306,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
               <option value="FILIPINO">FILIPINO</option>
               <option value="">Not Filipino</option>
             </select>
+            <small className='red'>{errorCitizenship}</small>
           </div>
         </div>
       </div>

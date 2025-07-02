@@ -27,6 +27,7 @@ export const useLoanStore = create<LoanStore>((set) => ({
 
 interface FinalLoanData {
     contactNumber: string;
+    countryCode: string;
     email: string;
     firstName: string;
     middleName?: string;

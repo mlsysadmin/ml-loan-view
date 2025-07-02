@@ -6,8 +6,8 @@ import './globals.css'
 // import HomeLoanPage from './landing-pages/home-loan'
 // import CarLoanPage from './landing-pages/car-loan'
 // import { usePathname, useSearchParams } from 'next/navigation';
-import Navbar from './loans/components/navbar';
-import Footer from './loans/components/footer';
+import Navbar from './loans/components/Navbar';
+import Footer from './loans/components/Footer';
 
 function mainPage() {
     const whyCard = [

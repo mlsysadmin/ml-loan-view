@@ -162,7 +162,7 @@ export default function CarLoanLandingPage() {
                                             <div key={item.type} className='car-card'>
                                                 <Image
                                                     className={item.img}
-                                                    src={'/images/' + item.img + '.svg'}
+                                                    src={'/images/car_loan_icons/' + item.img + '.svg'}
                                                     alt={item.img}
                                                     width={item.width}
                                                     height={item.hieght}
@@ -172,11 +172,6 @@ export default function CarLoanLandingPage() {
                                         </div>
                                     )}
                                 </Row>
-                                {/* <div className="card-title  smaller regular">
-                                    </div> */}
-                                {/* <div className="card-check-list-wrapper">
-                                        {whatYouNeedContents(item.constents)}
-                                    </div> */}
                             </div>
                         )}
                     </div>

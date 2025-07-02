@@ -1,14 +1,10 @@
 'use client'
-import { ArrowRight, Link, SquareUserRound } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Container, Modal } from 'react-bootstrap';
-import DatePicker from '@/app/loans/components/date-picker';
 import { useLoanStore, useFinalLoanStore } from '@/app/loans/store/dataStore';
 import 'react-phone-input-2/lib/style.css';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
-import PageLoader from '@/app/loans/components/pageLoader';
-import header from '../../components/navbar';
 // import 'react-phone-input-2/lib/material.css'
 // import SendEmailForm from '../../api/mailer/mailer-service';
 
@@ -38,6 +34,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
 
   const [ref, setRef] = useState('');
   const contactNumber = data.contactNumber;
+  const countryCode = data.countryCode;
   const email = data.email
   const firstName = data.firstName;
   const middleName = data.middleName
@@ -454,7 +451,8 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       cityOrTown,
       barrangay,
       streetName,
-      specAddress
+      specAddress,
+      countryCode
     });
     setShow(true);
     await sendEmail()

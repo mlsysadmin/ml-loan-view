@@ -6,34 +6,50 @@ interface PhoneInputProps {
   value: string;
   onChange: (formatted: string) => void;
   country: string;
-  onCountryChange?: (code: string) => void;
-  ref?: (() => void) | undefined;
+  countryCode?: string;
+  onCountryChange?: (flag: string) => void;
 }
 
-const countryOptions: Record<string, { code: string; flag: string; placeholder: string }> = {
-  PH: { code: '+63', flag: 'ph', placeholder: '900 000 0000' },
-  US: { code: '+1', flag: 'us', placeholder: '(000) 000 0000' },
-  CA: { code: '+1', flag: 'ca', placeholder: '(000) 000 0000' },
+const countryOptions: Record<string, { code: string; country: string; flag: string; placeholder: string }> = {
+  CA: { code: '+1', country: 'Canada', flag: 'ca', placeholder: '000 888 8888' },
+  PH: { code: '+63', country: 'Philippines', flag: 'ph', placeholder: '988 888 8888' },
+  US: { code: '+1', country: 'United States', flag: 'us', placeholder: '(000) 888 8888' },
 };
 
-const PhoneInput: React.FC<PhoneInputProps> = ({ value, onChange, country, onCountryChange }) => {
+const PhoneInput: React.FC<PhoneInputProps> = ({ value, countryCode, onChange, country, onCountryChange }) => {
   const [selectedCountry, setSelectedCountry] = useState<string>(country);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (countryCode) {
+      const foundKey = Object.keys(countryOptions).find(
+        (key) => countryOptions[key].flag === countryCode.toLowerCase()
+      );
+      if (foundKey) {
+        setSelectedCountry(foundKey);
+      }
+    }
+  }, [countryCode]);
+
   const handleCountrySelect = (countryKey: string) => {
     setSelectedCountry(countryKey);
     setDropdownOpen(false);
-    onCountryChange?.(countryOptions[countryKey].code);
+    onCountryChange?.(countryOptions[countryKey].flag); 
   };
 
   const formatPhone = (raw: string) => {
     const digits = raw.replace(/\D/g, '');
     if (selectedCountry === 'PH') {
       return digits.replace(/^(\d{3})(\d{3})(\d{0,4}).*/, '$1 $2 $3').trim();
-    } else {
+    }
+    if (selectedCountry === 'US') {
       return digits.replace(/^(\d{3})(\d{3})(\d{0,4}).*/, '($1) $2 $3').trim();
     }
+    if (selectedCountry === 'CA') {
+      return digits.replace(/^(\d{3})(\d{3})(\d{0,4}).*/, '$1 $2 $3').trim();
+    }
+    return digits;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,30 +78,28 @@ const PhoneInput: React.FC<PhoneInputProps> = ({ value, onChange, country, onCou
         className='country-code-dropdown'
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >
-        <img
+        <Image
           src={`/images/flags/${countryOptions[selectedCountry].flag}-circle.png`}
           alt="Flag"
           className='country-code-dropdown-img'
+          width={20}
+          height={20}
         />
-        <span style={{ fontSize: '14px' }}>{countryOptions[selectedCountry].code}</span>
+        <span className='readble'>{countryOptions[selectedCountry].code}</span>
       </div>
 
       {/* Dropdown Menu */}
       {dropdownOpen && (
-        <div className='country-code-dropdown-select' >
-          {Object.entries(countryOptions).map(([key, { code, flag }]) => (
-            <div
-            className='country-code-dropdown-option'
-              key={key}
-              onClick={() => handleCountrySelect(key)}
-            >
+        <div className='country-code-dropdown-select scrollbar' >
+          {Object.entries(countryOptions).map(([key, { code, country, flag }]) => (
+            <div className='country-code-dropdown-option' key={key} onClick={() => handleCountrySelect(key)}>
               <Image
                 src={`/images/flags/${flag}-circle.png`}
                 alt={`${flag} flag`}
-                width={20}
-                height={20}
+                width={22}
+                height={22}
               />
-              <span style={{ fontSize: '14px' }}>{code}</span>
+              <span className=''>{country}</span> <span className='small text-muted'>{code}</span>
             </div>
           ))}
         </div>
