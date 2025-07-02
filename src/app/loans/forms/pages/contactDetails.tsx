@@ -127,18 +127,19 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     setFound(false);
   };
 
-  const handleDateChange = (date: { day: number; month: number; year: number }) => {
+  const handleDateChange = (date: { month: number; day: number; year: number }) => {
     setBirthdate(date);
     setErrorBdate('');
   };
 
   const dataHandle = () => {
+    console.log('====::AS:D:AS', birthdate)
     if (contactNumber === '') setErrorContactNumber('Mobile number is required.');
     if (email === '') setErrorEmail('Email is required.');
     if (!isValidEmail && email !== '') setErrorEmail('Invalid email.');
     if (firstName === '') setErrorFirstName('First name is required.');
     if (lastName === '') setErrorLastName('Last name is required.');
-    if (birthdate === null) setErrorBirthday('Birthday is required.');
+    if (birthdate === birthdate) setErrorBirthday('Birthday is required.');
     if (citizenship === '') setErrorCitizenship('Citizenship is required.');
     if (country === '') setErrorCountry('Country is required.');
     if (provinceOrState === '') setErrorProvinceOrState('Province/State is required.');

@@ -24,18 +24,18 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   console.log('=====>>', data)
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const [birthdate, setBirthdate] = useState<{ day: number; month: number; year: number } | null>(null);
-  const [citizenship, setCitizenship] = useState("");
+  // const [birthdate, setBirthdate] = useState<{ month: number; day: number; year: number } | undefined>(undefined);
   const [grossMonthlyIncome, setGrossMonthlyIncome] = useState("");
   const [sourceOfIncome, setSourceOfIncome] = useState("");
   const [empOrBusiness, setEmpOrBusiness] = useState("");
   const [designation, setDesignation] = useState("");
-  const [yearsEmpOrBus, setYearsEmpOrBus] = useState("");
 
   const [ref, setRef] = useState('');
   const contactNumber = data.contactNumber;
   const countryCode = data.countryCode;
   const email = data.email
+  const birthdate = data.birthdate;
+  const citizenship = data.citizenship;
   const firstName = data.firstName;
   const middleName = data.middleName
   const lastName = data.lastName;
@@ -52,16 +52,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     setShow(false);
   };
 
-  // const handleDateChange = (date: { day: number; month: number; year: number }) => {
-  //   setBirthdate(date);
-  // };
-
   useEffect(() => {
     generateRandomString();
     if (data.ckycData) {
       console.log('=== DATA+++++ =', data.birthdate)
-      setBirthdate(data.birthdate);
-      setCitizenship(data.ckycData.nationality);
       setSourceOfIncome(data.ckycData.occupation.sourceOfIncome);
       setEmpOrBusiness(data.ckycData.occupation.organizationName);
       setDesignation(data.ckycData.occupation.workPosition);
@@ -422,8 +416,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     grossMonthlyIncome,
     sourceOfIncome,
     empOrBusiness,
-    designation,
-    yearsEmpOrBus
+    designation
   ];
 
   async function submitData() {
@@ -443,7 +436,6 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       sourceOfIncome,
       empOrBusiness,
       designation,
-      yearsEmpOrBus,
       loanData,
       found: data.found,
       country,
@@ -496,11 +488,6 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
             placeholder='Gross Monthly Income' />
         </div>
       </div>
-      {/* <div className='form-fields'>
-            <label htmlFor="">&nbsp;</label>
-            <input type="text" className='form-control' value={yearsEmpOrBus || ""} onChange={(e) => setYearsEmpOrBus(e.target.value)} placeholder='No. of Years Employed / in Business' />
-          </div> */}
-
       <div className='form-btn-container'>
         <button className='__btn btn-white' onClick={onBack}>
           Back

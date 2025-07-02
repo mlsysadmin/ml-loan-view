@@ -38,7 +38,7 @@ function homeContents() {
 
     return (
         <>
-            <Container>
+            {/* <Container> */}
                 {referrer === 'car' && <CarLoanPage />}
                 {referrer === 'home' && <HomeLoanPage />}
 
@@ -71,7 +71,7 @@ function homeContents() {
                         )}
                     </div>
                 </Container>
-            </Container>
+            {/* </Container> */}
         </>
     );
 }

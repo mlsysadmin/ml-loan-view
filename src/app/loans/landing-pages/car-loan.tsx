@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { Col, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useSearchParams } from 'next/navigation';
 // import { Col, Container, Row } from "react-bootstrap";
 
@@ -14,74 +14,20 @@ export default function CarLoanLandingPage() {
 
     const typeArr = [
         {
-            option: 'Prenda',
-            type: [
-                {
-                    type: 'Motorcycle',
-                    img: 'motorcycle',
-                    width: 75,
-                    hieght: 65
-                }, {
-                    type: 'Car | SUV | Pickup | Van',
-                    img: '4-wheels',
-                    width: 80,
-                    hieght: 65
-                }
-            ]
-        },
-        {
-            option: 'Buy New',
-            type: [
-                {
-                    type: 'Motorcycple',
-                    img: 'motorcycle',
-                    width: 75,
-                    hieght: 65
-                }, {
-                    type: 'Car | SUV | Pickup | Van',
-                    img: '4-wheels',
-                    width: 80,
-                    hieght: 65
-                }, {
-                    type: '3-Wheeled Vehicle',
-                    img: '3-wheels',
-                    width: 80,
-                    hieght: 65
-                }, {
-                    type: 'Commercial Truck or Bus',
-                    img: 'commercial',
-                    width: 100,
-                    hieght: 65
-                }, {
-                    type: 'Construction Vehicle',
-                    img: 'heavy',
-                    width: 80,
-                    hieght: 65
-                }
-
-            ]
-        },
-        {
-            option: 'Buy Used',
-            type: [
-                {
-                    type: 'Car | SUV | Pickup | Van',
-                    img: '4-wheels',
-                    width: 80,
-                    hieght: 65
-                }, {
-                    type: 'Commercial Truck or Bus',
-                    img: 'commercial',
-                    width: 100,
-                    hieght: 65
-                }, {
-                    type: 'Construction Vehicle',
-                    img: 'heavy',
-                    width: 80,
-                    hieght: 65
-                }
-
-            ]
+            title: 'Buy a New Vehicle',
+            img: 'buy-new-vehicle',
+            width: 10,
+            hieght: 10
+        }, {
+            title: 'Buy a Used Vehicle',
+            img: 'buy-used-vehicle',
+            width: 10,
+            hieght: 10
+        }, {
+            title: 'Prenda my Vehicle',
+            img: 'prenda-my-vehicle',
+            width: 10,
+            hieght: 10
         }
     ];
 
@@ -132,11 +78,11 @@ export default function CarLoanLandingPage() {
                         <p className="regular readable">Your dream car is just a few clicks away.</p>
 
                     </div>
-                    <div className="hero-buttons">
+                    {/* <div className="hero-buttons">
                         <Link href={'/loans/calculator?type=' + referrer}>
                             <button className="btn btn-start-here">Start here &nbsp; <ArrowRight size={20} /></button>
                         </Link>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="home-loan-img-wrapper">
                     <Image
@@ -149,32 +95,41 @@ export default function CarLoanLandingPage() {
                 </div>
             </div>
             <br />
-            <Col lg="12">
-                <div className="what-you-need-container">
-                    <p className="banner-text regular title">I want to...</p>
+            {/* <Col lg="12"> */}
+            <div className='car-loan-type-container '>
+                <Container>
+                    
+                </Container>
+                <div className="car-loan-type-wrapper container ">
+                    <p className="banner-text regular title">I want to..</p>
                     <div className="">
-                        {typeArr.map(item =>
-                            <div key={item.option} className="mb-4">
-                                <p className='regular title red'>{item.option}</p>
-                                <Row>
-                                    {item.type.map(item =>
-                                        <div key={item.type} className="col-md-4">
-                                            <div key={item.type} className='car-card'>
-                                                <Image
-                                                    className={item.img}
-                                                    src={'/images/car_loan_icons/' + item.img + '.svg'}
-                                                    alt={item.img}
-                                                    width={item.width}
-                                                    height={item.hieght}
-                                                />
-                                                <div className='regular readable'>{item.type}</div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </Row>
-                            </div>
-                        )}
+                        <Row>
+                            {typeArr.map(item =>
+                                <div key={item.title} className="col-md-4">
+                                    <div className='car-card'>
+                                        <Image
+                                            src={'/images/car_loan_icons/home/' + item.img + '.svg'}
+                                            alt={item.img}
+                                            width={item.width}
+                                            height={item.hieght}
+                                        />
+                                        <div className='regular readable'>{item.title}</div>
+                                    </div>
+                                </div>
+                            )}
+                        </Row>
                     </div>
+
+
+                    <div className='form-btn-container'>
+                        <button className='__btn btn-white' >
+                            Back
+                        </button>
+                        <button className="__btn btn-black" >
+                            Continue
+                        </button>
+                    </div>
+
                     <br />
                     <p className="banner-text regular title">What you need</p>
                     <br />
@@ -195,7 +150,8 @@ export default function CarLoanLandingPage() {
                     <br />
                     {/* <div className="text-muted regular">* Except for condominium (see details)</div> */}
                 </div>
-            </Col>
+            </div>
+            {/* </Col> */}
         </>
     );
 }

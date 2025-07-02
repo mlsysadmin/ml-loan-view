@@ -45,7 +45,6 @@ interface FinalLoanData {
     sourceOfIncome: string;
     empOrBusiness: string;
     designation: string;
-    yearsEmpOrBus: number | string;
     loanData: LoanData | null;
     found: boolean;
     applicationTimeStamp: Timestamp | string;

@@ -81,80 +81,86 @@ const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({ onChange, value
     <>
       <div className="date-picker-wrapper" ref={dropdownRef}>
         {/* Year */}
-        <div className='date-picker-dropdown' onClick={() => {
-          setYearDropdownOpen(!yearDropdownOpen);
-          setMonthDropdownOpen(false);
-          setDayDropdownOpen(false)
-        }}>
-          <span className='readble'>{year ?? 'Year'}</span> <span className='date-picker-dropdown-carret'>▼</span>
-        </div>
-
-        {yearDropdownOpen && (
-          <div className='date-picker-dropdown-select date-picker-dropdown-select-year scrollbar' >
-            {[...Array(100)].map((_, i) => {
-              const yearOption = currentYear - i;
-              return (
-                <div className='date-picker-dropdown-option'
-                  key={yearOption}
-                  onClick={() => {
-                    setSelectedYear(yearOption);
-                    setYearDropdownOpen(false);
-                  }}>
-                  <span>{yearOption}</span>
-                </div>
-              )
-            })}
+        <div className='full-width'>
+          <div className='date-picker-dropdown' onClick={() => {
+            setYearDropdownOpen(!yearDropdownOpen);
+            setMonthDropdownOpen(false);
+            setDayDropdownOpen(false)
+          }}>
+            <span className='readble'>{year ?? 'Year'}</span> <span className='date-picker-dropdown-carret'>▼</span>
           </div>
-        )}
+
+          {yearDropdownOpen && (
+            <div className='date-picker-dropdown-select scrollbar' >
+              {[...Array(100)].map((_, i) => {
+                const yearOption = currentYear - i;
+                return (
+                  <div className='date-picker-dropdown-option'
+                    key={yearOption}
+                    onClick={() => {
+                      setSelectedYear(yearOption);
+                      setYearDropdownOpen(false);
+                    }}>
+                    <span>{yearOption}</span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
 
         {/* Month */}
-        <div className='date-picker-dropdown' onClick={() => {
-          setMonthDropdownOpen(!monthDropdownOpen)
-          setYearDropdownOpen(false);
-          setDayDropdownOpen(false)
-        }}>
-          <span className='readble'>{monthLabel ?? 'Month'}</span> <span className='date-picker-dropdown-carret'>▼</span>
-        </div>
-
-        {monthDropdownOpen && (
-          <div className='date-picker-dropdown-select date-picker-dropdown-select-month scrollbar' >
-            {months.map((label, index) => (
-              <div className='date-picker-dropdown-option'
-                key={index + 1}
-                onClick={() => {
-                  setSelectedMonth(index + 1);
-                  setMonthDropdownOpen(false);
-                  setSelectedMonthLabel(label);
-                }}>
-                <span>{label}</span>
-              </div>
-            ))}
+        <div className='full-width'>
+          <div className='date-picker-dropdown' onClick={() => {
+            setMonthDropdownOpen(!monthDropdownOpen)
+            setYearDropdownOpen(false);
+            setDayDropdownOpen(false)
+          }}>
+            <span className='readble'>{monthLabel ?? 'Month'}</span> <span className='date-picker-dropdown-carret'>▼</span>
           </div>
-        )}
+
+          {monthDropdownOpen && (
+            <div className='date-picker-dropdown-select scrollbar' >
+              {months.map((label, index) => (
+                <div className='date-picker-dropdown-option'
+                  key={index + 1}
+                  onClick={() => {
+                    setSelectedMonth(index + 1);
+                    setMonthDropdownOpen(false);
+                    setSelectedMonthLabel(label);
+                  }}>
+                  <span>{label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Day */}
-        <div className='date-picker-dropdown' onClick={() => {
-          setDayDropdownOpen(!dayDropdownOpen);
-          setYearDropdownOpen(false);
-          setMonthDropdownOpen(false);
-        }}>
-          <span className='readble'>{day ?? 'Day'}</span> <span className='date-picker-dropdown-carret'>▼</span>
-        </div>
-
-        {dayDropdownOpen && (
-          <div className='date-picker-dropdown-select date-picker-dropdown-select-day scrollbar'>
-            {daysInMonth.map((d) => (
-              <div className='date-picker-dropdown-option'
-                key={d}
-                onClick={() => {
-                  setSelectedDay(d);
-                  setDayDropdownOpen(false);
-                }}>
-                <span>{d}</span>
-              </div>
-            ))}
+        <div className='full-width'>
+          <div className='date-picker-dropdown' onClick={() => {
+            setDayDropdownOpen(!dayDropdownOpen);
+            setYearDropdownOpen(false);
+            setMonthDropdownOpen(false);
+          }}>
+            <span className='readble'>{day ?? 'Day'}</span> <span className='date-picker-dropdown-carret'>▼</span>
           </div>
-        )}
+
+          {dayDropdownOpen && (
+            <div className='date-picker-dropdown-select scrollbar'>
+              {daysInMonth.map((d) => (
+                <div className='date-picker-dropdown-option'
+                  key={d}
+                  onClick={() => {
+                    setSelectedDay(d);
+                    setDayDropdownOpen(false);
+                  }}>
+                  <span>{d}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
