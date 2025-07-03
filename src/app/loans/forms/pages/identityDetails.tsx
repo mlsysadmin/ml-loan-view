@@ -19,7 +19,6 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     stored && setLoanType(stored)
   })
 
-  console.log('=====>>', data)
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   // const [birthdate, setBirthdate] = useState<{ month: number; day: number; year: number } | undefined>(undefined);
