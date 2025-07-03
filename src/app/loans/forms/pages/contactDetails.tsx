@@ -20,7 +20,8 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
 
   useEffect(() => {
     const stored = localStorage.getItem('loanType');
-    stored && setLoanType(JSON.parse(stored))
+    console.log('====>>>S>A>D', stored)
+    stored && setLoanType(stored)
   })
 
   const router = useRouter();

@@ -5,8 +5,6 @@ import { useLoanStore, useFinalLoanStore } from '@/app/loans/store/dataStore';
 import 'react-phone-input-2/lib/style.css';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
-// import 'react-phone-input-2/lib/material.css'
-// import SendEmailForm from '../../api/mailer/mailer-service';
 
 interface Props {
   data: any;
@@ -18,7 +16,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
 
   useEffect(() => {
     const stored = localStorage.getItem('loanType');
-    stored && setLoanType(JSON.parse(stored))
+    stored && setLoanType(stored)
   })
 
   console.log('=====>>', data)

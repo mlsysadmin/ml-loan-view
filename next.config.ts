@@ -1,14 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  eslint: {
-    ignoreDuringBuilds: true
-  },
-  output: "standalone",
-  typescript: {
-    ignoreBuildErrors: true,
-  }
+  output: 'standalone',
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true }
 };
 
 export default nextConfig;

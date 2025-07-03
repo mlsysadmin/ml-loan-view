@@ -1,10 +1,10 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
 import SliderInput from './SliderInput';
 import SummaryPanel from './SummaryPanel';
 import PropertyDropdown from './Dropdown';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { notFound } from 'next/navigation';
+// import { notFound } from 'next/navigation';
 import '../../index.css';
 
 const LoanCalculator: React.FC = () => {
@@ -104,7 +104,7 @@ const LoanCalculator: React.FC = () => {
     useEffect(() => {
         if (loanType === 'car') setOptions(carOptions);
         else if (loanType === 'home') setOptions(homeOptions);
-        else notFound();
+        else  router.replace('/404');
 
     }, [loanType]);
 
