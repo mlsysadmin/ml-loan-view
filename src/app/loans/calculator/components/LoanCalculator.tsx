@@ -558,7 +558,7 @@ const LoanCalculator: React.FC = () => {
                 <div className='slider-card'>
                     <div className="mb-8">
                         <SliderInput
-                            label={loanOption === 'Prenda' ? 'Estimated Price: ₱' : 'Price: ₱'}
+                            label={loanOption === 'Prenda' || loanOption === 'Prenda my Vehicle' ? 'Estimated Price: ₱' : 'Price: ₱'}
                             value={purchasePrice}
                             onChange={setPurchasePrice}
                             min={minPrice}
@@ -572,7 +572,7 @@ const LoanCalculator: React.FC = () => {
                 <div className='slider-card'>
                     <div className="mb-8">
                         <SliderInput
-                            label={loanOption === 'Prenda' ? 'Amount to Borrow: ₱' : 'Down Payment: ₱'}
+                            label={loanOption === 'Prenda' || loanOption === 'Prenda my Vehicle' ? 'Amount to Borrow: ₱' : 'Down Payment: ₱'}
                             value={downPaymentPercent}
                             onChange={setDownPaymentPercent}
                             min={minDP}
