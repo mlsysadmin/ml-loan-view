@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useSearchCKYC } from "../../hooks/use-search-ckyc";
 import moment from 'moment';
-import { useFinalLoanStore } from '@/app/loans/store/dataStore';
+import { useFinalLoanStore, useLoanStore } from '@/app/loans/store/dataStore';
 import PhoneInput from '@/app/loans/components/PhoneNumberInput';
 // import { useLoader } from '../../contexts/LoaderContext';
 
@@ -16,17 +16,22 @@ interface Props {
 };
 
 const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
-  const [laonType, setLoanType] = useState("");
+  const [prevURL, setPrevURL] = useState("");
 
   useEffect(() => {
-    const stored = localStorage.getItem('loanType');
-    console.log('====>>>S>A>D', stored)
-    stored && setLoanType(stored)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const raw = localStorage.getItem('prevURL');
+    if (raw) {
+      const cleaned = raw.replace(/^\/?"?|"?\/?$/g, '');
+      const fixedUrl = cleaned.startsWith('/') ? cleaned : '/' + cleaned;
+      fixedUrl && setPrevURL(fixedUrl)
+    }
   })
 
   const router = useRouter();
   const [show, setShow] = useState(false);
   const storedData = useFinalLoanStore((state) => state.data);
+  const loanData = useLoanStore((state) => state.data);
   const setFinalLoanData = useFinalLoanStore((state) => state.setFinalLoanData);
   const [phone, setPhone] = useState(''); // formated value
   const [countryCode, setCountryCode] = useState('');
@@ -72,6 +77,8 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const contactRef = useRef<HTMLInputElement>(null);
   const [found, setFound] = useState(false);
 
+  const [unitType, setUnitType] = useState('');
+
   const {
     data: ckycData,
     isFetching,
@@ -80,6 +87,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   } = useSearchCKYC(contactNumber);
 
   useEffect(() => {
+    console.log('LOAN DATA:::::::', loanData)
     const stored = localStorage.getItem("ckycData")
     const parsed = stored ? JSON.parse(stored) : null
     setContactNumber(parsed?.cellphoneNumber ?? "")
@@ -285,7 +293,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
           <div className='form-fields date-wrapper'>
             {/* <label className='readable medium'>&nbsp;</label> */}
             <DatePicker
-              value={birthdate} 
+              value={birthdate}
               onChange={handleDateChange}
             />
             <small className='red'>{errorBirthdate}</small>
@@ -381,7 +389,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         </div>
       </div> */}
       <div className='form-btn-container'>
-        <button className='__btn btn-white' onClick={() => router.push('/loans/calculator?type=' + laonType)} >
+        <button className='__btn btn-white' onClick={() => router.push('/loans/' + prevURL)} >
           Back
         </button>
         <button className="__btn btn-black" onClick={handleContinue}>

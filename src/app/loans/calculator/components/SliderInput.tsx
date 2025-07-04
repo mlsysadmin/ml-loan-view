@@ -165,7 +165,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
       </div>
 
       {/* Bottom marks */}
-      <div className="details text-xs mt-3 relative">
+      <div className="details text-xs mt-2 relative">
         {customMarks ? (
           <>
             {customMarks.map((mark) => (

@@ -8,7 +8,6 @@ interface LoanData {
     monthlyPayment: number;
     loanTerm: number;
     propertyType: string;
-    loanPurpose: string;
     unitType: string;
     loanOption: string;
 }

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from "next/link";
 import '../index.css'
 import { useLoanStore } from '@/app/loans/store/dataStore';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface SummaryPanelProps {
     ammountFinanced: number,
@@ -35,6 +35,19 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
     onConfirm,
     canProceed
 }) => {
+    // const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        if (searchParams) {
+            const query = searchParams.toString();
+            const full = `/calculator${query ? `?${query}` : ''}`;
+            console.log('_+_AS_D+_+AS_D', full)
+            localStorage.setItem('prevURL', JSON.stringify(full));
+        }
+    }, [searchParams]);
+
+
     const setLoanData = useLoanStore((state) => state.setLoanData);
     const router = useRouter();
 

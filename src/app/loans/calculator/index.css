@@ -194,7 +194,7 @@ input[type=radio]:checked+.__radio>span {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .manual-input {
@@ -218,7 +218,7 @@ input[type=radio]:checked+.__radio>span {
 .summary-container {
     color: #4f4f4f;
     background-color: #f5f5f5;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     border-radius: 15px;
 }
 

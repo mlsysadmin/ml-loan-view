@@ -83,21 +83,20 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       <span class="detail-value">${loanData?.propertyType}</span>
     </div>
   `;
-  headerType += `HOUSING `
+    headerType += `HOUSING `
   }
 
   if (laonType === 'car') {
     otherData += `
     <div class="detail-item">
       <span class="detail-label">Loan Purpose</span>
-      <span class="detail-value">${loanData?.loanPurpose}</span>
     </div>
     <div class="detail-item">
       <span class="detail-label">Preferred Type of Unit</span>
       <span class="detail-value">${loanData?.unitType}</span>
     </div>
   `;
-  headerType += `CAR `
+    headerType += `CAR `
   }
 
   const htmlContent = `
@@ -413,10 +412,19 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     grossMonthlyIncome,
     sourceOfIncome,
     empOrBusiness,
-    designation
+    designation,
+    loanData,
+    country,
+    provinceOrState,
+    cityOrTown,
+    barrangay,
+    streetName,
+    specAddress,
+    countryCode
   ];
 
   async function submitData() {
+    console.log('FINAL DATA :::::::::', finalData)
     setIsLoading(true)
     setFinalLoanData({
       ref: ref,

@@ -15711,6 +15711,8 @@ a {
     font-size: 22px;
   }
 
+
+
   .readable {
     font-size: 18px;
   }
@@ -15735,8 +15737,20 @@ a {
   .why {
     padding: 50px 0;
   }
+
   .home-banner {
     padding: 20px 0 0 0;
+  }
+
+  .car-card {
+    margin: 10px 0px;
+    padding: 25px 45px;
+    border-radius: 10px;
+    gap: 30px;
+  }
+
+  .summary-container {
+    margin-top: 20px;
   }
 }
 
@@ -15779,8 +15793,19 @@ a {
   .why {
     padding: 70px 0;
   }
+
   .home-banner {
     padding: 50px 0;
+  }
+
+  .car-card {
+    margin: 20px 0px;
+    padding: 10px 30px;
+    border-radius: 20px;
+  }
+
+  .summary-container {
+    margin-top: 90px;
   }
 }
 
@@ -15997,13 +16022,13 @@ a {
   text-align: center;
   white-space: nowrap;
   border-radius: 25px;
-  padding: 10px 50px;
   /* width: 100%; */
 }
 
 .btn-black {
   color: #fff;
   background-color: #333;
+  padding: 10px 30px;
 }
 
 .text-center {

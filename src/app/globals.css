@@ -15906,6 +15906,7 @@ a {
   background-color: #ffffff;
   color: #5d5d5d;
   border: solid #5d5d5d 0.8;
+  padding: 10px 47px;
 }
 
 .modal-btn {
@@ -15969,7 +15970,6 @@ a {
   text-align: center;
   white-space: nowrap;
   border-radius: 25px;
-  padding: 10px 50px;
   /* width: 100%; */
 }
 

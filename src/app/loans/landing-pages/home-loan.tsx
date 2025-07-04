@@ -80,10 +80,10 @@ export default function HomeLoanLandingPage() {
                     <p className="banner-text regular title">What you need</p>
                     <br />
                     <Row className="">
-                        {whatYouNeed.map(item =>
-                            <div key={item.title} className="col-md-4 mb-5 mb-md-0 ">
-                                <div className="what-you-need-card what-card">
-                                    <div className="card-title  smaller regular">
+                        {whatYouNeed.map(item => (
+                            <div key={item.title} className="col-md-4 mb-5 mb-md-0 d-flex">
+                                <div className="what-you-need-card what-card flex-grow-1 h-100">
+                                    <div className="card-title smaller regular">
                                         {item.title}
                                     </div>
                                     <div className="card-check-list-wrapper">
@@ -91,7 +91,7 @@ export default function HomeLoanLandingPage() {
                                     </div>
                                 </div>
                             </div>
-                        )}
+                        ))}
                     </Row>
                 </div>
             </div>

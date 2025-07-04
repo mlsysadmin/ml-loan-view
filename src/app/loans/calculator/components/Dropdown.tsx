@@ -17,7 +17,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
   onChange,
   placeholder = 'Select an option',
   className = 'w-100',
-  error, // ✅ include in destructuring
+  error, // include in destructuring
 }) => {
   return (
     <div className={className}>

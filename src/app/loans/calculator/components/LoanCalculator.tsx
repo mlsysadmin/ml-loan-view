@@ -9,7 +9,14 @@ import '../../index.css';
 
 const LoanCalculator: React.FC = () => {
     const searchParams = useSearchParams();
+
+
     const loanType = searchParams.get('type');
+    const selectedType = searchParams.get('loanType');
+    const selectedVehicle = searchParams.get('vehicle');
+
+
+
     const router = useRouter();
     const [purchasePrice, setPurchasePrice] = useState(10000000);
     const [downPaymentPercent, setDownPaymentPercent] = useState(30);
@@ -17,16 +24,23 @@ const LoanCalculator: React.FC = () => {
     const [downPaymentAmount, setDownPaymentAmount] = useState(0);
     const [monthlyPayment, setMonthlyPayment] = useState(0);
     const [ammountFinanced, setammountFinanced] = useState(0);
-    const [loanOption, setOption] = useState('');
-    const [propertyType, setPropertyType] = useState(''); // for Home Loan
-    const [purpose, setPurpose] = useState(''); // for Car Loan
-    const [unitType, setUnitType] = useState(''); // for Car Loan
     const [formError, setFormError] = useState('');
     const [dropdownErrors, setDropdownErrors] = useState<Record<number, string>>({});
     const [canProceed, setCanProceed] = useState(false);
 
+    const [loanOption, setOption] = useState('');
+    const [propertyType, setPropertyType] = useState(''); // for Home Loan
+    const [unitType, setUnitType] = useState(''); // for Car Loan (selectedVehicle)
+    const [maxDP, setMaxDP] = useState(0);
+    const [minDP, setMinDP] = useState(0);
+    const [maxTerm, setMaxTerm] = useState(0);
+    const [minTerm, setMinTerm] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(0);
+    const [minPrice, setMinPrice] = useState(0);
+
     // Calculate the loan details whenever inputs change
     useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         // Calculate down payment amount
         const downPayment = (purchasePrice * downPaymentPercent) / 100;
         setDownPaymentAmount(downPayment);
@@ -46,106 +60,429 @@ const LoanCalculator: React.FC = () => {
     const [options, setOptions] = useState<typeof carOptions | typeof homeOptions | null>(null);
     const [dropdownSelections, setDropdownSelections] = useState<Record<number, string>>({});
 
+
+    useEffect(() => {
+        const dropdownLabel = loanType === 'car' ? 'Unit Type' : 'Property Type';
+        const selectedDropdownValue = dropdownSelections[0]; // assuming it's always index 0
+        const selectedLoanType = loanOption;
+
+        // Get the correct dropdown item
+        const dropdownData = options?.dropdown.find(item => item.label === dropdownLabel);
+        const selectedItem = dropdownData?.values.find((v: any) => v.type === selectedDropdownValue);
+
+        if (!selectedItem) return;
+
+        // Get the config based on selected loan option
+        const loanConfig = selectedItem.loanType.find((l: any) => l.type === selectedLoanType);
+
+        if (!loanConfig) return;
+
+        setMinPrice(loanConfig.price.min);
+        setMaxPrice(loanConfig.price.max);
+        setMinDP(loanConfig.downPayment.min);
+        setMaxDP(loanConfig.downPayment.max);
+        setMinTerm(loanConfig.term.min);
+        setMaxTerm(loanConfig.term.max);
+
+        // Optional: clamp current values to new bounds
+        setPurchasePrice(prev => Math.min(Math.max(prev, loanConfig.price.min), loanConfig.price.max));
+        setDownPaymentPercent(prev => Math.min(Math.max(prev, loanConfig.downPayment.min), loanConfig.downPayment.max));
+        setLoanTerm(prev => Math.min(Math.max(prev, loanConfig.term.min), loanConfig.term.max));
+    }, [loanOption, dropdownSelections, options]);
+
+    const termMarks = Array.from({ length: (maxTerm - minTerm) / 12 + 1 }, (_, i) => {
+        const value = minTerm + i * 12;
+        return { value, label: value.toString() };
+    });
+
+    useEffect(() => {
+        if (options?.radio?.length && !loanOption) {
+            const defaultOption = options.radio.find(r => r.type === 'Buy a New') || options.radio[0];
+            setOption(defaultOption.type);
+        }
+    }, [options, loanOption]);
+
+    useEffect(() => {
+        ///////////////// TO DISPLAY DEFAULTS /////////////////
+        console.log('======>>>>', selectedType, selectedVehicle)
+        if (!loanType) return;
+        if (loanType === 'car') {
+            setOptions(carOptions);
+
+            const defaultRadio = selectedType || 'Buy a New';
+            const defaultUnitType = selectedVehicle ||
+                carOptions.dropdown[0].values[0].type;
+
+            setOption(defaultRadio);
+            setUnitType(defaultUnitType);
+
+            setDropdownSelections({
+                0: defaultUnitType
+            });
+        }
+        if (loanType === 'home') {
+            setOptions(homeOptions);
+
+            const defaultPropertyType = homeOptions.dropdown[0].values[0].type;
+
+            setOption('Buy');
+            setPropertyType(defaultPropertyType);
+
+            setDropdownSelections({
+                0: defaultPropertyType
+            });
+        }
+        if (loanType !== 'car' && loanType !== 'home') {
+            router.replace('/404');
+        }
+    }, [loanType, selectedType, selectedVehicle]);
+
+
     const homeOptions = {
-        radio: [
-            { 
-                type: 'Buy', 
-                displayText: 'Buy a Home' 
-            }, { 
-                type: 'Prenda', 
-                displayText: 'Prenda my Home' 
-            },
-        ],
-        dropdown: [
-            {
-                id: 0,
-                label: 'Property Type',
-                values: ['House & Lot', 'Condominium', 'Lot only'],
-            },
+        radio: [{
+            type: 'Buy',
+            displayText: 'Buy a Home'
+        }, {
+            type: 'Prenda',
+            displayText: 'Prenda my Home'
+        }],
+        dropdown: [{
+            id: 0,
+            label: 'Property Type',
+            // values: ['House & Lot', 'Condominium', 'Lot only'],
+            values: [{
+                type: 'House & Lot',
+                loanType: [{
+                    type: 'Buy',
+                    downPayment: {
+                        min: 10, //%
+                        max: 70 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 60 // months
+                    },
+                    price: {
+                        min: 1000000,
+                        max: 20000000
+                    }
+                }, {
+                    type: 'Prenda',
+                    downPayment: {
+                        min: 10, //%
+                        max: 70 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 60 // months
+                    },
+                    price: {
+                        min: 1000000,
+                        max: 20000000
+                    }
+                }
+                ]
+            }, {
+                type: 'Condominium',
+                loanType: [
+                    {
+                        type: 'Buy',
+                        downPayment: {
+                            min: 10, //%
+                            max: 70 //%
+                        },
+                        term: {
+                            min: 12, // months
+                            max: 60 // months
+                        },
+                        price: {
+                            min: 1000000,
+                            max: 20000000
+                        }
+                    }, {
+                        type: 'Prenda',
+                        downPayment: {
+                            min: 10, //%
+                            max: 70 //%
+                        },
+                        term: {
+                            min: 12, // months
+                            max: 60 // months
+                        },
+                        price: {
+                            min: 1000000,
+                            max: 20000000
+                        }
+                    }
+                ]
+            }, {
+                type: 'Lot only',
+                loanType: [
+                    {
+                        type: 'Buy',
+                        downPayment: {
+                            min: 10, //%
+                            max: 70 //%
+                        },
+                        term: {
+                            min: 12, // months
+                            max: 60 // months
+                        },
+                        price: {
+                            min: 1000000,
+                            max: 20000000
+                        }
+                    }, {
+                        type: 'Prenda',
+                        downPayment: {
+                            min: 10, //%
+                            max: 70 //%
+                        },
+                        term: {
+                            min: 12, // months
+                            max: 60 // months
+                        },
+                        price: {
+                            min: 1000000,
+                            max: 20000000
+                        }
+                    }
+                ]
+            }]
+        },
         ],
     };
 
 
     const carOptions = {
         radio: [
-            { 
-                type: 'Brand New', 
-                displayText: 'Brand New' 
-            }, { 
-                type: 'Second Hand', 
-                displayText: 'Second Hand' 
-            },
-        ],
-        dropdown: [
             {
-                id: 0,
-                label: 'Purpose',
-                values: [
-                    'Acquisition or Purchase of Vehicle',
-                    'Refinancing or Re-Loan of Vehicle',
-                    'Equity Cash Reimbursement',
-                ],
-            },
-            {
-                id: 1,
-                label: 'Unit Type',
-                values: [
-                    'Sedan/SUV/Pickup/Van for private use',
-                    'Motorcycle for private use',
-                    'Truck / Pickup',
-                    'Van / MPV',
-                    'Motorcycle',
-                    'Electric Vehicle (EV)',
-                ],
-            },
+                type: 'Buy a New Vehicle',
+                displayText: 'Buy a New Vehicle'
+            }, {
+                type: 'Buy a Used Vehicle',
+                displayText: 'Buy a Used Vehicle'
+            }, {
+                type: 'Prenda my Vehicle',
+                displayText: 'Prenda my Vehicle'
+            }
         ],
+        dropdown: [{
+            id: 0,
+            label: 'Unit Type',
+            // values: [
+            //     'Acquisition or Purchase of Vehicle',
+            //     'Refinancing or Re-Loan of Vehicle',
+            //     'Equity Cash Reimbursement',
+            // ]
+            values: [{
+                type: '4-wheel',
+                loanType: [{
+                    type: 'Buy a New Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 400000,
+                        max: 30000000
+                    }
+                }, {
+                    type: 'Buy a Used Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 300000,
+                        max: 2000000
+                    }
+                }, {
+                    type: 'Prenda my Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 70 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 300000,
+                        max: 2000000
+                    }
+                }]
+            }, {
+                type: '2-wheel',
+                loanType: [{
+                    type: 'Buy a New Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 40000,
+                        max: 2000000
+                    }
+                }, {
+                    type: 'Buy a Used Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 40000,
+                        max: 1000000
+                    }
+                }, {
+                    type: 'Prenda my Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 70 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 40000,
+                        max: 1000000
+                    }
+                }]
+            }, {
+                type: '3-wheel',
+                loanType: [{
+                    type: 'Buy a New Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 40000,
+                        max: 1000000
+                    }
+                }, {
+                    type: 'Buy a Used Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 40000,
+                        max: 1000000
+                    }
+                }, {
+                    type: 'Prenda my Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 70 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 40000,
+                        max: 1000000
+                    }
+                }]
+            }, {
+                type: 'Commercial',
+                loanType: [{
+                    type: 'Buy a New Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 200000,
+                        max: 10000000
+                    }
+                }, {
+                    type: 'Buy a Used Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 200000,
+                        max: 5000000
+                    }
+                }]
+            }, {
+                type: 'Construction',
+                loanType: [{
+                    type: 'Buy a New Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 200000,
+                        max: 10000000
+                    }
+                }, {
+                    type: 'Buy a Used Vehicle',
+                    downPayment: {
+                        min: 10, //%
+                        max: 90 //%
+                    },
+                    term: {
+                        min: 12, // months
+                        max: 48 // months
+                    },
+                    price: {
+                        min: 200000,
+                        max: 5000000
+                    }
+                }]
+            }],
+        }],
     };
 
-    useEffect(() => {
-        if (loanType === 'car') setOptions(carOptions);
-        else if (loanType === 'home') setOptions(homeOptions);
-        else  router.replace('/404');
-
-    }, [loanType]);
-
-    useEffect(() => {
-        if (options?.radio?.length && !loanOption) {
-            const firstOption = options.radio[0].type ?? '';
-            setOption(firstOption);
-        }
-    }, [options, loanOption]);
-
-    useEffect(() => {
-        if (loanType === 'car') {
-            setOptions(carOptions);
-            setDropdownSelections(
-                Object.fromEntries(
-                    carOptions.dropdown.map((item) => [item.id, item.label])
-                )
-            );
-        } else if (loanType === 'home') {
-            setOptions(homeOptions);
-            setDropdownSelections(
-                Object.fromEntries(
-                    homeOptions.dropdown.map((item) => [item.id, item.label])
-                )
-            );
-        }
-    }, [loanType]);
 
     const handleContinue = () => {
         let errors: Record<number, string> = {};
         let hasError = false;
 
         if (loanType === 'car') {
-            const purposeId = carOptions.dropdown.find(item => item.label === 'Purpose')?.id;
             const unitTypeId = carOptions.dropdown.find(item => item.label === 'Unit Type')?.id;
-
-            if (!purpose && purposeId !== undefined) {
-                errors[purposeId] = 'Loan Purpose is required.';
-                hasError = true;
-            }
-
             if (!unitType && unitTypeId !== undefined) {
                 errors[unitTypeId] = 'Unit Type is required.';
                 hasError = true;
@@ -178,22 +515,25 @@ const LoanCalculator: React.FC = () => {
     return (
         <div className="calculator-container">
             <div className="col-md-6">
-                <span className='medium title'>Loan Calculator</span>
+                <span className='regular title'>Loan Calculator</span>
                 <p> Tell me about the property </p>
-                <div className='option-wrapper'>
-                    {options?.radio.map((o, index) =>
-                        <label key={o.type} className="__radio-option">
-                            <input type="radio" checked={loanOption === o.type} onChange={selectOption} value={o.type} name="paymentOption" />
-                            <span className="__radio"><span></span></span>
-                            <span>{o.displayText}</span>
-                        </label>
-                    )}
-                </div>
 
-                {options?.dropdown.map((item) => (
+                {loanType === 'home' && (
+                    <div className='option-wrapper'>
+                        {options?.radio.map((o, index) =>
+                            <label key={o.type} className="__radio-option">
+                                <input type="radio" checked={loanOption === o.type} onChange={selectOption} value={o.type} name="paymentOption" />
+                                <span className="__radio"><span></span></span>
+                                <span>{o.displayText}</span>
+                            </label>
+                        )}
+                    </div>
+                )}
+
+                {loanType === 'home' && options?.dropdown.map((item) => (
                     <div key={item.id} className="mb-3">
                         <PropertyDropdown
-                            options={item.values}
+                            options={item.values.map((v: any) => v.type)}
                             value={dropdownSelections[item.id] || ''}
                             onChange={(selectedValue) => {
                                 setFormError('');
@@ -202,22 +542,12 @@ const LoanCalculator: React.FC = () => {
                                     ...prev,
                                     [item.id]: selectedValue,
                                 }));
-
-                                // clear error
                                 setDropdownErrors((prev) => ({
                                     ...prev,
                                     [item.id]: '',
                                 }));
-
-                                // update specific state
-                                if (loanType === 'home') {
-                                    if (item.label === 'Property Type') setPropertyType(selectedValue);
-                                }
-
-                                if (loanType === 'car') {
-                                    if (item.label === 'Purpose') setPurpose(selectedValue);
-                                    if (item.label === 'Unit Type') setUnitType(selectedValue);
-                                }
+                                if (item.label === 'Property Type') setPropertyType(selectedValue); // HOME LOAN
+                                if (item.label === 'Unit Type') setUnitType(selectedValue); // CAR LOAN
                             }}
                             placeholder={`Select ${item.label}`}
                             error={dropdownErrors[item.id]}
@@ -231,11 +561,10 @@ const LoanCalculator: React.FC = () => {
                             label={loanOption === 'Prenda' ? 'Estimated Price: ₱' : 'Price: ₱'}
                             value={purchasePrice}
                             onChange={setPurchasePrice}
-                            min={1000000}
-                            max={20000000}
+                            min={minPrice}
+                            max={maxPrice}
                             step={100000}
                             formatValue={(value) => value.toLocaleString()}
-                        // showFloatingLabel={true}
                         />
                     </div>
                 </div>
@@ -246,11 +575,10 @@ const LoanCalculator: React.FC = () => {
                             label={loanOption === 'Prenda' ? 'Amount to Borrow: ₱' : 'Down Payment: ₱'}
                             value={downPaymentPercent}
                             onChange={setDownPaymentPercent}
-                            min={0}
-                            max={70}
+                            min={minDP}
+                            max={maxDP}
                             step={1}
                             formatValue={(value) => `${value}%`}
-                            // suffix="%"
                             secondaryValue={purchasePrice}
                             showFloatingLabel={true}
                             editableAmountInstead={true}
@@ -264,19 +592,12 @@ const LoanCalculator: React.FC = () => {
                             label="Term: "
                             value={loanTerm}
                             onChange={setLoanTerm}
-                            min={12}
-                            max={60}
+                            min={minTerm}
+                            max={maxTerm}
                             step={12}
-                            // formatValue={(value) => `${value / 12} ${value === 12 ? 'year' : 'years'}`}
                             formatValue={(value) => `${value} months`}
                             // suffix=" mons."
-                            customMarks={[
-                                { value: 12, label: '12' },
-                                { value: 24, label: '24' },
-                                { value: 36, label: '36' },
-                                { value: 48, label: '48' },
-                                { value: 60, label: '60' },
-                            ]}
+                            customMarks={termMarks}
                         // showFloatingLabel={true}
                         />
                     </div>
@@ -293,11 +614,13 @@ const LoanCalculator: React.FC = () => {
                     loanOption={loanOption}
                     propertyType={propertyType}
                     unitType={unitType}
-                    loanPurpose={purpose}
                     onConfirm={handleContinue}
                     formError={formError}
                     canProceed={canProceed}
                 />
+                <div className='foot-note'>
+                    <i>*Subject for approval</i>
+                </div>
             </div>
         </div>
     );
