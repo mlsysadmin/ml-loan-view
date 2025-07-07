@@ -22,13 +22,26 @@ export default function CarLoanLandingPage() {
     const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
     const [step, setStep] = useState(0);
 
+    const [hovered, setHovered] = useState<number | null>(null);
+
     const handleContinue = () => {
         console.log('==+++=+', step)
         if (step === 0) {
+            if (!selectedType) {
+                setShouldWiggle(true);
+                setTimeout(() => setShouldWiggle(false), 400);
+            }
             if (selectedType) setStep(1)
-        }
+        } else if (step === 1) {
+            if (!selectedVehicle) {
+                setShouldWiggle(true);
+                setTimeout(() => setShouldWiggle(false), 400);
+            }
+            if (selectedVehicle) router.push(`${'/loans/calculator?type=' + referrer + '&loanType=' + selectedType + '&vehicle=' + selectedVehicle}`);
+        } else router.push('/')
     }
 
+    const [shouldWiggle, setShouldWiggle] = useState(false);
 
     const typeArr = [
         {
@@ -128,11 +141,10 @@ export default function CarLoanLandingPage() {
 
     return (
         <>
-
             <div className="container car-banner">
                 <div className="banner-content-wrapper">
                     <div>
-                        <p className="banner-text regular title">Own your dream <span className="red">Car</span> with a <span className="red">Loan</span> that works you.</p>
+                        <p className="banner-text regular title">Own your dream starts with a <span className="red">Loan</span> that works you.</p>
                         <p className="regular readable">Your dream car is just a few clicks away.</p>
 
                     </div>
@@ -161,7 +173,7 @@ export default function CarLoanLandingPage() {
                         <Row>
                             {(step === 0 ? typeArr : selectedType ? vehicleArr.filter(v => v.forTypes.includes(
                                 typeArr.find(t => t.title === selectedType)?.code ?? ''
-                            )) : []).map((item) => {
+                            )) : []).map((item, index) => {
                                 const isTypeStep = step === 0;
                                 const key = isTypeStep ? (item as typeof typeArr[0]).title : (item as typeof vehicleArr[0]).vehicleType;
                                 const label = key;
@@ -171,22 +183,35 @@ export default function CarLoanLandingPage() {
                                 return (
                                     <div key={key} className="col-md-4">
                                         <div
-                                            className={`car-card ${isSelected ? 'selected' : ''}`}
+                                            // className={`car-card ${isSelected ? 'selected' : ''}`}
+                                            className={`car-card ${isSelected ? 'selected' : ''} ${shouldWiggle ? 'wiggle' : ''}`}
                                             onClick={() => {
                                                 if (isTypeStep) {
                                                     setSelectedType((item as typeof typeArr[0]).title);
                                                     setSelectedVehicle(null);
+                                                    setShouldWiggle(false);
                                                 } else {
                                                     setSelectedVehicle((item as typeof vehicleArr[0]).vehicleType);
+                                                    setShouldWiggle(false);
                                                 }
                                             }}
+                                            onMouseEnter={() => setHovered(index)}
+                                            onMouseLeave={() => setHovered(null)}
                                         >
+
                                             <Image
+                                                src={`/images/car_loan_icons/${(hovered === index || isSelected) ? item.img + '-white' : item.img}.svg`}
+                                                alt={label}
+                                                width={55}
+                                                height={55}
+                                            />
+
+                                            {/* <Image
                                                 src={`/images/car_loan_icons/${imgName}.svg`}
                                                 alt={label}
                                                 width={'width' in item ? item.width : 55}
                                                 height={'hieght' in item ? item.hieght : 55}
-                                            />
+                                            /> */}
                                             <div className="regular readable mt-2">{label} {(isMobile && step === 1) && ' Vehicle'}</div>
                                         </div>
                                     </div>
@@ -198,17 +223,23 @@ export default function CarLoanLandingPage() {
                         <button className='__btn btn-white' onClick={() => setStep(0)}>
                             Back
                         </button>
-                        {step === 0 ? (
-                            <button className="__btn btn-black" onClick={handleContinue}>
+                        {(!selectedVehicle || !selectedType) ? (
+                            <button
+                                className="__btn btn-black"
+                                onClick={() => {
+                                    handleContinue();
+                                }}
+                            >
                                 Continue
                             </button>
                         ) : (
-                            <Link  href={`${'/loans/calculator?type=' + referrer + '&loanType=' + selectedType + '&vehicle=' + selectedVehicle}`}>
+                            <Link href={`${'/loans/calculator?type=' + referrer + '&loanType=' + selectedType + '&vehicle=' + selectedVehicle}`}>
                                 <button className="__btn btn-black" disabled={!selectedVehicle}>
                                     Continue
                                 </button>
                             </Link>
                         )}
+
                     </div>
 
                     <br />

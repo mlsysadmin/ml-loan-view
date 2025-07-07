@@ -139,6 +139,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const handleDateChange = (date: { month: number; day: number; year: number }) => {
     setBirthdate(date);
     setErrorBdate('');
+    setErrorBirthday('');
   };
 
   const dataHandle = () => {
@@ -148,7 +149,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     if (!isValidEmail && email !== '') setErrorEmail('Invalid email.');
     if (firstName === '') setErrorFirstName('First name is required.');
     if (lastName === '') setErrorLastName('Last name is required.');
-    if (birthdate === birthdate) setErrorBirthday('Birthday is required.');
+    if (birthdate === undefined) setErrorBirthday('Birthday is required.');
     if (citizenship === '') setErrorCitizenship('Citizenship is required.');
     if (country === '') setErrorCountry('Country is required.');
     if (provinceOrState === '') setErrorProvinceOrState('Province/State is required.');
@@ -161,7 +162,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const handleContinue = () => {
     setIsValidEmail(emailRegex.test(email));
 
-    if (firstName && lastName && contactNumber && email && isValidEmail && country && cityOrTown && barrangay && specAddress) {
+    if (firstName && lastName && contactNumber && email && isValidEmail && birthdate && citizenship && country && cityOrTown && barrangay && specAddress) {
       setFinalLoanData({
         contactNumber,
         countryCode,
@@ -259,23 +260,23 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       <div className='details-wrapper'>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>Personal Details</label> */}
-          <input type="text" className='form-control full-width' value={firstName} onChange={(e) => { setFirstName(e.target.value); setErrorFirstName(''); }} placeholder='First Name' />
+          <input type="text" className='form-control full-width' value={firstName} onChange={(e) => { setFirstName(e.target.value.toUpperCase()); setErrorFirstName(''); }} placeholder='First Name' />
           <small className='red'>{errorFirstName}</small>
         </div>
         <div className='form-fields full-width'>
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={middleName} onChange={(e) => setmiddleName(e.target.value)} placeholder='Middle Name' />
+          <input type="text" className='form-control full-width' value={middleName} onChange={(e) => setmiddleName(e.target.value.toUpperCase())} placeholder='Middle Name' />
           <small>Leave blank if you legally don't have one</small>
         </div>
         <div className='form-fields full-width'>
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={lastName} onChange={(e) => { setLastName(e.target.value); setErrorLastName(''); }} placeholder='Last Name' />
+          <input type="text" className='form-control full-width' value={lastName} onChange={(e) => { setLastName(e.target.value.toUpperCase()); setErrorLastName(''); }} placeholder='Last Name' />
           <small className='red'>{errorLastName}</small>
         </div>
         <div className='form-fields half-width'>
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
           <div className='select one-third-width'>
-            <select value={suffix} onChange={(e) => setSuffix(e.target.value)} className='select__field'>
+            <select value={suffix} onChange={(e) => setSuffix(e.target.value.toUpperCase())} className='select__field'>
               <option value="">Suffix &nbsp;&nbsp;</option>
               <option value="SR.">SR</option>
               <option value="JR">JR</option>
@@ -310,7 +311,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         <div className='form-fields citizenship-wrapper'>
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
           <div className='select full-width-select'>
-            <select onChange={(e) => setCitizenship(e.target.value)} id="" className='select__field' value={citizenship}>
+            <select onChange={(e) => { setCitizenship(e.target.value); setErrorCitizenship('') }} id="" className='select__field' value={citizenship}>
               <option value="">Citizenship&nbsp;&nbsp;&nbsp;</option>
               <option value="FILIPINO">FILIPINO</option>
               <option value="">Not Filipino</option>
@@ -326,17 +327,17 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       <div className='details-wrapper'>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={country} onChange={(e) => { setCountry(e.target.value); setErrorCountry(''); }} placeholder='Country' />
+          <input type="text" className='form-control full-width' value={country} onChange={(e) => { setCountry(e.target.value.toUpperCase()); setErrorCountry(''); }} placeholder='Country' />
           <small className='red'>{errorCountry}</small>
         </div>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={provinceOrState} onChange={(e) => { setProvinceOrState(e.target.value); setErrorProvinceOrState(''); }} placeholder='Province/State' />
+          <input type="text" className='form-control full-width' value={provinceOrState} onChange={(e) => { setProvinceOrState(e.target.value.toUpperCase()); setErrorProvinceOrState(''); }} placeholder='Province/State' />
           <small className='red'>{errorProvinceOrState}</small>
         </div>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={cityOrTown} onChange={(e) => { setCityOrTown(e.target.value); setErrorCityOrTown(''); }} placeholder='City/Town' />
+          <input type="text" className='form-control full-width' value={cityOrTown} onChange={(e) => { setCityOrTown(e.target.value.toUpperCase()); setErrorCityOrTown(''); }} placeholder='City/Town' />
           <small className='red'>{errorCityOrTown}</small>
         </div>
       </div>
@@ -344,17 +345,17 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       <div className='details-wrapper'>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={barrangay} onChange={(e) => { setBarrangay(e.target.value); setErrorBarrangay(''); }} placeholder='Barrangay/District' />
+          <input type="text" className='form-control full-width' value={barrangay} onChange={(e) => { setBarrangay(e.target.value.toUpperCase()); setErrorBarrangay(''); }} placeholder='Barrangay/District' />
           <small className='red'>{errorBarrangay}</small>
         </div>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={streetName} onChange={(e) => { setStreetName(e.target.value); setErrorStreet(''); }} placeholder='Street Name' />
+          <input type="text" className='form-control full-width' value={streetName} onChange={(e) => { setStreetName(e.target.value.toUpperCase()); setErrorStreet(''); }} placeholder='Street Name' />
           <small className='red'>{errorStreet}</small>
         </div>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={specAddress} onChange={(e) => { setSpecAddress(e.target.value); setErrorSpecAdd(''); }} placeholder='Unit/House No.' />
+          <input type="text" className='form-control full-width' value={specAddress} onChange={(e) => { setSpecAddress(e.target.value.toUpperCase()); setErrorSpecAdd(''); }} placeholder='Unit/House No.' />
           <small className='red'>{errorSpecAdd}</small>
         </div>
       </div>

@@ -36,6 +36,8 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
     // const pathname = usePathname();
     const searchParams = useSearchParams();
 
+    let loanType = searchParams.get('type');
+
     useEffect(() => {
         if (searchParams) {
             const query = searchParams.toString();
@@ -98,13 +100,15 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
                     </div>
                 </div>
             </div>
-            <div className='form-btn-container-summary'>
-                {/* <Link href="/loans/forms">
-                    <button onClick={submitData} className="btn btn-continue">
-                    Continue
+            <div className='form-btn-container-summary form-btn-container'>
+                {/* <Link href=${'/loans/forms?type='}> */}
+                <Link href={`${'/loans?type=' + loanType}`}>
+                    <button onClick={submitData} className="__btn btn-white">
+                        Back
                     </button>
-                    </Link> */}
-                <button onClick={onConfirm} className="btn btn-continue">
+                </Link>
+
+                <button onClick={onConfirm} className="__btn btn-black">
                     Continue
                 </button>
 

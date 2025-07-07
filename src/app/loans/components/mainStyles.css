@@ -15535,14 +15535,15 @@ a {
     display: flex;
     align-items: center;
     background-color: #ffffff;
-    transition: all 0.2s ease;
+    /* transition: all 0.2s ease; */
     cursor: pointer;
     border: solid 3px #FFFFFF;
 }
 
 .car-card:hover {
     border: solid 3px #AAAAAA;
-    /* color: #ffffff; */
+    background-color: #AAAAAA;
+    color: #ffffff;
 }
 
 .car-card.selected {
