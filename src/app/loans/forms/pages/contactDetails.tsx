@@ -9,6 +9,7 @@ import { useSearchCKYC } from "../../hooks/use-search-ckyc";
 import moment from 'moment';
 import { useFinalLoanStore, useLoanStore } from '@/app/loans/store/dataStore';
 import PhoneInput from '@/app/loans/components/PhoneNumberInput';
+import CustomDropdown from '../../components/Dropdown';
 // import { useLoader } from '../../contexts/LoaderContext';
 
 interface Props {
@@ -310,14 +311,21 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         )}
         <div className='form-fields citizenship-wrapper'>
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
-          <div className='select full-width-select'>
+            <CustomDropdown
+              label="Month"
+              value={citizenship}
+              options={['FILIPINO', 'NOT FILIPINO']}
+              onChange={(e) => { setCitizenship(e.target.value); setErrorCitizenship('') }}
+              placeholder="Citizenship"
+            />
+          {/* <div className='select full-width-select'>
             <select onChange={(e) => { setCitizenship(e.target.value); setErrorCitizenship('') }} id="" className='select__field' value={citizenship}>
               <option value="">Citizenship&nbsp;&nbsp;&nbsp;</option>
               <option value="FILIPINO">FILIPINO</option>
               <option value="">Not Filipino</option>
             </select>
             <small className='red'>{errorCitizenship}</small>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -399,7 +407,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       <br />
       <br />
 
-      <Modal show={show} onHide={handleClose} keyboard={false} autoFocus={false} className='modal'>
+      <Modal show={show} onHide={handleClose} keyboard={false} autoFocus={false} className='modal' dialogClassName="custom-width-modal">
         <div className="modal-overlay">
           <div className="modal-wrapper">
             <div className='id-modal-icon-wrapper'>

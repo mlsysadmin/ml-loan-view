@@ -93,7 +93,7 @@ const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({ onChange, value
           {yearDropdownOpen && (
             <>
               <div className="date-picker-header">
-                <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select Year</span>
+                <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;Select Year</span>
                 <button onClick={() => setYearDropdownOpen(false)} className="">
                   ✕
                 </button>
@@ -133,7 +133,7 @@ const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({ onChange, value
           {monthDropdownOpen && (
             <>
               <div className="date-picker-header">
-                <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select Month</span>
+                <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;Select Month</span>
                 <button onClick={() => setMonthDropdownOpen(false)} className="">
                   ✕
                 </button>
@@ -173,7 +173,7 @@ const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({ onChange, value
               {daysInMonth.length > 0 ? (
                 <>
                   <div className="date-picker-header">
-                    <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select Day</span>
+                    <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;Select Day</span>
                     <button onClick={() => setDayDropdownOpen(false)} className="">
                       ✕
                     </button>

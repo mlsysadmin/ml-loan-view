@@ -171,6 +171,11 @@ body {
         width: 25%;
     }
 
+    .custom-width-modal {
+        max-width: 900px;
+        width: 350px;
+    }
+
 }
 
 .form-fields {
@@ -178,5 +183,5 @@ body {
 }
 
 .uppercase-input {
-  text-transform: uppercase;
+    text-transform: uppercase;
 }
