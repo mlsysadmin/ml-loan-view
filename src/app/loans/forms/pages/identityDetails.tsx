@@ -26,6 +26,8 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   const [sourceOfIncome, setSourceOfIncome] = useState("");
   const [empOrBusiness, setEmpOrBusiness] = useState("");
   const [designation, setDesignation] = useState("");
+  const [headerText, setHeaderText] = useState("");
+  const [unitOrPropertyType, setUnitOrPropertyType] = useState("");
 
   const [ref, setRef] = useState('');
   const contactNumber = data.contactNumber;
@@ -43,6 +45,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   const barrangay = data.barrangay;
   const streetName = data.streetName;
   const specAddress = data.specAddress;
+  const loanData = useLoanStore((state) => state.data);
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -58,10 +61,17 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       setDesignation(data.ckycData.occupation.workPosition);
     }
     setIsLoading(false)
+    if (laonType === 'home') {
+      setHeaderText('HOUSING');
+      setUnitOrPropertyType(loanData?.propertyType || '')
+    }
+    if (laonType === 'car') {
+      setHeaderText('CAR');
+      setUnitOrPropertyType(loanData?.unitType || '')
+    }
   }, []);
 
   const setFinalLoanData = useFinalLoanStore((state) => state.setFinalLoanData);
-  const loanData = useLoanStore((state) => state.data);
   const finalLoanStore = useFinalLoanStore((state) => state.data);
 
   function generateRandomString(length = 8) {
@@ -71,32 +81,6 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       result += chars[Math.floor(Math.random() * chars.length)];
     }
     setRef(`(LEH)${result}`);
-  }
-
-  let otherData = '';
-  let headerType = '';
-
-  if (laonType === 'home') {
-    otherData += `
-    <div class="detail-item">
-      <span class="detail-label">Property Type</span>
-      <span class="detail-value">${loanData?.propertyType}</span>
-    </div>
-  `;
-    headerType += `HOUSING `
-  }
-
-  if (laonType === 'car') {
-    otherData += `
-    <div class="detail-item">
-      <span class="detail-label">Loan Purpose</span>
-    </div>
-    <div class="detail-item">
-      <span class="detail-label">Preferred Type of Unit</span>
-      <span class="detail-value">${loanData?.unitType}</span>
-    </div>
-  `;
-    headerType += `CAR `
   }
 
   const htmlContent = `
@@ -251,7 +235,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
             <img src="https://mlhuillier.com/img/revamp/ml-logo.svg" alt="M Lhuillier Logo">
         </div>
         <div class="document-title">
-            <h2>${headerType} LOAN APPLICATION</h2>
+            <h2>${headerText} LOAN APPLICATION</h2>
             <div class="detail-item">
               <span class="detail-label">Ref No</span>
               <h3 class="detail-value">${ref}</h3>
@@ -272,7 +256,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
               <span class="detail-value">${loanData?.loanOption}</span>
             </div>
             
-            ${otherData}
+            <div class="detail-item">
+              <span class="detail-label">Preferred Type of Unit</span>
+              <span class="detail-value">${unitOrPropertyType}</span>
+            </div>
           </div>
           
           <div>
@@ -384,7 +371,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
 
   const sendEmail = async () => {
     setIsLoading(true);
-    const res = await fetch('/api/mailer-service', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/mailer-service`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

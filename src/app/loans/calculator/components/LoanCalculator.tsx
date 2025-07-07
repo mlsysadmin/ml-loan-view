@@ -40,7 +40,7 @@ const LoanCalculator: React.FC = () => {
 
     // Calculate the loan details whenever inputs change
     useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // window.scrollTo({ top: 0, behavior: 'smooth' });
         // Calculate down payment amount
         const downPayment = (purchasePrice * downPaymentPercent) / 100;
         setDownPaymentAmount(downPayment);
@@ -155,7 +155,7 @@ const LoanCalculator: React.FC = () => {
                 loanType: [{
                     type: 'Buy',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 70 //%
                     },
                     term: {
@@ -169,7 +169,7 @@ const LoanCalculator: React.FC = () => {
                 }, {
                     type: 'Prenda',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 70 //%
                     },
                     term: {
@@ -188,7 +188,7 @@ const LoanCalculator: React.FC = () => {
                     {
                         type: 'Buy',
                         downPayment: {
-                            min: 10, //%
+                            min: 0, //%
                             max: 70 //%
                         },
                         term: {
@@ -202,7 +202,7 @@ const LoanCalculator: React.FC = () => {
                     }, {
                         type: 'Prenda',
                         downPayment: {
-                            min: 10, //%
+                            min: 0, //%
                             max: 70 //%
                         },
                         term: {
@@ -221,7 +221,7 @@ const LoanCalculator: React.FC = () => {
                     {
                         type: 'Buy',
                         downPayment: {
-                            min: 10, //%
+                            min: 0, //%
                             max: 70 //%
                         },
                         term: {
@@ -235,7 +235,7 @@ const LoanCalculator: React.FC = () => {
                     }, {
                         type: 'Prenda',
                         downPayment: {
-                            min: 10, //%
+                            min: 0, //%
                             max: 70 //%
                         },
                         term: {
@@ -530,7 +530,7 @@ const LoanCalculator: React.FC = () => {
                     </div>
                 )}
 
-                {loanType === 'home' && options?.dropdown.map((item) => (
+                {(loanType === 'home' && loanOption === 'Buy') && options?.dropdown.map((item) => (
                     <div key={item.id} className="mb-3">
                         <PropertyDropdown
                             options={item.values.map((v: any) => v.type)}
@@ -563,7 +563,7 @@ const LoanCalculator: React.FC = () => {
                             onChange={setPurchasePrice}
                             min={minPrice}
                             max={maxPrice}
-                            step={100000}
+                            step={Math.max((maxPrice - minPrice) / 50, 1)}
                             formatValue={(value) => value.toLocaleString()}
                         />
                     </div>

@@ -9,9 +9,16 @@ export default function AppWrapper({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     const userAgent = navigator.userAgent;
-    setIsMobile(/iPhone|iPad|iPod|Android/i.test(userAgent));
+    // setIsMobile(/iPhone|iPad|iPod|Android/i.test(userAgent));
+
+    // const userAgent = req.headers['user-agent'] || '';
+
+    const isAndroidWebView = userAgent.includes('wv') || userAgent.includes('Version/');
+    const isIOSWebView = /iPhone|iPad|iPod/.test(userAgent) && !userAgent.includes('Safari');
+
+    const isMobile = isAndroidWebView || isIOSWebView;
   }, []);
-  
+
 
   return (
     <>

@@ -19,7 +19,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [prevURL, setPrevURL] = useState("");
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // window.scrollTo({ top: 0, behavior: 'smooth' });
     const raw = localStorage.getItem('prevURL');
     if (raw) {
       const cleaned = raw.replace(/^\/?"?|"?\/?$/g, '');
@@ -228,7 +228,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     <Container>
       <label className='readable medium'>Contact Details</label>
       <br />
-      <div>
+      <div className='form-fields contact-details-wrapper'>
         <div className='form-fields'>
           <small>{isFetching ? "Searching..." : ""}</small>
           <PhoneInput
@@ -248,8 +248,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
           <small className='red'>{errorContactNumber}</small>
         </div>
         <div className='form-fields'>
-          {/* <label htmlFor="">&nbsp;</label> */}
-          <input className='form-control' value={email} onChange={(e) => { setEmail(e.target.value); setErrorEmail(''); }} type="email" placeholder='Email Address (juan.d@gmail.com)' autoComplete="off" />
+          <input className='form-control full-width' value={email} onChange={(e) => { setEmail(e.target.value); setErrorEmail(''); }} type="email" placeholder='Email Address (juan.d@gmail.com)' autoComplete="off" />
           <small className='red'>{errorEmail}</small>
         </div>
       </div>
@@ -409,18 +408,18 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
             </div>
             <Modal.Body>
               <div className='id-modal-wrapper'>
-                <div className='title medium text-center'>Identity Verification</div>
-                <div className='readable'>A customer matching this number was found.</div>
-                <div className='readable'>
+                <div className='modal-header-text regular text-center'>Identity Verification</div>
+                <div className='smaller'>A customer matching this number was found.</div>
+                <div className='smaller'>
                   Name: <span className='medium'>{maskStringExceptFirst(ckycData?.name.firstName)} {maskStringExceptFirst(ckycData?.name.middleName)} {maskStringExceptFirst(ckycData?.name.lastName)}</span><br />
                   Mobile No.: <span className='medium'>{ckycData?.cellphoneNumber}</span>
                 </div>
-                <div className='readable'>If this is you, provide your birth date.</div>
+                <div className='smaller'>If this is you, provide your birth date.</div>
                 <DatePicker onChange={handleDateChange} />
                 <small className='red text-center'>{errorBdate}</small>
                 <div className='modal-btn-wrapper'>
-                  <button className='btn-white modal-btn' onClick={() => handleClose()}>This is not me</button>
                   <button className='btn-red modal-btn' onClick={comapreBirthdates}>Confirm</button>
+                  <button className='btn-white modal-btn' onClick={() => handleClose()}>This is not me</button>
                 </div>
               </div>
             </Modal.Body>

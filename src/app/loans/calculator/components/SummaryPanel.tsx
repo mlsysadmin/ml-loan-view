@@ -14,7 +14,6 @@ interface SummaryPanelProps {
     loanOption: string;
     propertyType: string;
     unitType: string;
-    loanPurpose: string;
     formError: string;
     onConfirm: () => void;
     canProceed: boolean;
@@ -30,7 +29,6 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
     loanOption,
     propertyType,
     unitType,
-    loanPurpose,
     formError,
     onConfirm,
     canProceed
@@ -66,7 +64,6 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             loanTerm,
             propertyType,
             loanOption,
-            loanPurpose,
             unitType
         }
         setLoanData({
@@ -77,7 +74,6 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             loanTerm,
             propertyType,
             loanOption,
-            loanPurpose,
             unitType
         });
         console.log('==Caculator summary====', data)
@@ -86,27 +82,20 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
     return (
         <div className='summary-container'>
             <p className='medium title red'>Summary</p>
-            <br />
             <div className="space-y-4">
-                <div className="details">
-                    <span className="text-gray-600">Ammount Financed</span>
-                    <span className="font-medium">₱ {ammountFinanced.toLocaleString()}</span>
-                </div>
-
-                <div className="details">
-                    <span className="text-gray-600">Down Payment</span>
-                    <span className="font-medium">₱ {downPayment.toLocaleString()}</span>
-                </div>
-
-                <div className="details">
-
-                    <span className="text-gray-600">Monthly Payment</span>
-                    <span className="font-medium">₱ {monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                </div>
-
-                <div className="details">
-                    <span className="text-gray-600">Loan Term <small></small></span>
-                    <span className="font-medium">{loanTerm} months</span>
+                <div className="details-wrapper">
+                    <div className='contents'>
+                        <span className="font-medium">Ammount Financed</span>
+                        <span className="font-medium">Down Payment</span>
+                        <span className="font-medium">Loan Term <small></small></span>
+                        <span className="font-medium medium">Monthly Payment</span>
+                    </div>
+                    <div className='contents'>
+                        <span className="font-medium">PHP {ammountFinanced.toLocaleString()}</span>
+                        <span className="font-medium">PHP {downPayment.toLocaleString()}</span>
+                        <span className="font-medium">{loanTerm} months</span>
+                        <span className="font-medium medium">PHP {monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                    </div>
                 </div>
             </div>
             <div className='form-btn-container-summary'>

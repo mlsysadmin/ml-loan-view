@@ -5000,7 +5000,7 @@ input[type=submit].btn-block {
 }
 
 .card-title {
-  margin-bottom: .75rem
+  margin-bottom: 10px
 }
 
 .card-subtitle {
@@ -15711,8 +15711,6 @@ a {
     font-size: 22px;
   }
 
-
-
   .readable {
     font-size: 18px;
   }
@@ -15752,6 +15750,10 @@ a {
   .summary-container {
     margin-top: 20px;
   }
+
+  .contact-details-wrapper {
+    width: 100%;
+  }
 }
 
 @media(min-width: 515px) {
@@ -15759,6 +15761,10 @@ a {
   /* Web width*/
   .small {
     font-size: 18px;
+  }
+
+  .modal-header-text {
+    font-size: 22px;
   }
 
   .smaller {
@@ -15774,7 +15780,7 @@ a {
   }
 
   .title {
-    font-size: 30px;
+    font-size: 40px;
   }
 
   .readable {
@@ -15806,6 +15812,10 @@ a {
 
   .summary-container {
     margin-top: 90px;
+  }
+
+  .contact-details-wrapper {
+    width: 35%;
   }
 }
 
@@ -15866,7 +15876,7 @@ a {
   }
 
   .banner-text {
-    width: 500px;
+    width: 510px;
   }
 
   .why-text {
@@ -15927,8 +15937,9 @@ a {
   width: 100%;
   padding: 5px 15px;
   color: #616263;
-  border: solid #dee2e6;
+  border: solid 1.4px #dee2e6;
   outline: none;
+  border-radius: 6px;
   -webkit-appearance: none;
   /* for webkit browsers */
   -moz-appearance: none;

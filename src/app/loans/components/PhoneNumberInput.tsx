@@ -107,7 +107,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({ value, countryCode, onChange, c
 
       {/* Phone Input */}
       <input
-        className="form-control mobile-input"
+        className="form-control mobile-input full-width"
         type="text"
         value={value}
         onChange={handleInputChange}

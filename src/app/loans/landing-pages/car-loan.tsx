@@ -203,8 +203,8 @@ export default function CarLoanLandingPage() {
                                 Continue
                             </button>
                         ) : (
-                            <Link href={`${'/loans/calculator?type=' + referrer + '&loanType=' + selectedType + '&vehicle=' + selectedVehicle}`}>
-                                <button className="__btn btn-black" onClick={handleContinue}>
+                            <Link  href={`${'/loans/calculator?type=' + referrer + '&loanType=' + selectedType + '&vehicle=' + selectedVehicle}`}>
+                                <button className="__btn btn-black" disabled={!selectedVehicle}>
                                     Continue
                                 </button>
                             </Link>
@@ -228,7 +228,6 @@ export default function CarLoanLandingPage() {
                             </div>
                         ))}
                     </Row>
-
                     <br />
                     {/* <div className="text-muted regular">* Except for condominium (see details)</div> */}
                 </div>

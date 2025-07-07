@@ -28,7 +28,7 @@ export default function HomeLoanLandingPage() {
     }, {
         title: 'Loan Details',
         constents: [
-            'Up to PHP 10,000,000',
+            'Up to ₱10,000,000',
             'From 12 to 6 months',
             'Quick approval',
         ]

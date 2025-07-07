@@ -63,10 +63,10 @@ function homeContents() {
                                     height={50}
                                 />
                             </div>
-                            <h6>
+                            <div className="medium readable mb-2">
                                 {item.title}
-                            </h6>
-                            <p>{item.description}</p>
+                            </div>
+                            <p className="readable">{item.description}</p>
                         </div>
                     )}
                 </div>

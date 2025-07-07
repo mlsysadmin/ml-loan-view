@@ -91,21 +91,32 @@ const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({ onChange, value
           </div>
 
           {yearDropdownOpen && (
-            <div className='date-picker-dropdown-select scrollbar' >
-              {[...Array(100)].map((_, i) => {
-                const yearOption = currentYear - i;
-                return (
-                  <div className='date-picker-dropdown-option'
-                    key={yearOption}
-                    onClick={() => {
-                      setSelectedYear(yearOption);
-                      setYearDropdownOpen(false);
-                    }}>
-                    <span>{yearOption}</span>
-                  </div>
-                )
-              })}
-            </div>
+            <>
+              <div className="date-picker-header">
+                <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select Year</span>
+                <button onClick={() => setYearDropdownOpen(false)} className="">
+                  ✕
+                </button>
+              </div>
+              <div className='date-picker-grid scrollbar'>
+                {[...Array(100)].map((_, i) => {
+                  const yearOption = currentYear - i;
+                  return (
+                    <div
+                      key={yearOption}
+                      className={`date-picker-dropdown-option ${yearOption === year ? 'selected' : ''}`}
+                      onClick={() => {
+                        setSelectedYear(yearOption);
+                        setYearDropdownOpen(false);
+                        setMonthDropdownOpen(true);
+                      }}
+                    >
+                      <span>{yearOption}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
         </div>
 
@@ -120,25 +131,36 @@ const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({ onChange, value
           </div>
 
           {monthDropdownOpen && (
-            <div className='date-picker-dropdown-select scrollbar' >
-              {months.map((label, index) => (
-                <div className='date-picker-dropdown-option'
-                  key={index + 1}
-                  onClick={() => {
-                    setSelectedMonth(index + 1);
-                    setMonthDropdownOpen(false);
-                    setSelectedMonthLabel(label);
-                  }}>
-                  <span>{label}</span>
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="date-picker-header">
+                <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select Month</span>
+                <button onClick={() => setMonthDropdownOpen(false)} className="">
+                  ✕
+                </button>
+              </div>
+              <div className='date-picker-grid scrollbar'>
+                {months.map((label, index) => (
+                  <div
+                    key={index + 1}
+                    className={`date-picker-dropdown-option ${month === index + 1 ? 'selected' : ''}`}
+                    onClick={() => {
+                      setSelectedMonth(index + 1);
+                      setSelectedMonthLabel(label);
+                      setMonthDropdownOpen(false);
+                      setDayDropdownOpen(true);
+                    }}
+                  >
+                    <span>{label}</span>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
 
         {/* Day */}
         <div className='full-width'>
-          <div className='date-picker-dropdown' onClick={() => {
+          <div className='date-picker-dropdown scrollbar' onClick={() => {
             setDayDropdownOpen(!dayDropdownOpen);
             setYearDropdownOpen(false);
             setMonthDropdownOpen(false);
@@ -147,18 +169,33 @@ const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({ onChange, value
           </div>
 
           {dayDropdownOpen && (
-            <div className='date-picker-dropdown-select scrollbar'>
-              {daysInMonth.map((d) => (
-                <div className='date-picker-dropdown-option'
-                  key={d}
-                  onClick={() => {
-                    setSelectedDay(d);
-                    setDayDropdownOpen(false);
-                  }}>
-                  <span>{d}</span>
-                </div>
-              ))}
-            </div>
+            <>
+              {daysInMonth.length > 0 ? (
+                <>
+                  <div className="date-picker-header">
+                    <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select Day</span>
+                    <button onClick={() => setDayDropdownOpen(false)} className="">
+                      ✕
+                    </button>
+                  </div>
+                  <div className='date-picker-grid scrollbar'>
+                    {daysInMonth.map((label, index) => (
+                      <div
+                        className={`date-picker-dropdown-option ${day === index + 1 ? 'selected' : ''}`}
+                        key={label}
+                        onClick={() => {
+                          setSelectedDay(label);
+                          setDayDropdownOpen(false);
+                        }}>
+                        <span>{label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className='date-picker-empty'>Select Year and Month first.</div>
+              )}
+            </>
           )}
         </div>
       </div>

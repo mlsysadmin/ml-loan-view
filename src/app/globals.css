@@ -5000,7 +5000,7 @@ input[type=submit].btn-block {
 }
 
 .card-title {
-  margin-bottom: .75rem
+  margin-bottom: 10px
 }
 
 .card-subtitle {
@@ -15750,7 +15750,7 @@ a {
   }
 
   .title {
-    font-size: 30px;
+    font-size: 40px;
   }
 
   .big {
@@ -15821,11 +15821,11 @@ a {
   }
 
   .banner-text {
-    width: 500px;
+    width: 510px;
   }
 
   .why-text {
-    width: 500px;
+    width: 510px;
   }
 }
 

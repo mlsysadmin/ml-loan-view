@@ -51,7 +51,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
 
   const editRef = useRef<HTMLDivElement | null>(null);
 
-  const percentage = ((value - min) / (max - min)) * 100;
+  const percentage = Math.min(Math.max(((value - min) / (max - min)) * 100, 0), 100);
   const computedPHP =
     typeof secondaryValue === 'number' ? (secondaryValue * value) / 100 : value;
 
@@ -106,6 +106,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
           {label}
           {isEditing ? (
             <input
+              pattern="[0-9]*"
               className="manual-input ml-1"
               type="text"
               value={manualAmount}
