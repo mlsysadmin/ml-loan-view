@@ -67,7 +67,7 @@ export default function HomeLoanLandingPage() {
                 <div className="home-loan-img-wrapper">
                     <Image
                         className="home-loan-img"
-                        src="/images/home-loan.svg"
+                        src="/images/house.svg"
                         alt="MLhuillier logo"
                         width={100}
                         height={100}

@@ -275,8 +275,18 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
           <small className='red'>{errorLastName}</small>
         </div>
         <div className='form-fields half-width'>
+          <CustomDropdown
+            label="Suffix"
+            value={suffix}
+            options={['SR', 'JR', 'II', 'III', 'IV', 'V']}
+            onChange={(val) => {
+              setSuffix(val.toUpperCase())
+              setErrorCitizenship('');
+            }}
+            placeholder="Suffix"
+          />
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
-          <div className='select one-third-width'>
+          {/* <div className='select one-third-width'>
             <select value={suffix} onChange={(e) => setSuffix(e.target.value.toUpperCase())} className='select__field'>
               <option value="">Suffix &nbsp;&nbsp;</option>
               <option value="SR.">SR</option>
@@ -286,7 +296,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
               <option value="IV">IV</option>
               <option value="V">V</option>
             </select>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className='details-wrapper'>
@@ -311,13 +321,16 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         )}
         <div className='form-fields citizenship-wrapper'>
           {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
-            <CustomDropdown
-              label="Month"
-              value={citizenship}
-              options={['FILIPINO', 'NOT FILIPINO']}
-              onChange={(e) => { setCitizenship(e.target.value); setErrorCitizenship('') }}
-              placeholder="Citizenship"
-            />
+          <CustomDropdown
+            label="Citizenship"
+            value={citizenship}
+            options={['FILIPINO', 'NOT FILIPINO']}
+            onChange={(val) => {
+              setCitizenship(val);
+              setErrorCitizenship('');
+            }}
+            placeholder="Citizenship"
+          />
           {/* <div className='select full-width-select'>
             <select onChange={(e) => { setCitizenship(e.target.value); setErrorCitizenship('') }} id="" className='select__field' value={citizenship}>
               <option value="">Citizenship&nbsp;&nbsp;&nbsp;</option>

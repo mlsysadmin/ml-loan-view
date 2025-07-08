@@ -5,6 +5,7 @@ import { useLoanStore, useFinalLoanStore } from '@/app/loans/store/dataStore';
 import 'react-phone-input-2/lib/style.css';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
+import CustomDropdown from '../../components/Dropdown';
 
 interface Props {
   data: any;
@@ -61,15 +62,20 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       setDesignation(data.ckycData.occupation.workPosition);
     }
     setIsLoading(false)
-    if (laonType === 'home') {
+  }, []);
+  
+  useEffect(() => {
+    console.log('-as=d-as=-d=asd==================', laonType)
+    if (laonType === '"home"') {
       setHeaderText('HOUSING');
       setUnitOrPropertyType(loanData?.propertyType || '')
-    }
-    if (laonType === 'car') {
+      console.log('==-=-=', unitOrPropertyType, headerText)
+    } else if (laonType === '"car"') {
       setHeaderText('CAR');
       setUnitOrPropertyType(loanData?.unitType || '')
+      console.log('==-=-=', unitOrPropertyType, headerText, loanData?.propertyType)
     }
-  }, []);
+  });
 
   const setFinalLoanData = useFinalLoanStore((state) => state.setFinalLoanData);
   const finalLoanStore = useFinalLoanStore((state) => state.data);
@@ -449,15 +455,15 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       <label className='readable medium'>Income Details</label>
       <div className='details-wrapper'>
         <div className='form-fields full-width'>
-          <div className='select'>
-            <select onChange={(e) => setSourceOfIncome(e.target.value)} className='select__field' value={sourceOfIncome}>
-              <option value="">Type of Income</option>
-              <option value="SALARY">SALARY</option>
-              <option value="BUSINESS">BUSINESS</option>
-              <option value="PENSION">PENSION</option>
-              <option value="REGULAR REMITTANCE ABROAD">REGULAR REMITTANCE ABROAD</option>
-            </select>
-          </div>
+          <CustomDropdown
+            label="Suffix"
+            value={sourceOfIncome}
+            options={['SALARY', 'BUSINESS', 'PENSION', 'REGULAR REMITTANCE ABROAD']}
+            onChange={(val) => {
+              setSourceOfIncome(val.toUpperCase())
+            }}
+            placeholder="Type of Income"
+          />
         </div>
         <div className='form-fields full-width'>
           <input type="text" className='form-control full-width' value={empOrBusiness || ""} onChange={(e) => setEmpOrBusiness(e.target.value)} placeholder='Employer / Business Name' />

@@ -198,14 +198,12 @@ export default function CarLoanLandingPage() {
                                             onMouseEnter={() => setHovered(index)}
                                             onMouseLeave={() => setHovered(null)}
                                         >
-
                                             <Image
                                                 src={`/images/car_loan_icons/${(hovered === index || isSelected) ? item.img + '-white' : item.img}.svg`}
                                                 alt={label}
                                                 width={55}
                                                 height={55}
                                             />
-
                                             {/* <Image
                                                 src={`/images/car_loan_icons/${imgName}.svg`}
                                                 alt={label}
