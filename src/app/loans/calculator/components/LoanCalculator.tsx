@@ -580,7 +580,8 @@ const LoanCalculator: React.FC = () => {
                             step={1}
                             formatValue={(value) => `${value}%`}
                             secondaryValue={purchasePrice}
-                            showFloatingLabel={true}
+                            // showFloatingLabel={true}
+                            showSecondatyLabel={true}
                             editableAmountInstead={true}
                         />
                     </div>

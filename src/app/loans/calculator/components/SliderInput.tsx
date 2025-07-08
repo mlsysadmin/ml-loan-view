@@ -2,6 +2,7 @@
 import { SquarePen } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { spawn } from 'child_process';
 
 interface Mark {
   value: number;
@@ -19,6 +20,7 @@ interface SliderInputProps {
   customMarks?: Mark[];
   secondaryValue?: number;
   showFloatingLabel?: boolean;
+  showSecondatyLabel?: boolean;
   suffix?: string;
   editableAmountInstead?: boolean;
 }
@@ -34,6 +36,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
   customMarks,
   secondaryValue,
   showFloatingLabel = false,
+  showSecondatyLabel = false,
   suffix = '',
   editableAmountInstead = false,
 }) => {
@@ -129,6 +132,9 @@ const SliderInput: React.FC<SliderInputProps> = ({
                 : formatValue(value)}
               {suffix}
             </span>
+          )}
+          {showSecondatyLabel && (
+            <span className='red'>&nbsp;({`${value.toFixed(0)}%`})</span>
           )}
         </div>
 
