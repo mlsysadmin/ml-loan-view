@@ -6,6 +6,7 @@ import chromium from '@sparticuz/chromium';
 export async function POST(req: Request) {
   const body = await req.json();
   const { to, subject, text, cc, htmlContent } = body;
+  const isDev = process.env.NODE_ENV !== 'production';
 
   if (!to || !subject || !text || !htmlContent) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
@@ -16,7 +17,8 @@ export async function POST(req: Request) {
     const browser = await puppeteer.launch({
       args: chromium.args,
       executablePath: await chromium.executablePath(),
-      headless: true,
+      headless: process.env.HEADLESS === 'true',
+      defaultViewport: { width: 1280, height: 800 },
     });
     const page = await browser.newPage();
     await page.setContent(`
