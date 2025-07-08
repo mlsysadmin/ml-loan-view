@@ -10,20 +10,37 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
-  // Generate PDF from HTML using Puppeteer
   let pdfBuffer: Buffer;
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+
     const page = await browser.newPage();
-    await page.setContent(htmlContent);
-    const pdf = await page.pdf({ format: 'A4' });
+
+    // Make sure to wrap HTML properly
+    await page.setContent(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <style>body { font-family: Arial; }</style>
+        </head>
+        <body>
+          ${htmlContent}
+        </body>
+      </html>
+    `);
+
+    const pdf = await page.pdf({ format: 'A4', printBackground: true });
     pdfBuffer = Buffer.from(pdf);
     await browser.close();
   } catch (pdfError: any) {
+    console.error('PDF Error:', pdfError);
     return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
   }
 
-  // Configure email transport
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -33,7 +50,6 @@ export async function POST(req: Request) {
   });
 
   try {
-    // Send email with PDF attachment
     await transporter.sendMail({
       from: `"ML Loans Application" <${process.env.EMAIL_USER}>`,
       to,
@@ -50,9 +66,11 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ message: 'Email with PDF sent successfully' });
   } catch (emailError: any) {
+    console.error('Email Error:', emailError);
     return NextResponse.json({ error: emailError.message }, { status: 500 });
   }
 }
+
 
 // import { NextResponse } from 'next/server';
 // import puppeteer from 'puppeteer';
