@@ -1,0 +1,187 @@
+body {
+    background-color: #ffffff !important;
+}
+
+.title {
+    margin-bottom: 0px;
+}
+
+.top-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0px 50px 0px;
+}
+
+.top-text {
+    font-size: 31px !important;
+    margin-bottom: 0px;
+}
+
+.step-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.steps {
+    color: #333333;
+    background-color: #d9d9d9;
+    padding: 5px 13px;
+    border-radius: 20px;
+    margin: 0px 5px;
+}
+
+.done {
+    color: #ffffff;
+    background-color: #333333;
+}
+
+.form-card {
+    background-color: #ffffff;
+    padding: 20px 50px;
+    border-radius: 5px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.form-fields {
+    gap: 2px;
+}
+
+.full {
+    width: 100%;
+}
+
+.form-btn-container {
+    display: flex;
+    border-top: none;
+    padding: 35px 0px 50px;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.form-btn-container button {
+    display: block;
+    border-radius: 20px;
+    margin-right: 0;
+    padding: 10px 20px;
+}
+
+.form-control {
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
+}
+
+.form-control:focus {
+    border: 1px solid #ff0000;
+}
+
+.disabled-date-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.disabled-date-fields {
+    text-align: center;
+}
+
+@media(max-width: 514px) {
+
+    /* Mobile */
+    .form-control {
+        width: 100%;
+    }
+
+    .mobile-input {
+        width: 100%;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .btn-wrapper {
+        width: 90%;
+    }
+
+    .date-wrapper {
+        width: 100%;
+    }
+}
+
+
+@media (min-width: 515px),
+(max-width: 990px) {
+    .date-wrapper {
+        width: 100%;
+    }
+}
+
+@media (min-width: 991px) {
+    .date-wrapper {
+        width: 35%;
+    }
+}
+
+@media(min-width: 515px) {
+
+    /* Web */
+    .form-control {
+        width: 40%;
+    }
+
+    .mobile-input {
+        width: 30%;
+    }
+
+    .details-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        gap: 10px
+    }
+
+    .full-width {
+        width: 100%;
+    }
+
+    .half-width {
+        max-width: 50%;
+        width: 50%
+    }
+
+    .citizenship-wrapper {
+        width: 25%;
+    }
+
+    .custom-width-modal {
+        max-width: 900px;
+        width: 350px;
+    }
+
+}
+
+.form-fields {
+    margin-bottom: 20px;
+}
+
+.uppercase-input {
+    text-transform: uppercase;
+}
