@@ -331,6 +331,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
             }}
             placeholder="Citizenship"
           />
+          <small className='red'>{errorCitizenship}</small>
           {/* <div className='select full-width-select'>
             <select onChange={(e) => { setCitizenship(e.target.value); setErrorCitizenship('') }} id="" className='select__field' value={citizenship}>
               <option value="">Citizenship&nbsp;&nbsp;&nbsp;</option>

@@ -377,7 +377,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
 
   const sendEmail = async () => {
     setIsLoading(true);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/mailer-service`, {
+    const res = await fetch(`/api/mailer-service`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
