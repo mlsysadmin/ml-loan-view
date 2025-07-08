@@ -1,17 +1,20 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer'; // If you're on Vercel/Netlify, see the alternate version below
 
 export async function POST(req: Request) {
   const body = await req.json();
   const { to, subject, text, cc, htmlContent } = body;
 
+  // Validate input
   if (!to || !subject || !text || !htmlContent) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
   let pdfBuffer: Buffer;
+
   try {
+    console.log('Launching Puppeteer...');
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -19,28 +22,33 @@ export async function POST(req: Request) {
 
     const page = await browser.newPage();
 
-    // Make sure to wrap HTML properly
-    await page.setContent(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>body { font-family: Arial; }</style>
-        </head>
-        <body>
-          ${htmlContent}
-        </body>
-      </html>
-    `);
+    console.log('Setting content...');
+    await page.setContent(
+      `<!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8" />
+            <style>body { font-family: Arial, sans-serif; }</style>
+          </head>
+          <body>
+            ${htmlContent}
+          </body>
+        </html>`,
+      { waitUntil: 'networkidle0' }
+    );
 
+    console.log('Generating PDF...');
     const pdf = await page.pdf({ format: 'A4', printBackground: true });
     pdfBuffer = Buffer.from(pdf);
+
+    console.log('Closing browser...');
     await browser.close();
   } catch (pdfError: any) {
-    console.error('PDF Error:', pdfError);
-    return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
+    console.error('PDF generation error:', pdfError);
+    return NextResponse.json({ error: 'Failed to generate PDF', detail: pdfError.message }, { status: 500 });
   }
 
+  // Email transporter
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -66,10 +74,11 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ message: 'Email with PDF sent successfully' });
   } catch (emailError: any) {
-    console.error('Email Error:', emailError);
-    return NextResponse.json({ error: emailError.message }, { status: 500 });
+    console.error('Email sending error:', emailError);
+    return NextResponse.json({ error: 'Failed to send email', detail: emailError.message }, { status: 500 });
   }
 }
+
 
 
 // import { NextResponse } from 'next/server';
