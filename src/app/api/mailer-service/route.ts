@@ -1,43 +1,69 @@
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
-import puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer';
 import chromium from '@sparticuz/chromium';
+import nodemailer from 'nodemailer';
 
 export async function POST(req: Request) {
   const body = await req.json();
   const { to, subject, text, cc, htmlContent } = body;
-  const isDev = process.env.NODE_ENV !== 'production';
 
   if (!to || !subject || !text || !htmlContent) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
+  let browser = null;
   let pdfBuffer: Buffer;
-  try {
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
-      headless: process.env.HEADLESS === 'true',
-      defaultViewport: { width: 1280, height: 800 },
-    });
-    const page = await browser.newPage();
-    await page.setContent(`
-      <!DOCTYPE html>
-      <html><body>${htmlContent}</body></html>
-    `, { waitUntil: 'networkidle0' });
 
-    const pdf = await page.pdf({ format: 'A4', printBackground: true });
+  try {
+    // Launch headless Chromium (works on GCP)
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    const browser = await puppeteer.launch({
+      args: isProduction ? chromium.args : [],
+      executablePath: isProduction
+        ? await chromium.executablePath()
+        : undefined, // let puppeteer use bundled Chromium in dev
+      headless: true,
+    });
+
+    const page = await browser.newPage();
+
+    // Inject HTML content
+    await page.setContent(`<!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <style>body { font-family: Arial, sans-serif; }</style>
+        </head>
+        <body>
+          ${htmlContent}
+        </body>
+      </html>`, {
+      waitUntil: 'networkidle0',
+    });
+
+    // Generate PDF
+    const pdf = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+    });
+
     pdfBuffer = Buffer.from(pdf);
-    await browser.close();
-  } catch (error: any) {
-    return NextResponse.json({ error: 'Failed to generate PDF', detail: error.message }, { status: 500 });
+
+  } catch (err: any) {
+    console.error('PDF generation error:', err);
+    return NextResponse.json({ error: 'Failed to generate PDF', detail: err.message }, { status: 500 });
+  } finally {
+    // Always close browser
+    if (browser) await browser.close();
   }
 
+  // Configure email
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: process.env.EMAIL_USER,      // set in .env
+      pass: process.env.EMAIL_PASS,      // set in .env
     },
   });
 
@@ -48,14 +74,18 @@ export async function POST(req: Request) {
       cc,
       subject,
       text,
-      attachments: [{
-        filename: 'application.pdf',
-        content: pdfBuffer,
-      }],
+      attachments: [
+        {
+          filename: 'application.pdf',
+          content: pdfBuffer,
+        },
+      ],
     });
 
-    return NextResponse.json({ message: 'Email sent successfully with PDF' });
+    return NextResponse.json({ message: 'Email with PDF sent successfully' });
+
   } catch (emailError: any) {
+    console.error('Email send error:', emailError);
     return NextResponse.json({ error: 'Failed to send email', detail: emailError.message }, { status: 500 });
   }
 }
