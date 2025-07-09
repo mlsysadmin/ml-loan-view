@@ -55,15 +55,18 @@ FROM node:18-slim
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+RUN npm run build
 
 # Add Puppeteer dependencies
 RUN apt-get update && apt-get install -y \
-  wget ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 \
-  libnspr4 libnss3 libxss1 xdg-utils libgbm-dev libgtk-3-0 \
-  --no-install-recommends && rm -rf /var/lib/apt/lists/*
+    wget ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 \
+    libnspr4 libnss3 libxss1 xdg-utils libgbm-dev libgtk-3-0 \
+    --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 # Copy app code
-COPY . .
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
 # Expose port and start
 EXPOSE 3000
