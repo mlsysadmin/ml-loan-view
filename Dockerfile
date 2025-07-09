@@ -26,46 +26,21 @@
 # /////////////////////////////////////
 
 
-# # --- Build Stage ---
-# FROM node:18-alpine AS builder
-# WORKDIR /app
-# COPY . .
-# RUN npm install
-# RUN npm run build
-
-# # --- Production Stage ---
-# FROM node:18-alpine AS runner
-# WORKDIR /app
-
-# # Copy necessary standalone files
-# COPY --from=builder /app/.next/standalone ./
-# COPY --from=builder /app/.next/static ./.next/static
-# COPY --from=builder /app/public ./public
-
-# EXPOSE 3000
-# CMD ["node", "server.js"]
-
-
-
-
-# Use official Node.js image
-FROM node:18-slim
-
-# Install dependencies
+# --- Build Stage ---
+FROM node:18-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
+COPY . .
 RUN npm install
 RUN npm run build
 
-# Add Puppeteer dependencies
-RUN apt-get update && apt-get install -y \
-    wget ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 \
-    libnspr4 libnss3 libxss1 xdg-utils libgbm-dev libgtk-3-0 \
-    --no-install-recommends && rm -rf /var/lib/apt/lists/*
+# --- Production Stage ---
+FROM node:18-alpine AS runner
+WORKDIR /app
 
-# Copy app code
-COPY . .
+# Copy necessary standalone files
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
-# Expose port and start
 EXPOSE 3000
-CMD ["npm", "run", "start"]
+CMD ["node", "server.js"]
