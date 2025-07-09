@@ -382,8 +382,8 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         to: 'kenneth88877@gmail.com',
-        cc: 'kenneth.simbulan@mlhuillier.com',
-        // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
+        // cc: 'kenneth.simbulan@mlhuillier.com',
+        cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
         subject: 'Home Loan Application',
         text: `Applicant: ${firstName} ${lastName} ${lastName} ${suffix} <br/> `,
         htmlContent: htmlContent
@@ -466,12 +466,12 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
           />
         </div>
         <div className='form-fields full-width'>
-          <input type="text" className='form-control full-width' value={empOrBusiness || ""} onChange={(e) => setEmpOrBusiness(e.target.value)} placeholder='Employer / Business Name' />
+          <input type="text" className='form-control full-width' value={empOrBusiness || ""} onChange={(e) => setEmpOrBusiness(e.target.value.toUpperCase())} placeholder='Employer / Business Name' />
         </div>
       </div>
       <div className='details-wrapper'>
         <div className='form-fields full-width'>
-          <input type="text" className='form-control full-width' value={designation || ""} onChange={(e) => setDesignation(e.target.value)} placeholder='Position' />
+          <input type="text" className='form-control full-width' value={designation || ""} onChange={(e) => setDesignation(e.target.value.toUpperCase())} placeholder='Position' />
         </div>
         <div className='form-fields full-width'>
           <input type="text"
