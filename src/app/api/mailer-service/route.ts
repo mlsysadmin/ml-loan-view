@@ -1,56 +1,52 @@
+// /app/api/mailer/route.ts
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
 import puppeteer from 'puppeteer';
+import nodemailer from 'nodemailer';
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { to, subject, text, cc, htmlContent } = body;
+  const { to, subject, text, htmlContent } = body;
 
   if (!to || !subject || !text || !htmlContent) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
-  // Generate PDF from HTML using Puppeteer
-  let pdfBuffer: Buffer;
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+
     const page = await browser.newPage();
     await page.setContent(htmlContent);
-    const pdf = await page.pdf({ format: 'A4' });
-    pdfBuffer = Buffer.from(pdf);
+    const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
     await browser.close();
-  } catch (pdfError: any) {
-    return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
-  }
 
-  // Configure email transport
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-  try {
-    // Send email with PDF attachment
     await transporter.sendMail({
-      from: `"ML Loans Application" <${process.env.EMAIL_USER}>`,
+      from: `"ML Loans App" <${process.env.EMAIL_USER}>`,
       to,
-      cc,
       subject,
       text,
       attachments: [
         {
-          filename: 'application.pdf',
+          filename: 'loan-application.pdf',
           content: pdfBuffer,
         },
       ],
     });
 
-    return NextResponse.json({ message: 'Email with PDF sent successfully' });
-  } catch (emailError: any) {
-    return NextResponse.json({ error: emailError.message }, { status: 500 });
+    return NextResponse.json({ message: 'Email sent with PDF attachment' });
+  } catch (err: any) {
+    console.error('Error:', err);
+    return NextResponse.json({ error: 'Failed to send email', detail: err.message }, { status: 500 });
   }
 }
 
