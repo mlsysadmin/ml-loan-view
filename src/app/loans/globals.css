@@ -16076,5 +16076,6 @@ a {
 }
 
 .wiggle {
+  border: solid #ff0000;
   animation: wiggle 0.3s ease-in-out;
 }

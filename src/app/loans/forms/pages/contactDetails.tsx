@@ -49,8 +49,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [provinceOrState, setProvinceOrState] = useState("");
   const [cityOrTown, setCityOrTown] = useState("");
   const [barrangay, setBarrangay] = useState("");
-  const [streetName, setStreetName] = useState("");
-  const [specAddress, setSpecAddress] = useState("");
+  const [streetNameAndSpecAddress, setStreetNameAndSpecAddress] = useState("");
 
   const [sourceOfIncome, setSourceOfIncome] = useState("");
   const [grossMonthlyIncome, setGrossMonthlyIncome] = useState("");
@@ -111,8 +110,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       setProvinceOrState(storedData.provinceOrState || '');
       setCityOrTown(storedData.cityOrTown || '');
       setBarrangay(storedData.barrangay || '');
-      setStreetName(storedData.streetName || '');
-      setSpecAddress(storedData.specAddress || '');
+      setStreetNameAndSpecAddress(storedData.streetNameAndSpecAddress || '');
       setCountryCode(storedData.countryCode || '');
     }
   }, []);
@@ -156,14 +154,13 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     if (provinceOrState === '') setErrorProvinceOrState('Province/State is required.');
     if (cityOrTown === '') setErrorCityOrTown('City or Town is required.');
     if (barrangay === '') setErrorBarrangay('Barrangay is required.');
-    if (streetName === '') setErrorStreet('Street name is required.');
-    if (specAddress === '') setErrorSpecAdd('House no. / Sitio / Purok is required.');
+    if (streetNameAndSpecAddress === '') setErrorStreet('House No., Street / Sitio is required.');
   };
 
   const handleContinue = () => {
     setIsValidEmail(emailRegex.test(email));
 
-    if (firstName && lastName && contactNumber && email && isValidEmail && birthdate && citizenship && country && cityOrTown && barrangay && specAddress) {
+    if (firstName && lastName && contactNumber && email && isValidEmail && birthdate && citizenship && country && cityOrTown && barrangay && streetNameAndSpecAddress) {
       setFinalLoanData({
         contactNumber,
         countryCode,
@@ -178,8 +175,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         provinceOrState,
         cityOrTown,
         barrangay,
-        streetName,
-        specAddress,
+        streetNameAndSpecAddress,
         found: ckycData ? true : false,
         ckycData
       });
@@ -197,8 +193,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         provinceOrState,
         cityOrTown,
         barrangay,
-        streetName,
-        specAddress,
+        streetNameAndSpecAddress,
         found: ckycData ? true : false,
         ckycData: ckycData
       });
@@ -218,9 +213,11 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       setBirthdate(birthdate);
       setEmail(ckycData?.email);
       setCitizenship(ckycData?.nationality);
-      setCountry(ckycData?.addresses.current.addressL0Name)
-      setCityOrTown(ckycData?.addresses.current.addressL2Name)
-      setBarrangay(ckycData?.addresses.current.otherAddress)
+      setCountry(ckycData?.addresses.current.addressL0Name);
+      setProvinceOrState(ckycData?.addresses.current.addressL1Name);
+      setCityOrTown(ckycData?.addresses.current.addressL2Name);
+      setBarrangay(ckycData?.addresses.current.addressL3Name);
+      setStreetNameAndSpecAddress(ckycData?.addresses.current.otherAddress);
       setConfirmed(true);
       handleClose();
     } else setErrorBdate('Birth date not matched.');
@@ -372,14 +369,13 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         </div>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={streetName} onChange={(e) => { setStreetName(e.target.value.toUpperCase()); setErrorStreet(''); }} placeholder='Street Name' />
+          <input type="text" className='form-control full-width' value={streetNameAndSpecAddress} onChange={(e) => { setStreetNameAndSpecAddress(e.target.value.toUpperCase()); setErrorStreet(''); }} placeholder='House No., Street / Sitio' />
           <small className='red'>{errorStreet}</small>
         </div>
-        <div className='form-fields full-width'>
-          {/* <label className='readable medium'>&nbsp;</label> */}
+        {/* <div className='form-fields full-width'>
           <input type="text" className='form-control full-width' value={specAddress} onChange={(e) => { setSpecAddress(e.target.value.toUpperCase()); setErrorSpecAdd(''); }} placeholder='Unit/House No.' />
           <small className='red'>{errorSpecAdd}</small>
-        </div>
+        </div> */}
       </div>
 
       {/* <div className='hide'>

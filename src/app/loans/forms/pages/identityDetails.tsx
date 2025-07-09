@@ -44,8 +44,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   const provinceOrState = data.provinceOrState;
   const cityOrTown = data.cityOrTown;
   const barrangay = data.barrangay;
-  const streetName = data.streetName;
-  const specAddress = data.specAddress;
+  const streetNameAndSpecAddress = data.streetNameAndSpecAddress;
   const loanData = useLoanStore((state) => state.data);
 
   const [show, setShow] = useState(false);
@@ -367,7 +366,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
           </div>
           <div class="detail-item address">
             <span class="detail-label">Address</span>
-            <span class="detail-value"> ${specAddress && specAddress}, ${barrangay && barrangay}, ${cityOrTown && cityOrTown}, ${country && country}</span>
+            <span class="detail-value"> ${streetNameAndSpecAddress && streetNameAndSpecAddress}, ${barrangay && barrangay}, ${cityOrTown && cityOrTown}, ${country && country}</span>
           </div>
       </section>
     </div>
@@ -398,8 +397,8 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         to: 'kenneth88877@gmail.com',
-        // cc: 'kenneth.simbulan@mlhuillier.com',
-        cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
+        cc: 'kenneth.simbulan@mlhuillier.com',
+        // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
         subject: 'Loan Application',
         text: `Please find the attached loan application from ${firstName} ${lastName} ${lastName} ${suffix}`,
         ...finalData
@@ -425,12 +424,12 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     empOrBusiness: empOrBusiness,
     designation: designation,
     loanData: loanData,
+    unitOrPropertyType: unitOrPropertyType,
     country: country,
     provinceOrState: provinceOrState,
     cityOrTown: cityOrTown,
     barrangay: barrangay,
-    streetName: streetName,
-    specAddress: specAddress,
+    streetNameAndSpecAddress: streetNameAndSpecAddress,
     countryCode: countryCode,
     headerText: headerText,
     ref: ref
@@ -460,8 +459,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       provinceOrState,
       cityOrTown,
       barrangay,
-      streetName,
-      specAddress,
+      streetNameAndSpecAddress,
       countryCode
     });
     setShow(true);

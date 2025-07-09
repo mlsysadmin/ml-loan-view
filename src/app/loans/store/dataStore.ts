@@ -37,8 +37,7 @@ interface FinalLoanData {
     provinceOrState: string,
     cityOrTown: string,
     barrangay: string,
-    streetName: string,
-    specAddress: string,
+    streetNameAndSpecAddress: string,
     citizenship: string;
     grossMonthlyIncome: number | string;
     sourceOfIncome: string;

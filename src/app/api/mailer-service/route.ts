@@ -100,7 +100,7 @@ export async function POST(req: Request) {
     empOrBusiness,
     designation,
     grossMonthlyIncome,
-    specAddress,
+    streetNameAndSpecAddress,
     barrangay,
     cityOrTown,
     country
@@ -115,10 +115,9 @@ export async function POST(req: Request) {
     const lightGray = rgb(0.95, 0.95, 0.95);
 
     let y = 800;
-    const drawText = (label: string, value: any, x1 = 40, x2 = 300) => {
-      const safeValue = value !== undefined && value !== null ? String(value) : '---';
+    const drawText = (label: string, value: string, x1 = 40, x2 = 300) => {
       page.drawText(label, { x: x1, y, size: 10, font, color });
-      page.drawText(safeValue, { x: x2, y, size: 10, font, color });
+      page.drawText(value, { x: x2, y, size: 10, font, color });
       y -= 18;
     };
 
@@ -168,7 +167,7 @@ export async function POST(req: Request) {
     drawText('Employer/Business', empOrBusiness || '---');
     drawText('Designation', designation || '---');
     drawText('Gross Monthly Income', grossMonthlyIncome ? `PHP ${grossMonthlyIncome}` : '---');
-    drawText('Address', `${specAddress}, ${barrangay}, ${cityOrTown}, ${country}`);
+    drawText('Address', `${streetNameAndSpecAddress}, ${barrangay}, ${cityOrTown}, ${country}`);
 
     const pdfBytes = await pdfDoc.save();
 
