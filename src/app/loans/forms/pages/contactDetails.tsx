@@ -121,7 +121,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       setErrorContactNumber('');
       setBirthdateFromCKYC(ckycData.birthDate);
       setShow(true);
-      setFound(true);
     }
   }, [isFetching, ckycData]);
 
@@ -132,7 +131,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
 
   const handleClose = () => {
     setShow(false);
-    !ckycData && setFound(false);
   };
 
   const handleDateChange = (date: { month: number; day: number; year: number }) => {
@@ -205,6 +203,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     let ckycBdate = birthdateFromCKYC
     console.log('========', bday, ckycBdate, bday === ckycBdate)
     if (bday === ckycBdate) {
+      setFound(true);
       setContactNumber(ckycData?.cellphoneNumber);
       setFirstName(ckycData?.name.firstName);
       setmiddleName(ckycData?.name.middleName);
