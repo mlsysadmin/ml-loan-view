@@ -17,6 +17,7 @@ export function useSearchCKYC(
     queryKey: ["search", searchText],
     queryFn: async () => {
       if (isMobileNumber(searchText)) {
+        console.log('naaa ariiiiiiiiiii')
         const res = await axios.get<CKYCData>(
           `/api/ckyc?cellphoneNumber=${searchText}`,
           {

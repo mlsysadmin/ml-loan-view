@@ -10,6 +10,9 @@ import {
   ML_DOMESTIC_API_BASE_URL,
 } from "../lib/constants/common"
 
+const ckyc_api_url = process.env.CKYC_API_URL;
+const ckyc_api_key = process.env.CKYC_API_KEY;
+
 interface AuthResponse {
   data: {
     token: string
@@ -85,7 +88,6 @@ class PartnersAPI {
     } = params
 
     try {
-      console.log('adasdasdasdasdasdsd')
       const headers = await this.getHeaders()
       const queryParams = new URLSearchParams(
         Object.entries({ ckycId, cellphoneNumber, firstName, lastName })
@@ -94,7 +96,9 @@ class PartnersAPI {
       )
 
       const response: AxiosResponse<CKYCSearchResponse> = await axios.get(
-        `${ML_CKCYC_API_DOMAIN}/customers/exact-search?${queryParams.toString()}`,
+        // `${ML_CKCYC_API_DOMAIN}/customers/exact-search?${queryParams.toString()}`,
+        `${ML_CKCYC_API_DOMAIN}/api/v1/customers/exact-search?${queryParams.toString()}`,
+        // `${ckyc_api_url}/api/v1/customers/exact-search?apiKey=${ckyc_api_key}&signature=41fb31694a11914125fbe9af60958ffb97dd2da83d5aee854bc03747c3dd9b0caeb17f00573b74003df77a92d00fc0388a6659580c3ef95ec8491a76fdb8cef1`,
         { headers }
       )
 
@@ -115,7 +119,8 @@ class PartnersAPI {
 
       const response: AxiosResponse<TransactionHistoryResponse[]> =
         await axios.get(
-          `${ML_DOMESTIC_API_BASE_URL}/2.0/ml-money/transaction-history/${ckycId}?${searchParams}`,
+          // `${ML_DOMESTIC_API_BASE_URL}/2.0/ml-money/transaction-history/${ckycId}?${searchParams}`,
+          `${ckyc_api_url}/api/v1/customers/exact-search?apiKey=${ckyc_api_key}&signature=41fb31694a11914125fbe9af60958ffb97dd2da83d5aee854bc03747c3dd9b0caeb17f00573b74003df77a92d00fc0388a6659580c3ef95ec8491a76fdb8cef1`,
           { headers }
         )
 
