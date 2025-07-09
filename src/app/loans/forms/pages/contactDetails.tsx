@@ -132,7 +132,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
 
   const handleClose = () => {
     setShow(false);
-    setFound(false);
+    !ckycData && setFound(false);
   };
 
   const handleDateChange = (date: { month: number; day: number; year: number }) => {
@@ -307,10 +307,10 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
             <small className='red'>{errorBirthdate}</small>
           </div>
         ) : (
-          <div className='form-fields'>
+          <div className='form-fields half-width'>
             {/* <label className='readable medium'>&nbsp;</label> */}
             <div className='disabled-date-wrapper'>
-              <input className='disabled-date-fields form-control' type="text" value={birthdate?.month} disabled />
+              <input className='disabled-date-fields form-control' type="text" value={moment(`${birthdate?.month}/${birthdate?.day}/${birthdate?.year}`).format('MMM')} disabled />
               <input className='disabled-date-fields form-control' type="text" value={birthdate?.day} disabled />
               <input className='disabled-date-fields form-control' type="text" value={birthdate?.year} disabled />
             </div>
