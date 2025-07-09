@@ -1,9 +1,6 @@
-// app/api/send-pdf/route.ts (or any server route)
-
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import chromium from '@sparticuz/chromium';
-import puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer';
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -13,30 +10,20 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
+  // Generate PDF from HTML using Puppeteer
   let pdfBuffer: Buffer;
   try {
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
-      headless: true, 
-    });
-
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
-
-    await page.setContent(`
-      <!DOCTYPE html>
-      <html><head><meta charset="utf-8" /></head>
-      <body>${htmlContent}</body></html>
-    `, { waitUntil: 'networkidle0' });
-
-    const pdf = await page.pdf({ format: 'A4', printBackground: true });
+    await page.setContent(htmlContent);
+    const pdf = await page.pdf({ format: 'A4' });
     pdfBuffer = Buffer.from(pdf);
     await browser.close();
-  } catch (err: any) {
-    console.error('PDF generation failed:', err);
-    return NextResponse.json({ error: 'Failed to generate PDF', detail: err.message }, { status: 500 });
+  } catch (pdfError: any) {
+    return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
   }
 
+  // Configure email transport
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -46,26 +33,26 @@ export async function POST(req: Request) {
   });
 
   try {
+    // Send email with PDF attachment
     await transporter.sendMail({
       from: `"ML Loans Application" <${process.env.EMAIL_USER}>`,
       to,
       cc,
       subject,
       text,
-      attachments: [{
-        filename: 'application.pdf',
-        content: pdfBuffer,
-      }],
+      attachments: [
+        {
+          filename: 'application.pdf',
+          content: pdfBuffer,
+        },
+      ],
     });
 
     return NextResponse.json({ message: 'Email with PDF sent successfully' });
   } catch (emailError: any) {
-    console.error('Email failed:', emailError);
     return NextResponse.json({ error: emailError.message }, { status: 500 });
   }
 }
-
-
 
 // import { NextResponse } from 'next/server';
 // import puppeteer from 'puppeteer';
