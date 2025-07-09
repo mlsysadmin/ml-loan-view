@@ -15970,7 +15970,7 @@ a {
 .btn-white {
   background-color: #ffffff;
   color: #5d5d5d;
-  border: solid #5d5d5d 0.8;
+  border: 0.8px solid #5d5d5d;
 }
 
 .modal-btn {
@@ -16042,6 +16042,7 @@ a {
   color: #fff;
   background-color: #333;
   padding: 10px 30px;
+  border: none;
 }
 
 .text-center {

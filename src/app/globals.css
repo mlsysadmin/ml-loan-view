@@ -15905,7 +15905,7 @@ a {
 .btn-white {
   background-color: #ffffff;
   color: #5d5d5d;
-  border: solid #5d5d5d 0.8;
+  border: 0.8px solid #5d5d5d;
   padding: 10px 47px;
 }
 
@@ -15976,6 +15976,7 @@ a {
 .btn-black {
   color: #fff;
   background-color: #333;
+  border: none;
 }
 
 .text-center {

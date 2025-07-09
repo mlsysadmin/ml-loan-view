@@ -63,7 +63,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     }
     setIsLoading(false)
   }, []);
-  
+
   useEffect(() => {
     console.log('-as=d-as=-d=asd==================', laonType)
     if (laonType === '"home"') {
@@ -377,44 +377,64 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
 
   const sendEmail = async () => {
     setIsLoading(true);
-    const res = await fetch(`/api/mailer-service`, {
+    // const res = await fetch(`/api/mailer-service`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     to: 'kenneth88877@gmail.com',
+    //     cc: 'kenneth.simbulan@mlhuillier.com',
+    //     // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
+    //     subject: 'Home Loan Application',
+    //     text: `Applicant: ${firstName} ${lastName} ${lastName} ${suffix} <br/> `,
+    //     htmlContent: htmlContent
+    //   }),
+    // });
+    // const data = await res.json();
+    // console.log('data::::::', data)
+
+
+    const res = await fetch('/api/mailer-service', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         to: 'kenneth88877@gmail.com',
         // cc: 'kenneth.simbulan@mlhuillier.com',
         cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
-        subject: 'Home Loan Application',
-        text: `Applicant: ${firstName} ${lastName} ${lastName} ${suffix} <br/> `,
-        htmlContent: htmlContent
+        subject: 'Loan Application',
+        text: `Please find the attached loan application from ${firstName} ${lastName} ${lastName} ${suffix}`,
+        ...finalData
       }),
     });
+
     const data = await res.json();
     console.log('data::::::', data)
+
   };
 
-  let finalData = [
-    contactNumber,
-    email,
-    firstName,
-    middleName,
-    lastName,
-    suffix,
-    birthdate,
-    citizenship,
-    grossMonthlyIncome,
-    sourceOfIncome,
-    empOrBusiness,
-    designation,
-    loanData,
-    country,
-    provinceOrState,
-    cityOrTown,
-    barrangay,
-    streetName,
-    specAddress,
-    countryCode
-  ];
+  let finalData = {
+    contactNumber: contactNumber,
+    email: email,
+    firstName: firstName,
+    middleName: middleName,
+    lastName: lastName,
+    suffix: suffix,
+    birthdate: birthdate,
+    citizenship: citizenship,
+    grossMonthlyIncome: grossMonthlyIncome,
+    sourceOfIncome: sourceOfIncome,
+    empOrBusiness: empOrBusiness,
+    designation: designation,
+    loanData: loanData,
+    country: country,
+    provinceOrState: provinceOrState,
+    cityOrTown: cityOrTown,
+    barrangay: barrangay,
+    streetName: streetName,
+    specAddress: specAddress,
+    countryCode: countryCode,
+    headerText: headerText,
+    ref: ref
+  };
 
   async function submitData() {
     console.log('FINAL DATA :::::::::', finalData)
