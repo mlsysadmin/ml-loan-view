@@ -1,4 +1,4 @@
-<html lang="en">
+ <html lang="en">
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -146,11 +146,14 @@
     <!-- Header -->
     <div class="header">
         <div class="logo-section">
-            <img src="https://mlhuillier.com/img/revamp/ml-logo-2.svg" alt="M Lhuillier Logo">
+            <img src="https://mlhuillier.com/img/revamp/ml-logo.svg" alt="M Lhuillier Logo">
         </div>
         <div class="document-title">
-            <h2>HOUSING LOAN APPLICATION</h2>
-              <h3 class="detail-value">Ref. No:. &nbsp;&nbsp;&nbsp; ${ref}</h3>
+            <h2>${headerText} LOAN APPLICATION</h2>
+            <div class="detail-item">
+              <span class="detail-label">Ref No</span>
+              <h3 class="detail-value">${ref}</h3>
+            </div>
             <span class="detail-value">${moment(new Date()).format('MMMM Do YYYY, h:mm:ss a')}</span>
         </div>
     </div>
@@ -167,7 +170,10 @@
               <span class="detail-value">${loanData?.loanOption}</span>
             </div>
             
-            ${otherData}
+            <div class="detail-item">
+              <span class="detail-label">Preferred Type of Unit</span>
+              <span class="detail-value">${unitOrPropertyType}</span>
+            </div>
           </div>
           
           <div>
