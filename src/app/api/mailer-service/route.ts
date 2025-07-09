@@ -15,16 +15,22 @@ export async function POST(req: Request) {
   let pdfBuffer: Buffer;
 
   try {
-    // Launch headless Chromium (works on GCP)
     const isProduction = process.env.NODE_ENV === 'production';
 
+    // const browser = await puppeteer.launch({
+    //   args: isProduction ? chromium.args : [],
+    //   executablePath: isProduction
+    //     ? await chromium.executablePath()
+    //     : undefined,
+    //   headless: true,
+    // });
+
     const browser = await puppeteer.launch({
-      args: isProduction ? chromium.args : [],
-      executablePath: isProduction
-        ? await chromium.executablePath()
-        : undefined, // let puppeteer use bundled Chromium in dev
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
       headless: true,
     });
+
 
     const page = await browser.newPage();
 
@@ -42,7 +48,6 @@ export async function POST(req: Request) {
       waitUntil: 'networkidle0',
     });
 
-    // Generate PDF
     const pdf = await page.pdf({
       format: 'A4',
       printBackground: true,
@@ -54,16 +59,14 @@ export async function POST(req: Request) {
     console.error('PDF generation error:', err);
     return NextResponse.json({ error: 'Failed to generate PDF', detail: err.message }, { status: 500 });
   } finally {
-    // Always close browser
     if (browser) await browser.close();
   }
 
-  // Configure email
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,      // set in .env
-      pass: process.env.EMAIL_PASS,      // set in .env
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
