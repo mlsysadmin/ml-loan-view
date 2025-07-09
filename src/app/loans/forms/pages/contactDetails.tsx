@@ -140,19 +140,19 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   };
 
   const dataHandle = () => {
-    console.log('====::AS:D:AS', birthdate)
+    console.log('====::AS:D:AS', barrangay)
     if (contactNumber === '') setErrorContactNumber('Mobile number is required.');
     if (email === '') setErrorEmail('Email is required.');
     if (!isValidEmail && email !== '') setErrorEmail('Invalid email.');
     if (firstName === '') setErrorFirstName('First name is required.');
     if (lastName === '') setErrorLastName('Last name is required.');
     if (birthdate === undefined) setErrorBirthday('Birthday is required.');
-    if (citizenship === '') setErrorCitizenship('Citizenship is required.');
-    if (country === '') setErrorCountry('Country is required.');
-    if (provinceOrState === '') setErrorProvinceOrState('Province/State is required.');
-    if (cityOrTown === '') setErrorCityOrTown('City or Town is required.');
-    if (barrangay === '') setErrorBarrangay('Barrangay is required.');
-    if (streetNameAndSpecAddress === '') setErrorStreet('House No., Street / Sitio is required.');
+    if (citizenship === '' || citizenship === null || citizenship === undefined) setErrorCitizenship('Citizenship is required.');
+    if (country === '' || country === null || country === undefined) setErrorCountry('Country is required.');
+    if (provinceOrState === '' || provinceOrState === null || provinceOrState === undefined) setErrorProvinceOrState('Province/State is required.');
+    if (cityOrTown === '' || cityOrTown === null || cityOrTown === undefined) setErrorCityOrTown('City or Town is required.');
+    if (barrangay === '' || barrangay === null || barrangay === undefined) setErrorBarrangay('Barrangay is required.');
+    if (streetNameAndSpecAddress === '' || streetNameAndSpecAddress === null || streetNameAndSpecAddress === undefined) setErrorStreet('House No., Street / Sitio is required.');
   };
 
   const handleContinue = () => {
