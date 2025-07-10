@@ -79,7 +79,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             unitType
         });
         console.log('==Caculator summary====', data)
-        router.push('/loans/forms');
+        router.push(`/loans/forms?type=${loanType || 'home'}`);
     }
     return (
         <div className='summary-container'>

@@ -158,6 +158,8 @@ input[type=radio]:checked + .__radio > span {
     margin-bottom: 10px;
 }
 
+
+
 .title{
     display: flex;
     justify-content: space-between;
@@ -171,6 +173,8 @@ input[type=radio]:checked + .__radio > span {
     margin-top: 20px;
     border-radius: 15px;
 }
+
+
 
 .slider-card {
     color: #4f4f4f;

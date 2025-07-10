@@ -51,7 +51,7 @@ export default function PreApprovalPage() {
                 <br /><br /><br />
                 <br /><br /><br />
                 <br /><br /><br />
-                <div className='btn-wrapper'>
+                <div className='btn-wrapper2'>
                     <button className='__btn btn-black' onClick={() => handleBtnAction('home')}> Home </button>
                 </div>
                 {/* </>

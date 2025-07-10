@@ -5,8 +5,10 @@ import Link from "next/link";
 import { Col, Container, Row } from "react-bootstrap";
 import HomeLoanPage from './landing-pages/home-loan'
 import CarLoanPage from './landing-pages/car-loan'
+import SalaryLoanPage from './landing-pages/salary-loan'
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from "react";
+import SalaryLoanLandingPage from "./landing-pages/salary-loan";
 
 function homeContents() {
 
@@ -41,6 +43,7 @@ function homeContents() {
             {/* <Container> */}
             {referrer === 'car' && <CarLoanPage />}
             {referrer === 'home' && <HomeLoanPage />}
+            {referrer === 'salary' && <SalaryLoanPage />}
 
 
             <Container className="why">

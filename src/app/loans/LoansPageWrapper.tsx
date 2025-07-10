@@ -3,9 +3,7 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
-const LoansPageClient = dynamic(() => import('./LoansPageClient'), {
-  ssr: false,
-});
+const LoansPageClient = dynamic(() => import('./LoansPageClient'));
 
 export default function LoansPageWrapper() {
   return (
