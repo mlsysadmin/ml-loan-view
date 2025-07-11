@@ -12,8 +12,8 @@ const SalaryLoanCalculator: React.FC = () => {
   const searchParams = useSearchParams();
 
   const loanType = searchParams.get("type");
-  const selectedType = searchParams.get("loanType");
-  const selectedVehicle = searchParams.get("salary");
+  // const selectedType = searchParams.get("loanType");
+  // const selectedVehicle = searchParams.get("salary");
 
   const router = useRouter();
   // Salary loan defaults
@@ -25,6 +25,8 @@ const SalaryLoanCalculator: React.FC = () => {
 
   // SSR-safe: Start at 0, set to 500 on client for salary loan
   const [ammountFinanced, setammountFinanced] = useState(0);
+  const [isEditingAmount, setIsEditingAmount] = useState(false);
+  const [editAmountValue, setEditAmountValue] = useState("");
 
   // Set default to 500 only on client after mount to avoid hydration mismatch
   useEffect(() => {
@@ -46,16 +48,17 @@ const SalaryLoanCalculator: React.FC = () => {
     {}
   );
   const [canProceed, setCanProceed] = useState(false);
+  const [amountError, setAmountError] = useState("");
 
   const [loanOption, setOption] = useState("");
   const [propertyType, setPropertyType] = useState(""); // for Home Loan
   const [unitType, setUnitType] = useState(""); // for Car Loan (selectedVehicle)
-  const [maxDP, setMaxDP] = useState(0);
-  const [minDP, setMinDP] = useState(0);
+  // const [maxDP, setMaxDP] = useState(0);
+  // const [minDP, setMinDP] = useState(0);
   const [maxTerm, setMaxTerm] = useState(0);
   const [minTerm, setMinTerm] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(0);
-  const [minPrice, setMinPrice] = useState(0);
+  // const [maxPrice, setMaxPrice] = useState(0);
+  // const [minPrice, setMinPrice] = useState(0);
 
   // Calculate the loan details whenever inputs change
   useEffect(() => {
@@ -84,18 +87,31 @@ const SalaryLoanCalculator: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [purchasePrice, downPaymentPercent, loanTerm]);
 
-  const selectOption = (e: any) => {
-    console.log("====", e.target.value);
-    setOption(e.target.value);
-  };
+  // const selectOption = (e: any) => {
+  //   console.log("====", e.target.value);
+  //   setOption(e.target.value);
+  // };
 
-  const termMarks = Array.from(
-    { length: (maxTerm - minTerm) / 12 + 1 },
-    (_, i) => {
-      const value = minTerm + i * 12;
-      return { value, label: value.toString() };
+  // const termMarks = Array.from(
+  //   { length: (maxTerm - minTerm) / 12 + 1 },
+  //   (_, i) => {
+  //     const value = minTerm + i * 12;
+  //     return { value, label: value.toString() };
+  //   }
+  // );
+
+  const validateAmount = (value: number): string => {
+    if (isNaN(value)) {
+      return "Please enter a valid number";
     }
-  );
+    if (value < 500) {
+      return "It must be no less than the MIN amount.";
+    }
+    if (value > 4600) {
+      return "It must not exceed the MAX amount.";
+    }
+    return "";
+  };
 
   const handleContinue = () => {
     let errors: Record<number, string> = {};
@@ -204,24 +220,91 @@ const SalaryLoanCalculator: React.FC = () => {
                       gap: 12,
                     }}
                   >
-                    <span>₱{ammountFinanced.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}</span>
+                    {isEditingAmount ? (
+                      <input
+                        type="number"
+                        value={editAmountValue}
+                        onChange={(e) => setEditAmountValue(e.target.value)}
+                        onBlur={() => {
+                          const value = parseFloat(editAmountValue);
+                          const error = validateAmount(value);
+                          setAmountError(error);
+                          
+                          if (!error) {
+                            setammountFinanced(value);
+                            // Update monthly payment with interest
+                            let interestRate = 0;
+                            if (loanTerm === 1) interestRate = 0.05;
+                            else if (loanTerm === 2) interestRate = 0.1;
+                            const totalWithInterest = value + value * interestRate;
+                            setMonthlyPayment(loanTerm > 0 ? totalWithInterest / loanTerm : 0);
+                            setIsEditingAmount(false);
+                            setEditAmountValue("");
+                          }
+                        }}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            const value = parseFloat(editAmountValue);
+                            const error = validateAmount(value);
+                            setAmountError(error);
+                            
+                            if (!error) {
+                              setammountFinanced(value);
+                              // Update monthly payment with interest
+                              let interestRate = 0;
+                              if (loanTerm === 1) interestRate = 0.05;
+                              else if (loanTerm === 2) interestRate = 0.1;
+                              const totalWithInterest = value + value * interestRate;
+                              setMonthlyPayment(loanTerm > 0 ? totalWithInterest / loanTerm : 0);
+                              setIsEditingAmount(false);
+                              setEditAmountValue("");
+                            }
+                          }
+                        }}
+                        style={{
+                          border: "none",
+                          background: "transparent",
+                          padding: "4px",
+                          fontSize: 22,
+                          fontWeight: 600,
+                          width: "90px",
+                          textAlign: "end",
+                        
+                          color: "#4F4F4F",
+                        }}
+                        autoFocus
+                      />
+                    ) : (
+                      <span>₱{ammountFinanced.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}</span>
+                    )}
                     <img
                       src="/images/edit.svg"
                       alt="Edit"
                       width={20}
                       height={20}
-                      style={{ alignItems: "center" }}
-                    //   onClick={() => {
-                    //     setammountFinanced(500); // Reset to default for editing
-                    //     let interestRate = loanTerm === 2 ? 0.1 : 0.05;
-                    //     const totalWithInterest = 500 + 500 * interestRate;
-                    //     setMonthlyPayment(totalWithInterest / loanTerm);
-                    //   }}
+                      style={{ alignItems: "center", cursor: "pointer" }}
+                      onClick={() => {
+                        setIsEditingAmount(true);
+                        setEditAmountValue(ammountFinanced.toString());
+                        setAmountError(""); // Clear any previous errors when starting to edit
+                      }}
                     />
                   </div>
+                  {amountError && (
+                    <div
+                      style={{
+                        color: "#FF0000",
+                        fontSize: 13,
+                        marginTop: 2,
+                        fontWeight: 500,
+                      }}
+                    >
+                      {amountError}
+                    </div>
+                  )}
 
                   <div
                     style={{
@@ -232,6 +315,7 @@ const SalaryLoanCalculator: React.FC = () => {
                   >
                     Move the slider to select loan amount.
                   </div>
+                  
                   <div
                     style={{
                       border: "1px solid #D9D9D9",
