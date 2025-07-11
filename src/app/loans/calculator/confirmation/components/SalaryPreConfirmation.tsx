@@ -14,8 +14,8 @@ const SalaryPreConfirmation: React.FC = () => {
   const searchParams = useSearchParams();
 
   const loanType = searchParams.get("type");
-  const selectedType = searchParams.get("loanType");
-  const selectedVehicle = searchParams.get("salary");
+  // const selectedType = searchParams.get("loanType");
+  // const selectedVehicle = searchParams.get("salary");
 
   // Get loan details from search parameters
   const borrowedAmountParam = searchParams.get("borrowedAmount");
@@ -99,7 +99,7 @@ const SalaryPreConfirmation: React.FC = () => {
     setTimeout(() => {
       setIsLoading(false);
       router.push('/loans/pre-approval/salary');
-    }, 4000);
+    }, 1000);
   }
 
   // Avoid rendering until mounted to prevent hydration mismatch
@@ -198,9 +198,9 @@ const SalaryPreConfirmation: React.FC = () => {
               <button 
                 className="__btn2 btn-black" 
                 onClick={submitConfirmation}
-                // disabled={isLoading}
+                disabled={isLoading}
               >
-                Continue
+                {isLoading ? "Processing..." : "Continue"}
               </button>
               </Link>
               {/* <Link href=${'/loans/forms?type='}> */}
@@ -208,7 +208,7 @@ const SalaryPreConfirmation: React.FC = () => {
                 {/* <button onClick={submitData} className="__btn btn-white"> */}
                 <button 
                   className="__btn2 btn-white"
-                  // disabled={isLoading}
+                  disabled={isLoading}
                 >
                   Back
                 </button>
@@ -217,7 +217,7 @@ const SalaryPreConfirmation: React.FC = () => {
           </div>
         </div>
       </>
-      <Modal show={show} onHide={handleClose} keyboard={false} autoFocus={false} className='modal'>
+      {/* <Modal show={show} onHide={handleClose} keyboard={false} autoFocus={false} className='modal'>
         <div className="modal-overlay">
           <div className="modal-wrapper">
             <Modal.Body>
@@ -225,7 +225,7 @@ const SalaryPreConfirmation: React.FC = () => {
             </Modal.Body>
           </div>
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
