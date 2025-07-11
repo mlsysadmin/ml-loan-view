@@ -1,7 +1,7 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { useFinalLoanStore } from '@/app/loans/store/dataStore';
+import { useFinalLoanStore } from '@/app/store/dataStore';
 import moment from 'moment';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -10,29 +10,19 @@ export default function PreApprovalPage() {
     const router = useRouter();
     const data = useFinalLoanStore((state) => state.data);
     const clearFinalLoanData = useFinalLoanStore((state) => state.clearFinalLoanData); // ← Grab the clear method
-    const [dataRef, setDataRef] = useState<string>('');
 
-    useEffect(() => {
-        // Check for salary loan data in localStorage
-        const salaryLoanData = localStorage.getItem('salaryLoanData');
-        if (salaryLoanData) {
-            const parsedData = JSON.parse(salaryLoanData);
-            setDataRef(parsedData.ref);
-        } else if (data?.ref) {
-            setDataRef(data.ref);
-        }
-        
-        // const birthdate = `${data?.birthdate.month}/${data?.birthdate.day}/${data?.birthdate.year}`;
-        // const age = moment().diff(moment(birthdate, "MM/DD/YYYY"), 'years');
-        // if (age > 21) {
-        //     setQualified(true); 
-        // }
-    }, [data?.ref]);
+    console.log('==data:::::::', data)
+    // let qualified = false;
+
+    // const birthdate = `${data?.birthdate.month}/${data?.birthdate.day}/${data?.birthdate.year}`;
+    // const age = moment().diff(moment(birthdate, "MM/DD/YYYY"), 'years');
+
+    // if (age > 21) {
+    //     qualified = true;
+    // }
 
     function handleBtnAction(action: string) {
         clearFinalLoanData();
-        // Clear salary loan data from localStorage
-        // localStorage.removeItem('salaryLoanData');
         action === 'home' ? router.push('/') : router.push('/calculator');
     }
 
@@ -54,15 +44,15 @@ export default function PreApprovalPage() {
                 <div className='pre-approval-text'>
                     <p className='readable regular'>
                         A loan officer will contact
-                        <br /> you in 1 to 3 business days.
+                        <br/> you in 1 to 3 business days.
                     </p>
-                    <p className='readable medium'>Ref. No.: {dataRef}</p>
+                    <p className='readable medium'>Ref. No.: {data?.ref}</p>
                 </div>
                 <br /><br /><br />
                 <br /><br /><br />
                 <br /><br /><br />
-                <div className='btn2-wrapper'>
-                    <button className='__btn2 btn-black' onClick={() => handleBtnAction('home')}> Home </button>
+                <div className='btn-wrapper2'>
+                    <button className='__btn btn-black' onClick={() => handleBtnAction('home')}> Home </button>
                 </div>
                 {/* </>
                 ) : (
@@ -83,10 +73,10 @@ export default function PreApprovalPage() {
                                 for a home loan.
                             </p>
                             <p className='readable regular'>
-                                If you are married, consider applying with your spouse's combined income.
+                                If you are married, consider applying with your spouse’s combined income.
                             </p>
                             <p className='readable regular'>
-                                If you are a non-Filipino married to a Filipino citizen, consider applying using your spouse's details.
+                                If you are a non-Filipino married to a Filipino citizen, consider applying using your spouse’s details.
                             </p>
                         </div>
                         <br /><br />

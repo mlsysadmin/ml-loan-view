@@ -10,6 +10,7 @@ import CustomDropdown from '../../components/Dropdown';
 interface Props {
   data: any;
   onBack: () => void;
+  loanType?: string;
 }
 
 const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
