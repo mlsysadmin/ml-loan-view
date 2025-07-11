@@ -1,7 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
 import { isMobileNumber } from "../../../../lib/utils/common";
-import { ML_CKCYC_API_DOMAIN } from "../../../../lib/constants/common";
 
 export interface CKYCData {
   id: string

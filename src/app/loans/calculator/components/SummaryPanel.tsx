@@ -17,6 +17,7 @@ interface SummaryPanelProps {
     formError: string;
     onConfirm: () => void;
     canProceed: boolean;
+    interest: number;
 }
 
 
@@ -31,7 +32,8 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
     unitType,
     formError,
     onConfirm,
-    canProceed
+    canProceed,
+    interest
 }) => {
     // const pathname = usePathname();
     const searchParams = useSearchParams();

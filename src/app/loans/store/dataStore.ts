@@ -39,14 +39,15 @@ interface FinalLoanData {
     barrangay: string,
     streetNameAndSpecAddress: string,
     citizenship: string;
-    grossMonthlyIncome: number | string;
+    grossMonthlyIncome: number;
     sourceOfIncome: string;
     empOrBusiness: string;
     designation: string;
     loanData: LoanData | null;
     found: boolean;
     applicationTimeStamp: Timestamp | string;
-    ref: string;
+    ref: string | null;
+    ckycData: any
 }
 
 

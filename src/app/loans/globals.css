@@ -15810,6 +15810,17 @@ a {
     border-radius: 20px;
   }
 
+  .car-card2 {
+    margin: 20px 0px;
+    padding: 20px 49px !important;
+    border-radius: 20px;
+  }
+
+  .car-card2 img {
+    width: 90px !important;
+    height: 90px !important;
+  }
+
   .summary-container {
     margin-top: 90px;
   }

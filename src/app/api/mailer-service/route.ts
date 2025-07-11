@@ -169,6 +169,8 @@ export async function POST(req: Request) {
     drawText('Gross Monthly Income', grossMonthlyIncome ? `PHP ${grossMonthlyIncome}` : '---');
     drawText('Address', `${streetNameAndSpecAddress}, ${barrangay}, ${cityOrTown}, ${country}`);
 
+    const customerEmailContent = `Hi ${firstName} ${lastName}! We have received your ${loanData?.loanOption.charAt(0).toUpperCase() + loanData?.loanOption.slice(1)} Loan Application with ref.# ${ref}. We will contact you within 1 to 3 business days. Thank you.`;
+
     const pdfBytes = await pdfDoc.save();
 
     // Send email with Nodemailer
@@ -193,6 +195,14 @@ export async function POST(req: Request) {
           contentType: 'application/pdf',
         },
       ],
+    });
+
+    await transporter.sendMail({
+      from: `"ML Loans" <${process.env.EMAIL_USER}>`,
+      to,
+      cc,
+      subject: `${loanData?.headerText.charAt(0).toUpperCase() + loanData?.headerText.slice(1)} Loan Application`,
+      text: customerEmailContent,
     });
 
     return NextResponse.json({ message: 'Email sent with PDF' });

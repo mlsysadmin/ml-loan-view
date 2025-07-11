@@ -15,6 +15,27 @@ import CustomDropdown from '../../components/Dropdown';
 interface Props {
   onNext: (data: any) => void;
 };
+interface CKYCData {
+  cellphoneNumber: string;
+  email: string;
+  nationality: string;
+  name: {
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    suffix?: string;
+  };
+  birthDate: string;
+  addresses: {
+    current: {
+      addressL0Name: string;
+      addressL1Name: string;
+      addressL2Name: string;
+      addressL3Name: string;
+      otherAddress: string;
+    };
+  };
+}
 
 const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [prevURL, setPrevURL] = useState("");
@@ -44,7 +65,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [lastName, setLastName] = useState("");
   const [suffix, setSuffix] = useState("");
   const [birthdate, setBirthdate] = useState<{ month: number; day: number; year: number } | undefined>(undefined);
-  const [birthdateFromCKYC, setBirthdateFromCKYC] = useState(Date);
   const [country, setCountry] = useState("");
   const [provinceOrState, setProvinceOrState] = useState("");
   const [cityOrTown, setCityOrTown] = useState("");
@@ -52,11 +72,9 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [streetNameAndSpecAddress, setStreetNameAndSpecAddress] = useState("");
 
   const [sourceOfIncome, setSourceOfIncome] = useState("");
-  const [grossMonthlyIncome, setGrossMonthlyIncome] = useState("");
+  const [grossMonthlyIncome, setGrossMonthlyIncome] = useState(0);
   const [empOrBusiness, setEmpOrBusiness] = useState("");
   const [designation, setDesignation] = useState("");
-  const [yearsEmpOrBus, setYearsEmpOrBus] = useState("");
-  const [confirmed, setConfirmed] = useState(false);
 
   const [errorContactNumber, setErrorContactNumber] = useState('');
   const [errorBdate, setErrorBdate] = useState('');
@@ -70,17 +88,15 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [errorCityOrTown, setErrorCityOrTown] = useState('');
   const [errorBarrangay, setErrorBarrangay] = useState('');
   const [errorStreet, setErrorStreet] = useState('');
-  const [errorSpecAdd, setErrorSpecAdd] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const contactRef = useRef<HTMLInputElement>(null);
   const [found, setFound] = useState(false);
-
-  const [unitType, setUnitType] = useState('');
+  const [ckycData, setCKYCData] = useState<CKYCData | null>(null);
 
   const {
-    data: ckycData,
+    data: ckyc,
     isFetching,
     refetch,
     error,
@@ -116,18 +132,12 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   }, []);
 
   useEffect(() => {
-    if (!isFetching && ckycData && Object.keys(ckycData).length > 0) {
+    if (!isFetching && ckyc && Object.keys(ckyc).length > 0) {
       contactRef.current?.blur();
       setErrorContactNumber('');
-      setBirthdateFromCKYC(ckycData.birthDate);
-      setShow(true);
+      !firstName && setShow(true);
     }
-  }, [isFetching, ckycData]);
-
-  const maskStringExceptFirst = (str: string) => {
-    if (!str || str.length === 0) return "";
-    return str.charAt(0) + "*".repeat(str.length - 1);
-  };
+  }, [isFetching, ckyc]);
 
   const handleClose = () => {
     setShow(false);
@@ -175,7 +185,14 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         barrangay,
         streetNameAndSpecAddress,
         found: ckycData ? true : false,
-        ckycData
+        ckycData,
+        grossMonthlyIncome,
+        sourceOfIncome,
+        empOrBusiness,
+        designation,
+        loanData,
+        applicationTimeStamp: '',
+        ref: ''
       });
       onNext({
         contactNumber,
@@ -198,28 +215,43 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     } else dataHandle()
   };
 
-  function comapreBirthdates() {
-    let bday = moment(`${birthdate?.year}-${birthdate?.month}-${birthdate?.day}`).format("YYYY-MM-DD")
-    let ckycBdate = birthdateFromCKYC
-    console.log('========', bday, ckycBdate, bday === ckycBdate)
-    if (bday === ckycBdate) {
-      setFound(true);
-      setContactNumber(ckycData?.cellphoneNumber);
-      setFirstName(ckycData?.name.firstName);
-      setmiddleName(ckycData?.name.middleName);
-      setLastName(ckycData?.name.lastName);
-      setSuffix(ckycData?.name.suffix);
-      setBirthdate(birthdate);
-      setEmail(ckycData?.email);
-      setCitizenship(ckycData?.nationality);
-      setCountry(ckycData?.addresses.current.addressL0Name);
-      setProvinceOrState(ckycData?.addresses.current.addressL1Name);
-      setCityOrTown(ckycData?.addresses.current.addressL2Name);
-      setBarrangay(ckycData?.addresses.current.addressL3Name);
-      setStreetNameAndSpecAddress(ckycData?.addresses.current.otherAddress);
-      setConfirmed(true);
-      handleClose();
-    } else setErrorBdate('Birth date not matched.');
+  async function comapreBirthdates() {
+    const bdate = moment(`${birthdate?.year}-${birthdate?.month}-${birthdate?.day}`).format("YYYY-MM-DD");
+
+    try {
+      const res = await fetch(`/api/ckyc-check-bdate?cellphoneNumber=${contactNumber}&bdate=${bdate}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch CKYC data');
+      }
+      const data = await res.json();
+      setCKYCData(data.data);
+
+      if (data.match) {
+        setFound(true);
+        setContactNumber(ckycData?.cellphoneNumber || '');
+        setFirstName(ckycData?.name.firstName || '');
+        setmiddleName(ckycData?.name.middleName || '');
+        setLastName(ckycData?.name.lastName || '');
+        setSuffix(ckycData?.name.suffix || '');
+        setBirthdate(birthdate);
+        setEmail(ckycData?.email || '');
+        setCitizenship(ckycData?.nationality || '');
+        setCountry(ckycData?.addresses.current.addressL0Name || '');
+        setProvinceOrState(ckycData?.addresses.current.addressL1Name || '');
+        setCityOrTown(ckycData?.addresses.current.addressL2Name || '');
+        setBarrangay(ckycData?.addresses.current.addressL3Name || '');
+        setStreetNameAndSpecAddress(ckycData?.addresses.current.otherAddress || '');
+        setConfirmed(true);
+        handleClose();
+      } else setErrorBdate('Birth date did not match.');
+    } catch (err) {
+      console.error('CKYC Fetch Error:', err);
+      setCKYCData(null);
+    }
   };
 
   return (
@@ -239,7 +271,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
                 setContactNumber('0' + unformatted);
               }
             }}
-            country="PH" // shoul have default
+            country="PH" // should have default
             countryCode={countryCode}
             onCountryChange={(code) => setCountryCode(code)}
           />
@@ -281,18 +313,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
             }}
             placeholder="Suffix"
           />
-          {/* <label htmlFor="" className='readable medium'>&nbsp;</label> */}
-          {/* <div className='select one-third-width'>
-            <select value={suffix} onChange={(e) => setSuffix(e.target.value.toUpperCase())} className='select__field'>
-              <option value="">Suffix &nbsp;&nbsp;</option>
-              <option value="SR.">SR</option>
-              <option value="JR">JR</option>
-              <option value="II">II</option>
-              <option value="III">III</option>
-              <option value="IV">IV</option>
-              <option value="V">V</option>
-            </select>
-          </div> */}
         </div>
       </div>
       <div className='details-wrapper'>
@@ -328,14 +348,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
             placeholder="Citizenship"
           />
           <small className='red'>{errorCitizenship}</small>
-          {/* <div className='select full-width-select'>
-            <select onChange={(e) => { setCitizenship(e.target.value); setErrorCitizenship('') }} id="" className='select__field' value={citizenship}>
-              <option value="">Citizenship&nbsp;&nbsp;&nbsp;</option>
-              <option value="FILIPINO">FILIPINO</option>
-              <option value="">Not Filipino</option>
-            </select>
-            <small className='red'>{errorCitizenship}</small>
-          </div> */}
         </div>
       </div>
 
@@ -371,40 +383,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
           <input type="text" className='form-control full-width' value={streetNameAndSpecAddress} onChange={(e) => { setStreetNameAndSpecAddress(e.target.value.toUpperCase()); setErrorStreet(''); }} placeholder='House No., Street / Sitio' />
           <small className='red'>{errorStreet}</small>
         </div>
-        {/* <div className='form-fields full-width'>
-          <input type="text" className='form-control full-width' value={specAddress} onChange={(e) => { setSpecAddress(e.target.value.toUpperCase()); setErrorSpecAdd(''); }} placeholder='Unit/House No.' />
-          <small className='red'>{errorSpecAdd}</small>
-        </div> */}
       </div>
-
-      {/* <div className='hide'>
-        <br />
-        <label className='readable medium'>Income Details</label>
-        <div className='details-wrapper'>
-          <div className='form-fields full-width'>
-            <div className='select'>
-              <select onChange={(e) => setSourceOfIncome(e.target.value)} className='select__field' value={sourceOfIncome}>
-                <option value="">Type of Income</option>
-                <option value="salary">Salary</option>
-                <option value="business">Business</option>
-                <option value="pension">Pension</option>
-                <option value="REGULAR REMITTANCE ABROAD">REGULAR REMITTANCE ABROAD</option>
-              </select>
-            </div>
-          </div>
-          <div className='form-fields full-width'>
-            <input type="text" className='form-control full-width' value={empOrBusiness || ""} onChange={(e) => setEmpOrBusiness(e.target.value)} placeholder='Employer / Business Name' />
-          </div>
-        </div>
-        <div className='details-wrapper'>
-          <div className='form-fields full-width'>
-            <input type="text" className='form-control full-width' value={designation || ""} onChange={(e) => setDesignation(e.target.value)} placeholder='Position' />
-          </div>
-          <div className='form-fields full-width'>
-            <input type="number" className='form-control full-width ' value={grossMonthlyIncome} onChange={(e) => setGrossMonthlyIncome(e.target.value)} placeholder='Gross Monthly Income' />
-          </div>
-        </div>
-      </div> */}
       <div className='form-btn-container'>
         <button className='__btn btn-white' onClick={() => router.push('/loans/' + prevURL)} >
           Back
@@ -415,7 +394,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       </div>
       <br />
       <br />
-
       <Modal show={show} onHide={handleClose} keyboard={false} autoFocus={false} className='modal' dialogClassName="custom-width-modal">
         <div className="modal-overlay">
           <div className="modal-wrapper">
@@ -429,8 +407,8 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
                 <div className='modal-header-text regular text-center'>Identity Verification</div>
                 <div className='smaller'>A customer matching this number was found.</div>
                 <div className='smaller'>
-                  Name: <span className='medium'>{maskStringExceptFirst(ckycData?.name.firstName)} {maskStringExceptFirst(ckycData?.name.middleName)} {maskStringExceptFirst(ckycData?.name.lastName)}</span><br />
-                  Mobile No.: <span className='medium'>{ckycData?.cellphoneNumber}</span>
+                  Name: <span className='medium'>{ckyc?.name.firstName} {ckyc?.name.middleName} {ckyc?.name.lastName}</span><br />
+                  Mobile No.: <span className='medium'>{ckyc?.cellphoneNumber}</span>
                 </div>
                 <div className='smaller'>If this is you, provide your birth date.</div>
                 <DatePicker onChange={handleDateChange} />

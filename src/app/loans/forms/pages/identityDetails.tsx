@@ -17,13 +17,19 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
 
   useEffect(() => {
     const stored = localStorage.getItem('loanType');
-    stored && setLoanType(stored)
-  })
+    if (stored) {
+      try {
+        setLoanType(JSON.parse(stored));
+      } catch {
+        setLoanType(stored);
+      }
+    }
+  }, []);
 
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   // const [birthdate, setBirthdate] = useState<{ month: number; day: number; year: number } | undefined>(undefined);
-  const [grossMonthlyIncome, setGrossMonthlyIncome] = useState("");
+  const [grossMonthlyIncome, setGrossMonthlyIncome] = useState(0);
   const [sourceOfIncome, setSourceOfIncome] = useState("");
   const [empOrBusiness, setEmpOrBusiness] = useState("");
   const [designation, setDesignation] = useState("");
@@ -64,10 +70,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   }, []);
 
   useEffect(() => {
-    if (laonType === '"home"') {
+    if (laonType === 'home' || laonType === '"home"') {
       setHeaderText('HOUSING');
       setUnitOrPropertyType(loanData?.propertyType || '')
-    } else if (laonType === '"car"') {
+    } else if (laonType === 'car' || laonType === '"car"') {
       setHeaderText('CAR');
       setUnitOrPropertyType(loanData?.unitType || '')
     }
@@ -82,7 +88,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     for (let i = 0; i < length; i++) {
       result += chars[Math.floor(Math.random() * chars.length)];
     }
-    setRef(`(LEH)${result}`);
+    setRef(`LEH${result}`);
   }
 
 
@@ -109,8 +115,8 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         to: 'kenneth88877@gmail.com',
-        // cc: 'kenneth.simbulan@mlhuillier.com',
-        cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
+        cc: 'kenneth.simbulan@mlhuillier.com',
+        // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
         subject: 'Loan Application',
         text: `Please find the attached loan application from ${firstName} ${lastName} ${lastName} ${suffix}`,
         ...finalData
@@ -121,6 +127,25 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     console.log('data::::::', data)
 
   };
+
+  const submit = async () => {
+    await fetch('/api/application', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(finalData)
+    });
+  }
+
+  const sendSMS = () => {
+    fetch('/api/sms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mobileno: contactNumber,
+        msg: `Hi ${firstName} ${lastName}! We have received your ${laonType.charAt(0).toUpperCase() + laonType.slice(1)} Loan Application with ref.# ${ref}. We will contact you within 1 to 3 business days. Thank you.`,
+      }),
+    });
+  }
 
   let finalData = {
     contactNumber: contactNumber,
@@ -172,10 +197,13 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       cityOrTown,
       barrangay,
       streetNameAndSpecAddress,
-      countryCode
+      countryCode,
+      ckycData: undefined
     });
     setShow(true);
-    await sendEmail()
+    await submit();
+    await sendEmail();
+    sendSMS();
     router.push('/loans/pre-approval');
   }
 
@@ -208,10 +236,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
             className='form-control full-width '
             value={grossMonthlyIncome}
             onChange={(e) => {
-              const value = e.target.value;
-              if (/^\d*$/.test(value)) {
-                setGrossMonthlyIncome(value);
-              }
+              // const value = e.target.value;
+              // if (/^\d*$/.test(value)) {
+                setGrossMonthlyIncome(grossMonthlyIncome);
+              // }
             }}
             placeholder='Gross Monthly Income' />
         </div>

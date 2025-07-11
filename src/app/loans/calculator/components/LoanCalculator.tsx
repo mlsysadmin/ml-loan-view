@@ -27,6 +27,7 @@ const LoanCalculator: React.FC = () => {
     const [formError, setFormError] = useState('');
     const [dropdownErrors, setDropdownErrors] = useState<Record<number, string>>({});
     const [canProceed, setCanProceed] = useState(false);
+    const [interest, setInterest] = useState(0);
 
     const [loanOption, setOption] = useState('');
     const [propertyType, setPropertyType] = useState(''); // for Home Loan
@@ -38,6 +39,19 @@ const LoanCalculator: React.FC = () => {
     const [maxPrice, setMaxPrice] = useState(0);
     const [minPrice, setMinPrice] = useState(0);
 
+    useEffect(() => {
+        if (loanType === 'car') {
+            console.log('======>>>>>>>>', loanType)
+            if (selectedType === 'Prenda my Vehicle') {
+                console.log('selectedType ::::::::::', selectedType )
+                if (selectedVehicle === '2-wheel') setInterest(1.50)
+                if (selectedVehicle === '3-wheel') setInterest(2)
+                if (selectedVehicle === '4-wheel') setInterest(1.50)
+                console.log('=as=d==a=d=as=d=as=d', interest)
+            }
+        }
+    });
+
     // Calculate the loan details whenever inputs change
     useEffect(() => {
         // window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -48,13 +62,14 @@ const LoanCalculator: React.FC = () => {
         // Calculate monthly payment
         const loanAmount = purchasePrice - downPayment;
         setammountFinanced(loanAmount)
-        const monthlyAmount = (loanAmount / loanTerm);
+        const monthlyAmount = (loanAmount / loanTerm) + ((loanAmount / loanTerm) * (interest / 100));
         setMonthlyPayment(monthlyAmount);
     }, [purchasePrice, downPaymentPercent, loanTerm]);
 
     const selectOption = (e: any) => {
         console.log('====', e.target.value)
         setOption(e.target.value)
+        if (loanType === 'home') setInterest(2)
     };
 
     const [options, setOptions] = useState<typeof carOptions | typeof homeOptions | null>(null);
@@ -97,7 +112,7 @@ const LoanCalculator: React.FC = () => {
 
     useEffect(() => {
         if (options?.radio?.length && !loanOption) {
-            const defaultOption = options.radio.find(r => r.type === 'Buy a New') || options.radio[0];
+            const defaultOption = options.radio.find(r => r.type === 'Buy a New Vehicle') || options.radio[0];
             setOption(defaultOption.type);
         }
     }, [options, loanOption]);
@@ -109,7 +124,7 @@ const LoanCalculator: React.FC = () => {
         if (loanType === 'car') {
             setOptions(carOptions);
 
-            const defaultRadio = selectedType || 'Buy a New';
+            const defaultRadio = selectedType || 'Buy a New Vehicle';
             const defaultUnitType = selectedVehicle ||
                 carOptions.dropdown[0].values[0].type;
 
@@ -165,11 +180,12 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 1000000,
                         max: 20000000
-                    }
+                    },
+                    interrest: 0
                 }, {
                     type: 'Prenda',
-                    downPayment: {
-                        min: 0, //%
+                    downPayment: { // Amount to Borrow
+                        min: 10, //%
                         max: 70 //%
                     },
                     term: {
@@ -179,7 +195,8 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 1000000,
                         max: 20000000
-                    }
+                    },
+                    interrest: 2
                 }
                 ]
             }, {
@@ -198,7 +215,8 @@ const LoanCalculator: React.FC = () => {
                         price: {
                             min: 1000000,
                             max: 20000000
-                        }
+                        },
+                        interrest: 0
                     }, {
                         type: 'Prenda',
                         downPayment: {
@@ -212,7 +230,8 @@ const LoanCalculator: React.FC = () => {
                         price: {
                             min: 1000000,
                             max: 20000000
-                        }
+                        },
+                        interrest: 2
                     }
                 ]
             }, {
@@ -231,7 +250,8 @@ const LoanCalculator: React.FC = () => {
                         price: {
                             min: 1000000,
                             max: 20000000
-                        }
+                        },
+                        interrest: 0
                     }, {
                         type: 'Prenda',
                         downPayment: {
@@ -245,7 +265,8 @@ const LoanCalculator: React.FC = () => {
                         price: {
                             min: 1000000,
                             max: 20000000
-                        }
+                        },
+                        interrest: 2
                     }
                 ]
             }]
@@ -280,7 +301,7 @@ const LoanCalculator: React.FC = () => {
                 loanType: [{
                     type: 'Buy a New Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -290,11 +311,12 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 400000,
                         max: 30000000
-                    }
+                    },
+                    interrest: 0
                 }, {
                     type: 'Buy a Used Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -304,11 +326,12 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 300000,
                         max: 2000000
-                    }
+                    },
+                    interrest: 0
                 }, {
                     type: 'Prenda my Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 70 //%
                     },
                     term: {
@@ -318,14 +341,15 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 300000,
                         max: 2000000
-                    }
+                    },
+                    interrest: 1.50
                 }]
             }, {
                 type: '2-wheel',
                 loanType: [{
                     type: 'Buy a New Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -335,11 +359,12 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 40000,
                         max: 2000000
-                    }
+                    },
+                    interrest: 0
                 }, {
                     type: 'Buy a Used Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -349,11 +374,12 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 40000,
                         max: 1000000
-                    }
+                    },
+                    interrest: 0
                 }, {
                     type: 'Prenda my Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 70 //%
                     },
                     term: {
@@ -363,14 +389,15 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 40000,
                         max: 1000000
-                    }
+                    },
+                    interrest: 1.50
                 }]
             }, {
                 type: '3-wheel',
                 loanType: [{
                     type: 'Buy a New Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -380,11 +407,12 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 40000,
                         max: 1000000
-                    }
+                    },
+                    interrest: 0
                 }, {
                     type: 'Buy a Used Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -394,11 +422,12 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 40000,
                         max: 1000000
-                    }
+                    },
+                    interrest: 0
                 }, {
                     type: 'Prenda my Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 70 //%
                     },
                     term: {
@@ -408,14 +437,15 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 40000,
                         max: 1000000
-                    }
+                    },
+                    interrest: 2
                 }]
             }, {
                 type: 'Commercial',
                 loanType: [{
                     type: 'Buy a New Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -425,11 +455,12 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 200000,
                         max: 10000000
-                    }
+                    },
+                    interrest: 0
                 }, {
                     type: 'Buy a Used Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -439,14 +470,15 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 200000,
                         max: 5000000
-                    }
+                    },
+                    interrest: 0
                 }]
             }, {
                 type: 'Construction',
                 loanType: [{
                     type: 'Buy a New Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -456,11 +488,12 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 200000,
                         max: 10000000
-                    }
+                    },
+                    interrest: 0
                 }, {
                     type: 'Buy a Used Vehicle',
                     downPayment: {
-                        min: 10, //%
+                        min: 0, //%
                         max: 90 //%
                     },
                     term: {
@@ -470,7 +503,8 @@ const LoanCalculator: React.FC = () => {
                     price: {
                         min: 200000,
                         max: 5000000
-                    }
+                    },
+                    interrest: 0
                 }]
             }],
         }],
@@ -618,6 +652,7 @@ const LoanCalculator: React.FC = () => {
                     onConfirm={handleContinue}
                     formError={formError}
                     canProceed={canProceed}
+                    interest={interest}
                 />
                 <div className='foot-note'>
                     <i>*Subject for approval</i>
