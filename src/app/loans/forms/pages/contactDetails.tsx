@@ -245,7 +245,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         setCityOrTown(ckycData?.addresses.current.addressL2Name || '');
         setBarrangay(ckycData?.addresses.current.addressL3Name || '');
         setStreetNameAndSpecAddress(ckycData?.addresses.current.otherAddress || '');
-        setConfirmed(true);
         handleClose();
       } else setErrorBdate('Birth date did not match.');
     } catch (err) {
