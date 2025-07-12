@@ -205,9 +205,9 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       ckycData: undefined
     });
     setShow(true);
-    // await submit(); // SAVE TO DB
+    await submit(); // SAVE TO DB
     await sendEmail();
-    // sendSMS();
+    sendSMS();
     router.push('/loans/pre-approval');
   }
 
