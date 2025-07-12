@@ -6,6 +6,8 @@ import 'react-phone-input-2/lib/style.css';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
 import CustomDropdown from '../../components/Dropdown';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 interface Props {
   data: any;
@@ -95,22 +97,6 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
 
   const sendEmail = async () => {
     setIsLoading(true);
-    // const res = await fetch(`/api/mailer-service`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     to: 'kenneth88877@gmail.com',
-    //     cc: 'kenneth.simbulan@mlhuillier.com',
-    //     // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
-    //     subject: 'Home Loan Application',
-    //     text: `Applicant: ${firstName} ${lastName} ${lastName} ${suffix} <br/> `,
-    //     htmlContent: htmlContent
-    //   }),
-    // });
-    // const data = await res.json();
-    console.log('data::::::', finalData)
-
-
     const { firstName, lastName, suffix } = finalData;
 
     const res = await fetch('/api/mailer-service', {
@@ -118,18 +104,13 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         to: 'kenneth88877@gmail.com',
-        cc: 'kenneth.simbulan@mlhuillier.com',
-        // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
+        // cc: 'kenneth.simbulan@mlhuillier.com',
+        cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
         subject: 'Loan Application',
         text: `Please find the attached loan application from ${firstName} ${lastName} ${suffix || ''}`,
         ...finalData,
       }),
     });
-
-
-    const data = await res.json();
-    console.log('data::::::', data)
-
   };
 
   const submit = async () => {
@@ -140,16 +121,40 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     });
   }
 
+  // const sendSMS = () => {
+  //   fetch('/api/sms', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({
+  //       mobileno: contactNumber,
+  //       msg: `Dear ${firstName} ${lastName}, 
+
+  //       You have successfully submitted your ${laonType.charAt(0).toUpperCase() + laonType.slice(1)} Loan Application with ref.# ${ref}. 
+
+  //     Your application will be reviewed. We will contact you for any lacking requirements that you may still need to submit. Otherwise, we will proceed processing the approval of your loan application.
+
+  //     Thank you for choosing ML.
+
+
+  //     Sincerely,
+  //     M Lhuillier Financial Services Inc.`,
+  //     }),
+  //   });
+  // }
+
   const sendSMS = () => {
     fetch('/api/sms', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         mobileno: contactNumber,
-        msg: `Hi ${firstName} ${lastName}! We have received your ${laonType.charAt(0).toUpperCase() + laonType.slice(1)} Loan Application with ref.# ${ref}. We will contact you within 1 to 3 business days. Thank you.`,
+        firstName,
+        lastName,
+        loanType: laonType,
+        ref,
       }),
     });
-  }
+  };
 
   let finalData = {
     contactNumber: contactNumber,

@@ -230,21 +230,23 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       const data = await res.json();
       setCKYCData(data.data);
 
+      console.log('+_+_+_', ckycData)
+
       if (data.match) {
         setFound(true);
-        setContactNumber(ckycData?.cellphoneNumber || '');
-        setFirstName(ckycData?.name.firstName || '');
-        setmiddleName(ckycData?.name.middleName || '');
-        setLastName(ckycData?.name.lastName || '');
-        setSuffix(ckycData?.name.suffix || '');
+        setContactNumber(data.data.cellphoneNumber || '');
+        setFirstName(data.data.name.firstName || '');
+        setmiddleName(data.data.name.middleName || '');
+        setLastName(data.data.name.lastName || '');
+        setSuffix(data.data.name.suffix || '');
         setBirthdate(birthdate);
-        setEmail(ckycData?.email || '');
+        setEmail(data.data.email || '');
         setCitizenship(ckycData?.nationality || '');
-        setCountry(ckycData?.addresses.current.addressL0Name || '');
-        setProvinceOrState(ckycData?.addresses.current.addressL1Name || '');
-        setCityOrTown(ckycData?.addresses.current.addressL2Name || '');
-        setBarrangay(ckycData?.addresses.current.addressL3Name || '');
-        setStreetNameAndSpecAddress(ckycData?.addresses.current.otherAddress || '');
+        setCountry(data.data.addresses.current.addressL0Name || '');
+        setProvinceOrState(data.data.addresses.current.addressL1Name || '');
+        setCityOrTown(data.data.addresses.current.addressL2Name || '');
+        setBarrangay(data.data.addresses.current.addressL3Name || '');
+        setStreetNameAndSpecAddress(data.data.addresses.current.otherAddress || '');
         handleClose();
       } else setErrorBdate('Birth date did not match.');
     } catch (err) {

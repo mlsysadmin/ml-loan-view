@@ -1,0 +1,11 @@
+Dear ${firstName} ${lastName}, 
+       
+You have successfully submitted your ${laonType.charAt(0).toUpperCase() + laonType.slice(1)} Loan Application with ref.# ${ref}. 
+        
+Your application will be reviewed. We will contact you for any lacking requirements that you may still need to submit. Otherwise, we will proceed processing the approval of your loan application.
+      
+Thank you for choosing ML.
+        
+        
+Sincerely,
+M Lhuillier Financial Services Inc.

@@ -177,7 +177,7 @@ export async function POST(req: Request) {
     drawText('Gross Monthly Income', grossMonthlyIncome ? `PHP ${grossMonthlyIncome}` : '---');
     drawText('Address', `${streetNameAndSpecAddress}, ${barrangay}, ${cityOrTown}, ${country}`);
 
-    const loanOption = `${headerText.charAt(0).toUpperCase() + headerText.slice(1)}`;
+    const loanOption = `${headerText.charAt(0).toUpperCase() + headerText.toLowerCase().slice(1)}`;
     const currentYear = new Date().getFullYear();
 
     // const customerEmailContent = `Hi ${firstName} ${lastName}! We have received your ${loanOption} Loan Application with ref.# ${ref}. We will contact you within 1 to 3 business days. Thank you.`;
@@ -185,9 +185,17 @@ export async function POST(req: Request) {
     const filePath = path.join(process.cwd(), 'templates/LoanCutomerEmailTemplate.html');
     let htmlTemplate = fs.readFileSync(filePath, 'utf-8');
 
+    function capitalizeFullName(name: string): string {
+      return name
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }
+
     // Replace template variables
     htmlTemplate = htmlTemplate
-      .replace('{{firstName}}', firstName)
+      .replace('{{firstName}}', capitalizeFullName(firstName))
       .replace('{{loanOption}}', loanOption)
       .replace('{{ref}}', ref)
       .replace('{{year}}', currentYear.toString());
@@ -236,11 +244,6 @@ export async function POST(req: Request) {
     );
   }
 }
-
-
-
-
-
 
 
 
