@@ -22,4 +22,7 @@ export const LoanApplication = sequelize.define('LoanApplication', {
   designation: DataTypes.STRING,
   grossIncome: DataTypes.FLOAT,
   address: DataTypes.STRING,
+}, {
+  tableName: 'LoanApplications',
+  timestamps: true,             
 });

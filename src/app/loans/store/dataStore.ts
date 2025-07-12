@@ -39,7 +39,7 @@ interface FinalLoanData {
     barrangay: string,
     streetNameAndSpecAddress: string,
     citizenship: string;
-    grossMonthlyIncome: number;
+    grossMonthlyIncome: number | string;
     sourceOfIncome: string;
     empOrBusiness: string;
     designation: string;

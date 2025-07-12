@@ -77,6 +77,8 @@
 import { NextResponse } from 'next/server';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -130,27 +132,33 @@ export async function POST(req: Request) {
     y -= 10;
     page.drawRectangle({ x: 40, y: y - 10, width: 515, height: 1, color: rgb(0.8, 0.8, 0.8) });
     y -= 20;
+    if (loanData) {
+      // Loan Details
+      page.drawText('Loan Details', { x: 40, y, size: 14, font: bold, color });
+      y -= 20;
+      drawText('Loan Type', loanData?.loanOption);
+      drawText('Preferred Unit Type', unitOrPropertyType);
+      drawText('Estimated Price', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
+      drawText('Amount Borrow', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
+      drawText('Term', `${Number(loanData?.loanTerm) / 12} years`);
 
-    // Loan Details
-    page.drawText('Loan Details', { x: 40, y, size: 14, font: bold, color });
-    y -= 20;
-    drawText('Loan Type', loanData?.loanOption);
-    drawText('Preferred Unit Type', unitOrPropertyType);
-    drawText('Estimated Price', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
-    drawText('Amount Borrow', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
-    drawText('Term', `${Number(loanData?.loanTerm) / 12} years`);
+      y -= 10;
+      page.drawRectangle({ x: 40, y: y - 10, width: 515, height: 1, color: rgb(0.8, 0.8, 0.8) });
+      y -= 20;
 
-    y -= 10;
-    page.drawRectangle({ x: 40, y: y - 10, width: 515, height: 1, color: rgb(0.8, 0.8, 0.8) });
-    y -= 20;
-
-    // Summary
-    page.drawText('Loan Summary', { x: 40, y, size: 14, font: bold, color });
-    y -= 20;
-    drawText('Amount Financed', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
-    drawText('Down Payment', `PHP ${loanData?.downPayment.toLocaleString()}`);
-    drawText('Monthly Payment', `PHP ${loanData?.monthlyPayment.toLocaleString()}`);
-    drawText('Loan Term (months)', `${loanData?.loanTerm}`);
+      // Summary
+      page.drawText('Loan Summary', { x: 40, y, size: 14, font: bold, color });
+      y -= 20;
+      drawText('Amount Financed', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
+      drawText('Down Payment', `PHP ${loanData?.downPayment.toLocaleString()}`);
+      drawText('Monthly Payment', `PHP ${loanData?.monthlyPayment.toLocaleString()}`);
+      drawText('Loan Term (months)', `${loanData?.loanTerm}`);
+    } else {
+      page.drawText('Loan Details', { x: 40, y, size: 14, font: bold, color });
+      y -= 20;
+      drawText('No loan data provided', '');
+      y -= 10;
+    }
 
     y -= 10;
     page.drawRectangle({ x: 40, y: y - 10, width: 515, height: 1, color: rgb(0.8, 0.8, 0.8) });
@@ -169,7 +177,21 @@ export async function POST(req: Request) {
     drawText('Gross Monthly Income', grossMonthlyIncome ? `PHP ${grossMonthlyIncome}` : '---');
     drawText('Address', `${streetNameAndSpecAddress}, ${barrangay}, ${cityOrTown}, ${country}`);
 
-    const customerEmailContent = `Hi ${firstName} ${lastName}! We have received your ${loanData?.loanOption.charAt(0).toUpperCase() + loanData?.loanOption.slice(1)} Loan Application with ref.# ${ref}. We will contact you within 1 to 3 business days. Thank you.`;
+    const loanOption = `${headerText.charAt(0).toUpperCase() + headerText.slice(1)}`;
+    const currentYear = new Date().getFullYear();
+
+    // const customerEmailContent = `Hi ${firstName} ${lastName}! We have received your ${loanOption} Loan Application with ref.# ${ref}. We will contact you within 1 to 3 business days. Thank you.`;
+
+    const filePath = path.join(process.cwd(), 'templates/LoanCutomerEmailTemplate.html');
+    let htmlTemplate = fs.readFileSync(filePath, 'utf-8');
+
+    // Replace template variables
+    htmlTemplate = htmlTemplate
+      .replace('{{firstName}}', firstName)
+      .replace('{{loanOption}}', loanOption)
+      .replace('{{ref}}', ref)
+      .replace('{{year}}', currentYear.toString());
+
 
     const pdfBytes = await pdfDoc.save();
 
@@ -201,14 +223,17 @@ export async function POST(req: Request) {
       from: `"ML Loans" <${process.env.EMAIL_USER}>`,
       to,
       cc,
-      subject: `${loanData?.headerText.charAt(0).toUpperCase() + loanData?.headerText.slice(1)} Loan Application`,
-      text: customerEmailContent,
+      subject: `${headerText.charAt(0).toUpperCase() + headerText.slice(1)} Loan Application`,
+      html: htmlTemplate,
     });
 
     return NextResponse.json({ message: 'Email sent with PDF' });
-  } catch (error) {
-    console.error('PDF/Email Error:', error);
-    return NextResponse.json({ error: 'Failed to generate or send PDF' }, { status: 500 });
+  } catch (error: any) {
+    console.error('PDF/Email Error:', error.message, error.stack);
+    return NextResponse.json(
+      { error: 'Failed to generate or send PDF', detail: error.message },
+      { status: 500 }
+    );
   }
 }
 

@@ -11,22 +11,30 @@
 //   );
 // }
 
-"use client";
+// "use client";
 
-import CalculatorPageClient from './CalculatorPageClient';
-import SalaryLoanCalculatorClient from './SalaryLoanCalculatorClient';
-import { useSearchParams } from 'next/navigation';
+// import CalculatorPageClient from './CalculatorPageClient';
+// import SalaryLoanCalculatorClient from './SalaryLoanCalculatorClient';
+// import { useSearchParams } from 'next/navigation';
 
-function CalculatorSwitcher() {
-  const searchParams = useSearchParams();
-  const type = searchParams.get('type');
+// function CalculatorSwitcher() {
+//   const searchParams = useSearchParams();
+//   const type = searchParams.get('type');
 
-  if (type === 'salary') {
-    return <SalaryLoanCalculatorClient />;
-  }
-  return <CalculatorPageClient />;
-}
+//   if (type === 'salary') {
+//     return <SalaryLoanCalculatorClient />;
+//   }
+//   return <CalculatorPageClient />;
+// }
 
-export default function Page() {
-  return <CalculatorSwitcher />;
+// export default function Page() {
+//   return <CalculatorSwitcher />;
+// }
+
+
+
+import CalculatorSwitcherClient from './calculatorSwitcherWrapper';
+
+export default function CalculatorSwitcher() {
+  return <CalculatorSwitcherClient />;
 }

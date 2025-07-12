@@ -30,7 +30,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   // const [birthdate, setBirthdate] = useState<{ month: number; day: number; year: number } | undefined>(undefined);
-  const [grossMonthlyIncome, setGrossMonthlyIncome] = useState(0);
+  const [grossMonthlyIncome, setGrossMonthlyIncome] = useState("");
   const [sourceOfIncome, setSourceOfIncome] = useState("");
   const [empOrBusiness, setEmpOrBusiness] = useState("");
   const [designation, setDesignation] = useState("");
@@ -108,8 +108,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     //   }),
     // });
     // const data = await res.json();
-    // console.log('data::::::', data)
+    console.log('data::::::', finalData)
 
+
+    const { firstName, lastName, suffix } = finalData;
 
     const res = await fetch('/api/mailer-service', {
       method: 'POST',
@@ -119,10 +121,11 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
         cc: 'kenneth.simbulan@mlhuillier.com',
         // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
         subject: 'Loan Application',
-        text: `Please find the attached loan application from ${firstName} ${lastName} ${lastName} ${suffix}`,
-        ...finalData
+        text: `Please find the attached loan application from ${firstName} ${lastName} ${suffix || ''}`,
+        ...finalData,
       }),
     });
+
 
     const data = await res.json();
     console.log('data::::::', data)
@@ -202,9 +205,9 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       ckycData: undefined
     });
     setShow(true);
-    await submit();
+    // await submit(); // SAVE TO DB
     await sendEmail();
-    sendSMS();
+    // sendSMS();
     router.push('/loans/pre-approval');
   }
 
@@ -237,10 +240,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
             className='form-control full-width '
             value={grossMonthlyIncome}
             onChange={(e) => {
-              // const value = e.target.value;
-              // if (/^\d*$/.test(value)) {
-                setGrossMonthlyIncome(grossMonthlyIncome);
-              // }
+              const value = e.target.value;
+              if (/^\d*$/.test(value)) {
+                setGrossMonthlyIncome(value);
+              }
             }}
             placeholder='Gross Monthly Income' />
         </div>
