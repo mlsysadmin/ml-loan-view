@@ -167,7 +167,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     const validEmail = emailRegex.test(email);
     if (Number(contactNumber.length) <= 10) {
       if (Number(contactNumber.length) === 0 || Number(contactNumber.length === 1)) setErrorContactNumber('Mobile number is required.');
-      else setErrorContactNumber('Ivalid mobile number.');
+      else setErrorContactNumber('Invalid mobile number.');
     }
     if (email === '') setErrorEmail('Email is required.');
     if (validEmail === false) setErrorEmail('Invalid email.');
@@ -178,7 +178,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     if (country === '' || country === null || country === undefined) setErrorCountry('Country is required.');
     if (provinceOrState === '' || provinceOrState === null || provinceOrState === undefined) setErrorProvinceOrState('Province/State is required.');
     if (cityOrTown === '' || cityOrTown === null || cityOrTown === undefined) setErrorCityOrTown('City or Town is required.');
-    if (barrangay === '' || barrangay === null || barrangay === undefined) setErrorBarrangay('Barrangay is required.');
+    if (barrangay === '' || barrangay === null || barrangay === undefined) setErrorBarrangay('Barangay is required.');
     if (streetNameAndSpecAddress === '' || streetNameAndSpecAddress === null || streetNameAndSpecAddress === undefined) setErrorStreet('House No., Street / Sitio is required.');
   };
 
@@ -418,7 +418,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       <div className='details-wrapper'>
         <div className='form-fields full-width'>
           {/* <label className='readable medium'>&nbsp;</label> */}
-          <input type="text" className='form-control full-width' value={barrangay} onChange={(e) => { setBarrangay(e.target.value.toUpperCase()); setErrorBarrangay(''); }} placeholder='Barrangay/District' />
+          <input type="text" className='form-control full-width' value={barrangay} onChange={(e) => { setBarrangay(e.target.value.toUpperCase()); setErrorBarrangay(''); }} placeholder='Barangay/District' />
           <small className='red'>{errorBarrangay}</small>
         </div>
         <div className='form-fields full-width'>
