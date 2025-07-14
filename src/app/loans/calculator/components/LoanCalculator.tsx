@@ -18,9 +18,9 @@ const LoanCalculator: React.FC = () => {
 
 
     const router = useRouter();
-    const [purchasePrice, setPurchasePrice] = useState(10000000);
-    const [downPaymentPercent, setDownPaymentPercent] = useState(30);
-    const [loanTerm, setLoanTerm] = useState(48); // months
+    const [purchasePrice, setPurchasePrice] = useState(0);
+    const [downPaymentPercent, setDownPaymentPercent] = useState(0);
+    const [loanTerm, setLoanTerm] = useState(12); // months
     const [downPaymentAmount, setDownPaymentAmount] = useState(0);
     const [monthlyPayment, setMonthlyPayment] = useState(0);
     const [ammountFinanced, setammountFinanced] = useState(0);

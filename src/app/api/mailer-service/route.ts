@@ -130,7 +130,7 @@ export async function POST(req: Request) {
     page.drawText(`${headerText} LOAN APPLICATION`, { x: 40, y, size: 16, font: bold, color });
     y -= 24;
     drawText('Ref No', ref);
-    drawText('Date', new Date().toLocaleString(undefined, { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }));
+    drawText('Date', new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' }));
     // drawText('Date', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
     y -= 10;
