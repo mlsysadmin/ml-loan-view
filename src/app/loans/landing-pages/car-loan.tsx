@@ -314,7 +314,7 @@ export default function CarLoanLandingPage() {
 
                     </div>
                     <div className='form-btn-container'>
-                        {step === 1 && (
+                        {(step === 1 && isMobile)&& (
 
                             <button className='__btn btn-white' onClick={() => setStep(0)}>
                                 Back
