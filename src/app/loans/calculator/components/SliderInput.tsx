@@ -76,17 +76,37 @@ const SliderInput: React.FC<SliderInputProps> = ({
   }, []);
 
   // Apply manual input when editing ends
+  // const applyManualAmount = () => {
+  //   if (!manualAmount) {
+  //     setIsEditing(false);
+  //     return;
+  //   }
+
+  //   const parsed = parseFloat(manualAmount.replace(/[^0-9.]/g, ''));
+  //   if (isNaN(parsed)) {
+  //     setIsEditing(false);
+  //     return;
+  //   }
+
+  //   if (editableAmountInstead && secondaryValue) {
+  //     const maxPHP = (secondaryValue * max) / 100;
+  //     const minPHP = (secondaryValue * min) / 100;
+  //     const clampedPHP = Math.min(Math.max(parsed, minPHP), maxPHP);
+  //     const newPercent = (clampedPHP / secondaryValue) * 100;
+  //     onChange(Number(newPercent.toFixed(2)));
+  //   } else {
+  //     const clamped = Math.min(Math.max(parsed, min), max);
+  //     onChange(Number(clamped.toFixed(0)));
+  //   }
+
+  //   setIsEditing(false);
+  // };
   const applyManualAmount = () => {
-    if (!manualAmount) {
-      setIsEditing(false);
-      return;
-    }
+    if (!isEditing) return;
+    setIsEditing(false);
 
     const parsed = parseFloat(manualAmount.replace(/[^0-9.]/g, ''));
-    if (isNaN(parsed)) {
-      setIsEditing(false);
-      return;
-    }
+    if (isNaN(parsed)) return;
 
     if (editableAmountInstead && secondaryValue) {
       const maxPHP = (secondaryValue * max) / 100;
@@ -98,9 +118,8 @@ const SliderInput: React.FC<SliderInputProps> = ({
       const clamped = Math.min(Math.max(parsed, min), max);
       onChange(Number(clamped.toFixed(0)));
     }
-
-    setIsEditing(false);
   };
+
 
   return (
     <div className="mb-6">
@@ -118,13 +137,18 @@ const SliderInput: React.FC<SliderInputProps> = ({
                 if (/^\d*$/.test(raw)) {
                   setManualAmount(raw);
                 }
-              }}  
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') applyManualAmount();
               }}
-              onBlur={applyManualAmount}
+              onBlur={() => {
+                setTimeout(() => {
+                  applyManualAmount();
+                }, 0);
+              }}
               autoFocus
             />
+
           ) : (
             <span className="ml-1">
               {editableAmountInstead && secondaryValue
