@@ -203,7 +203,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     // if (!/^09\d{9}$/.test(contactNumber)) {
     //   setErrorContactNumber('Invalid mobile number.');
     // } else {
-      if (!/^09\d{9}$/.test(contactNumber) &&
+      if (
         firstName &&
         lastName &&
         Number(contactNumber.length) === 11 &&
