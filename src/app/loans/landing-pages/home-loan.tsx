@@ -55,7 +55,7 @@ export default function HomeLoanLandingPage() {
                 <div className="banner-content-wrapper">
                     <div>
                         <p className="banner-text regular title">Match your dream <span className="red">Home</span> with a <span className="red">Loan</span> that fits you.</p>
-                        <p className="regular readable">Your dream homeis just a few clicks away.</p>
+                        <p className="regular readable">Your dream home is just a few clicks away.</p>
 
                     </div>
                     <div className="hero-buttons">
