@@ -67,7 +67,8 @@ export default function NotElligible() {
                 <br /><br /><br />
                 <br /><br /><br />
                 <div className='btn-wrapper2'>
-                    <button className='__btn btn-black' onClick={() => handleBtnAction('home')}> Home </button>
+                    <button className='__btn3 btn-white' onClick={() => handleBtnAction('home')}> Home </button>
+                    <button className='__btn3 btn-black'> Reset & Retry Again </button>
                 </div>
             </div>
         </Container>

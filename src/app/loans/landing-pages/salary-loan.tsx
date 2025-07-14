@@ -14,36 +14,35 @@ export default function SalaryLoanLandingPage() {
 
   useEffect(() => {
     setMounted(true);
-    setReferrer(searchParams.get('type'));
+    setReferrer(searchParams.get("type"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   const salaryLoanWhatYouNeed = [
     {
-      title: "Basic Requirements",
+      title: "Requirements",
       constents: [
-        "One (1) valid government-issued ID",
-        "Latest 1 month payslip",
-        "Certificate of Employment (COE) with compensation",
-        "Proof of billing (utility bill, etc.)",
+        "Government ID",
+        "Proof of Income",
+        "COE w/ compensation",
         "Company ID",
       ],
     },
     {
-      title: "Who can apply",
+      title: "Qualifications",
       constents: [
-        "Filipino citizen, at least 21 years old",
-        "Currently employed (government or private)",
-        "Minimum monthly salary of PHP 10,000",
-        "With active contact number",
+        "At least 21 years old",
+        "Filipino Citizen*",
+        "Stable source of income",
+        "Active Contact Number",
       ],
     },
     {
-      title: "Salary Loan Features",
+      title: "Terms",
       constents: [
-        "Loan amount from PHP 5,000 up to PHP 500,000",
-        "Flexible repayment terms (6, 12, 18, or 24 months)",
-        "Fast approval and release",
+        "Up to ₱5000,000",
+        "From 6 to 24 mos.",
+        "Quick approval",
         "No collateral required",
       ],
     },
@@ -70,31 +69,49 @@ export default function SalaryLoanLandingPage() {
   return (
     <>
       <div className="container salary-banner">
-        <div className="banner-content-wrapper">
+        {/* <div className="banner-content-wrapper">
           <div>
-            <p className="banner-text regular title">
-              Your <span className="red">Salary Loan</span> is just a few clicks
-              away!
+            <p className="banner-text-salary regular title">
+              <span className="red">Salary Loan</span> supports the hustle
+              behind every payday
             </p>
             <p className="regular readable">
-              Apply for a salary loan and get fast approval with minimal
-              requirements.
+              Your solution is just a few clicks away.
             </p>
             <div className="hero-buttons">
-              <Link href={"/loans/calculator?type=" + (referrer || "salary")}> {/* fallback to 'salary' if null */}
+              <Link href={"/loans/calculator?type=" + (referrer || "salary")}>
                 <button className="btn btn-start-here">
                   Start here &nbsp; <ArrowRight size={20} />
                 </button>
               </Link>
             </div>
           </div>
+        </div> */}
+        <div className="banner-content-wrapper">
+          <div>
+            <p className="banner-text-salary regular title">
+              <span className="red">Salary Loan</span> supports the hustle
+              behind every payday
+            </p>
+            <p className="regular readable">
+              {" "}
+              Your solution is just a few clicks away.
+            </p>
+          </div>
+          <div className="hero-buttons">
+            <Link href={"/loans/calculator?type=" + (referrer || "salary")}>
+              <button className="btn btn-start-here">
+                Start here &nbsp; <ArrowRight size={20} />
+              </button>
+            </Link>
+          </div>
         </div>
         <div className="home-loan-img-wrapper">
           <Image
             className="home-loan-img"
-            src="/images/salary-loan.png"
+            src="/images/salary-loan.svg"
             alt="Salary Loan"
-            width={400}
+            width={100}
             height={100}
           />
         </div>
@@ -104,9 +121,7 @@ export default function SalaryLoanLandingPage() {
         {/* <Col lg="12"> */}
         <div className="car-loan-type-wrapper container">
           <br />
-          <p className="banner-text regular title">
-            What you need for your Salary Loan
-          </p>
+          <p className="banner-text regular title">What you need</p>
           <br />
           <Row className="">
             {salaryLoanWhatYouNeed.map((item) => (
@@ -121,7 +136,9 @@ export default function SalaryLoanLandingPage() {
             ))}
           </Row>
           <br />
-          {/* <div className="text-muted regular">* Except for condominium (see details)</div> */}
+          <div className="text-muted regular mt-3">
+            * Except for condominium (see details)
+          </div>
         </div>
         {/* </Col> */}
       </div>

@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 // This is the salary loan approval page
 const type = 'salary';
 
-export default function NotElligible() {
+export default function NotQualified() {
     const router = useRouter();
     // const data = useFinalLoanStore((state) => state.data);
     // const clearFinalLoanData = useFinalLoanStore((state) => state.clearFinalLoanData);
@@ -58,7 +58,8 @@ export default function NotElligible() {
                 <br /><br /><br />
                 <br /><br /><br />
                 <div className='btn-wrapper2'>
-                    <button className='__btn btn-black' onClick={() => handleBtnAction('home')}> Home </button>
+                    <button className='__btn3 btn-white' onClick={() => handleBtnAction('home')}> Home </button>
+                    <button className='__btn3 btn-black'> Reset & Retry Again </button>
                 </div>
             </div>
         </Container>

@@ -15696,9 +15696,7 @@ a {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 20px 0;
 }
-
 
 /*# sourceMappingURL=main.css.map */
 
@@ -15761,11 +15759,19 @@ a {
     width: 100%;
   }
 
+  .banner-text-salary {
+    width: 100%;
+  }
+
   .why {
     padding: 50px 0;
   }
 
   .home-banner {
+    padding: 20px 0 0 0;
+  }
+
+  .salary-banner {
     padding: 20px 0 0 0;
   }
 
@@ -15780,12 +15786,12 @@ a {
     margin-top: 20px;
   }
 
-    .summary-container {
+  .summary-container-salary {
     margin-top: 20px;
   }
 
   .summary-containers {
-    margin-top: 20px;
+    margin-top: 15px;
     width: 100%;
   }
 
@@ -15793,13 +15799,15 @@ a {
     margin-top: 10px;
     width: 100%;
     /* padding: 0 15px  */
-}
+  }
 
-
+  .center-parent {
+    width: 100%;
+  }
 
   .contact-details-wrapper {
     width: 100%;
-  } 
+  }
 }
 
 @media (min-width: 515px) {
@@ -15849,6 +15857,10 @@ a {
     padding: 50px 0;
   }
 
+  .salary-banner {
+    padding: 50px 0;
+  }
+
   .car-card {
     margin: 20px 0px;
     padding: 10px 30px;
@@ -15870,9 +15882,16 @@ a {
     margin-top: 90px;
   }
 
+  .summary-container-salary {
+    margin-top: 130px;
+  }
 
   .contact-details-wrapper {
     width: 35%;
+  }
+
+  .pre-approval{
+    padding: 15px 0px;
   }
 }
 
@@ -15892,7 +15911,13 @@ a {
   .banner-text {
     width: 90%;
   }
+
+  .banner-text-salary {
+    width: 90%;
+  }
+  
 }
+
 
 @media (max-width: 1000px) {
   /* Web width*/
@@ -15907,12 +15932,16 @@ a {
   }
 
   .salary-loan-img {
-     width: 100%;
+    width: 100%;
     height: 100%;
   }
 
   .banner-text {
     width: 100%;
+  }
+
+  .banner-text-salary {
+    width: 95%;
   }
 
   /* .why {
@@ -15945,6 +15974,10 @@ a {
     width: 550px;
   }
 
+  .banner-text-salary {
+    width: 600px;
+  }
+
   .why-text {
     width: 500px;
   }
@@ -15959,6 +15992,10 @@ a {
 }
 
 .banner-text {
+  margin-bottom: 0px;
+}
+
+.banner-text-salary {
   margin-bottom: 0px;
 }
 
@@ -16074,6 +16111,7 @@ a {
   padding: 40px 25px;
 }
 
+
 .pre-approval {
   display: flex;
   flex-direction: column;
@@ -16083,9 +16121,8 @@ a {
 }
 
 .pre-approval-text {
-  width: 100%;
+  width: 90%;
   text-align: center;
-  
 }
 
 .btn-wrapper {
@@ -16107,7 +16144,7 @@ a {
 .btn-black {
   color: #fff;
   background-color: #333;
-  padding: 10px 30px;
+  padding: 11px 30px;
   border: none;
 }
 

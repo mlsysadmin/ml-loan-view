@@ -15565,6 +15565,8 @@ a {
 
 .card-check-list-wrapper {
     display: flex;
+    text-align: center;
+    width: 100%;
     flex-direction: column;
     gap: 10px;
     color: #555555;
@@ -15814,6 +15816,14 @@ a {
     flex-direction: row;
     justify-content: space-between;
 }
+
+.salary-banner {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 
 .mobile-input-wrapper {
     display: flex;

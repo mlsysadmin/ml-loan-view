@@ -151,7 +151,7 @@ const SalaryLoanCalculator: React.FC = () => {
         <>
           <div className="col-md-6">
             <span className="regular title">Loan Calculator</span>
-            <p style={{ color: "#555555", fontSize: 16, marginBottom: 10 }}>
+            <p style={{ color: "#555555", fontSize: 16, marginBottom: 15 }}>
               You are eligible for M. Lhuillier Salary Loan of up to ₱ 4,600.00
               at only 5.0% per month!
             </p>
@@ -488,9 +488,9 @@ const SalaryLoanCalculator: React.FC = () => {
                   : undefined
               }
             />
-            {/* <div className="foot-note">
+            <div className="foot-note">
               <i>*Subject for approval</i>
-            </div> */}
+            </div>
           </div>
         </>
       )}

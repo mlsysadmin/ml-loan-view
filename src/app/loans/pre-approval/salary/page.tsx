@@ -65,7 +65,7 @@ export default function SalaryPreApprovalPage() {
                 <br /><br /><br />
                 <br /><br /><br />
                 <div className='btn-wrapper2'>
-                    <button className='__btn2 btn-black' onClick={() => handleBtnAction('home')}> Home </button>
+                    <button className='__btn2 btn-black' onClick={() => handleBtnAction('home')}> Home </button>                  
                 </div>
             </div>
         </Container>

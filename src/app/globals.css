@@ -15636,6 +15636,13 @@ a {
   justify-content: space-between;
 }
 
+.salary-banner {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 
 
 /*# sourceMappingURL=main.css.map */
@@ -15724,6 +15731,10 @@ a {
     width: 100%;
   }
 
+  .banner-text-salary {
+    width: 100%;
+  }
+
   .why {
     padding: 50px 0;
   }
@@ -15783,6 +15794,10 @@ a {
     width: 90%;
   }
 
+  .banner-text-salary {
+    width: 90%;
+  }
+
   .main-page-card-container {
     /* flex-direction: row; */
   }
@@ -15798,6 +15813,10 @@ a {
   }
 
   .banner-text {
+    width: 100%;
+  }
+
+  .banner-text-salary {
     width: 100%;
   }
 
@@ -15823,6 +15842,10 @@ a {
     width: 510px;
   }
 
+  .banner-text-salary {
+    width: 510px;
+  }
+
   .why-text {
     width: 510px;
   }
@@ -15831,6 +15854,8 @@ a {
 .banner-text {
   margin-bottom: 0px;
 }
+
+
 
 .home-loan-img-wrapper {
   display: flex;
@@ -15967,9 +15992,9 @@ a {
 
 .btn-wrapper2 {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 20px;
-  /* width: 60%; */
+  /* width: 282px; */
   /* padding: 15px 15px; */
 }
 
@@ -15977,10 +16002,13 @@ a {
   .btn-wrapper2 {
     display: flex;
     flex-direction: column;
-    gap: 0px;
+    gap: 15px;
     width: 100%;
+    /* align-content: center; */
     /* padding: 15px 15px; */
   }
+
+  
 }
 
 .__btn {
@@ -15988,6 +16016,7 @@ a {
   white-space: nowrap;
   border-radius: 25px;
   /* width: 100%; */
+  cursor: pointer;
 }
 
 .__btn2 {
@@ -15995,6 +16024,17 @@ a {
   white-space: nowrap;
   border-radius: 25px;
   width: 100%;
+  cursor: pointer;
+}
+
+.__btn3 {
+  text-align: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: 25px;
+  min-width: 282px; /* Minimum width */
+  width: auto;
+  cursor: pointer;
 }
 
 .btn-black {

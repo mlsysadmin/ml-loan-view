@@ -15772,7 +15772,19 @@ a {
     justify-content: space-between;
 }
 
+.salary-banner {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
 .banner-text {
+    font-size: 35px !important;
+    margin-bottom: 0px;
+}
+
+.banner-text-salary {
     font-size: 35px !important;
     margin-bottom: 0px;
 }

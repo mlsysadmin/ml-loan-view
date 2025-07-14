@@ -97,7 +97,7 @@ const SalaryLoanSummaryPanel: React.FC<SalaryLoanSummaryPanelProps> = ({
   const { totalWithInterest, monthly } = calculateMonthlyPaymentWithInterest();
 
   return (
-    <div className="summary-container">
+    <div className="summary-container-salary">
       <p className="medium title red">Summary</p>
       <div className="space-y-1">
         <div className="details-wrapper">
