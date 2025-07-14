@@ -54,7 +54,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
                 <br />
                 <div className="space-y-4">
                     <div className="details">
-                        <span className="text-gray-600">Ammount Financed</span>
+                        <span className="text-gray-600">Amount Financed</span>
                         <span className="font-medium">₱ {ammountFinanced.toLocaleString()}</span>
                     </div>
 

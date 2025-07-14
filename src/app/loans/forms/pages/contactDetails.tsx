@@ -65,6 +65,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [lastName, setLastName] = useState("");
   const [suffix, setSuffix] = useState("");
   const [birthdate, setBirthdate] = useState<{ month: number; day: number; year: number } | undefined>(undefined);
+  const [birthdateInit, setBirthdateInit] = useState<{ month: number; day: number; year: number } | undefined>(undefined);
   const [country, setCountry] = useState("");
   const [provinceOrState, setProvinceOrState] = useState("");
   const [cityOrTown, setCityOrTown] = useState("");
@@ -196,65 +197,71 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       barrangay &&
       streetNameAndSpecAddress)
 
-    if (
-      firstName &&
-      lastName &&
-      Number(contactNumber.length) === 11 &&
-      email &&
-      validEmail &&
-      birthdate &&
-      citizenship &&
-      country &&
-      cityOrTown &&
-      barrangay &&
-      streetNameAndSpecAddress
-    ) {
-      setFinalLoanData({
-        contactNumber,
-        countryCode,
-        email,
-        firstName,
-        middleName,
-        lastName,
-        suffix,
-        birthdate,
-        citizenship,
-        country,
-        provinceOrState,
-        cityOrTown,
-        barrangay,
-        streetNameAndSpecAddress,
-        found: ckycData ? true : false,
-        ckycData,
-        grossMonthlyIncome,
-        sourceOfIncome,
-        empOrBusiness,
-        designation,
-        loanData,
-        applicationTimeStamp: '',
-        ref: ''
-      });
 
-      onNext({
-        contactNumber,
-        countryCode,
-        email,
-        firstName,
-        middleName,
-        lastName,
-        suffix,
-        birthdate,
-        citizenship,
-        country,
-        provinceOrState,
-        cityOrTown,
-        barrangay,
-        streetNameAndSpecAddress,
-        found: ckycData ? true : false,
-        ckycData: ckycData
-      });
+
+    if (!/^09\d{9}$/.test(contactNumber)) {
+      setErrorContactNumber('Invalid mobile number.');
     } else {
-      dataHandle();
+      if (
+        firstName &&
+        lastName &&
+        Number(contactNumber.length) === 11 &&
+        email &&
+        validEmail &&
+        birthdate &&
+        citizenship &&
+        country &&
+        cityOrTown &&
+        barrangay &&
+        streetNameAndSpecAddress
+      ) {
+        setFinalLoanData({
+          contactNumber,
+          countryCode,
+          email,
+          firstName,
+          middleName,
+          lastName,
+          suffix,
+          birthdate,
+          citizenship,
+          country,
+          provinceOrState,
+          cityOrTown,
+          barrangay,
+          streetNameAndSpecAddress,
+          found: ckycData ? true : false,
+          ckycData,
+          grossMonthlyIncome,
+          sourceOfIncome,
+          empOrBusiness,
+          designation,
+          loanData,
+          applicationTimeStamp: '',
+          ref: ''
+        });
+  
+        onNext({
+          contactNumber,
+          countryCode,
+          email,
+          firstName,
+          middleName,
+          lastName,
+          suffix,
+          birthdate,
+          citizenship,
+          country,
+          provinceOrState,
+          cityOrTown,
+          barrangay,
+          streetNameAndSpecAddress,
+          found: ckycData ? true : false,
+          ckycData: ckycData
+        });
+      } else {
+        dataHandle();
+      }
     }
   };
 

@@ -11,9 +11,9 @@ interface PhoneInputProps {
 }
 
 const countryOptions: Record<string, { code: string; country: string; flag: string; placeholder: string }> = {
-  CA: { code: '+1', country: 'Canada', flag: 'ca', placeholder: '000 888 8888' },
+  // CA: { code: '+1', country: 'Canada', flag: 'ca', placeholder: '000 888 8888' },
   PH: { code: '+63', country: 'Philippines', flag: 'ph', placeholder: '988 888 8888' },
-  US: { code: '+1', country: 'United States', flag: 'us', placeholder: '(000) 888 8888' },
+  // US: { code: '+1', country: 'United States', flag: 'us', placeholder: '(000) 888 8888' },
 };
 
 const PhoneInput: React.FC<PhoneInputProps> = ({ value, countryCode, onChange, country, onCountryChange }) => {
@@ -35,7 +35,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({ value, countryCode, onChange, c
   const handleCountrySelect = (countryKey: string) => {
     setSelectedCountry(countryKey);
     setDropdownOpen(false);
-    onCountryChange?.(countryOptions[countryKey].flag); 
+    onCountryChange?.(countryOptions[countryKey].flag);
   };
 
   const formatPhone = (raw: string) => {
@@ -56,6 +56,19 @@ const PhoneInput: React.FC<PhoneInputProps> = ({ value, countryCode, onChange, c
     const formatted = formatPhone(e.target.value);
     onChange(formatted);
   };
+
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   let raw = e.target.value.replace(/\D/g, '');
+
+  //   if (selectedCountry === 'PH') {
+  //     // Only allow numbers starting with 9
+  //     if (raw.length === 1 && raw !== '9') return;
+  //     if (raw.length > 0 && raw[0] !== '9') return;
+  //   }
+
+  //   const formatted = formatPhone(raw);
+  //   onChange(formatted);
+  // };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
