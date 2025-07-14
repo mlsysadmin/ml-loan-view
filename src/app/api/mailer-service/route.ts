@@ -79,6 +79,7 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
+import moment from 'moment';
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -109,6 +110,8 @@ export async function POST(req: Request) {
   } = body;
 
   try {
+
+    console.log('TIME ZONE:::::::', Intl.DateTimeFormat().resolvedOptions().timeZone)
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([595, 842]); // A4
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -127,7 +130,8 @@ export async function POST(req: Request) {
     page.drawText(`${headerText} LOAN APPLICATION`, { x: 40, y, size: 16, font: bold, color });
     y -= 24;
     drawText('Ref No', ref);
-    drawText('Date', new Date().toLocaleString());
+    drawText('Date', new Date().toLocaleString(undefined, { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }));
+    // drawText('Date', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
     y -= 10;
     page.drawRectangle({ x: 40, y: y - 10, width: 515, height: 1, color: rgb(0.8, 0.8, 0.8) });
