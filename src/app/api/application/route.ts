@@ -10,22 +10,28 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const newApp = await LoanApplication.create({
-      ref: body.ref,
-      loanType: body.loanData?.loanOption,
-      unitType: body.unitOrPropertyType,
-      amount: body.loanData?.ammountFinanced,
-      downPayment: body.loanData?.downPayment,
-      monthlyPayment: body.loanData?.monthlyPayment,
-      term: body.loanData?.loanTerm,
-      borrower: `${body.firstName} ${body.middleName ?? ''} ${body.lastName} ${body.suffix ?? ''}`,
-      contactNumber: body.contactNumber,
-      email: body.email,
-      birthday: new Date(`${body.birthdate.year}-${body.birthdate.month}-${body.birthdate.day}`),
-      incomeType: body.sourceOfIncome ?? null,
+      reference_number: body.ref,
+      loanType: body.loanData?.loanOption ?? '',
+      unitType: body.unitOrPropertyType ?? '',
+      amount: body.loanData?.ammountFinanced ?? '',
+      downPayment: body.loanData?.downPayment ?? '',
+      monthlyPayment: body.loanData?.monthlyPayment ?? '',
+      term: body.loanData?.loanTerm ?? '',
+      // borrower: `${body.firstName} ${body.middleName ?? ''} ${body.lastName} ${body.suffix ?? ''}`,
+      first_name: body.firstName,
+      middle_name: body.middleName,
+      last_name: body.lastName,
+      suffix: body.suffix ?? '',
+      contact_number: body.contactNumber,
+      email_address: body.email,
+      citizenship: body.citizenship,
+      birth_date: new Date(`${body.birthdate.year}-${body.birthdate.month}-${body.birthdate.day}`),
+      source_of_income: body.sourceOfIncome ?? null,
       employer: body.empOrBusiness ?? null,
       designation: body.designation ?? null,
-      grossIncome: parseFloat(body.grossMonthlyIncome) || null,
+      gross_monthly_income: parseFloat(body.grossMonthlyIncome) || null,
       address: `${body.streetNameAndSpecAddress}, ${body.barrangay}, ${body.cityOrTown}, ${body.country}`,
+      status: 'PRE-APPROVED'
     });
 
     return NextResponse.json({ message: 'Application saved', id: newApp.get('id') });

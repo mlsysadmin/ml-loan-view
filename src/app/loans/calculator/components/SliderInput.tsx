@@ -118,7 +118,7 @@ const SliderInput: React.FC<SliderInputProps> = ({
                 if (/^\d*$/.test(raw)) {
                   setManualAmount(raw);
                 }
-              }}
+              }}  
               onKeyDown={(e) => {
                 if (e.key === 'Enter') applyManualAmount();
               }}

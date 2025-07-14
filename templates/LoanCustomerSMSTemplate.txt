@@ -1,0 +1,10 @@
+Dear {{firstName}} {{lastName}},
+
+You have successfully submitted your {{loanType}} Loan Application with ref.# {{ref}}.
+
+Your application will be reviewed. We will contact you for any lacking requirements. Otherwise, we will proceed processing the approval of your loan application.
+
+Thank you for choosing ML.
+
+Sincerely,
+M Lhuillier Financial Services Inc.

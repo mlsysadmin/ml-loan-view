@@ -43,7 +43,7 @@ const LoanCalculator: React.FC = () => {
         if (loanType === 'car') {
             console.log('======>>>>>>>>', loanType)
             if (selectedType === 'Prenda my Vehicle') {
-                console.log('selectedType ::::::::::', selectedType )
+                console.log('selectedType ::::::::::', selectedType)
                 if (selectedVehicle === '2-wheel') setInterest(1.50)
                 if (selectedVehicle === '3-wheel') setInterest(2)
                 if (selectedVehicle === '4-wheel') setInterest(1.50)
@@ -64,12 +64,31 @@ const LoanCalculator: React.FC = () => {
         setammountFinanced(loanAmount)
         const monthlyAmount = (loanAmount / loanTerm) + ((loanAmount / loanTerm) * (interest / 100));
         setMonthlyPayment(monthlyAmount);
-    }, [purchasePrice, downPaymentPercent, loanTerm]);
+    }, [purchasePrice, downPaymentPercent, loanTerm, interest]);
 
     const selectOption = (e: any) => {
         console.log('====', e.target.value)
-        setOption(e.target.value)
-        if (loanType === 'home') setInterest(2)
+        // setOption(e.target.value)
+        // if (loanType === 'home') setInterest(2)
+        const selected = e.target.value;
+        setOption(selected);
+
+        // Update interest when loanType and dropdown value exist
+        const dropdownLabel = loanType === 'car' ? 'Unit Type' : 'Property Type';
+        const selectedDropdownValue = dropdownSelections[0];
+
+        if (!options || !selectedDropdownValue) return;
+
+        const dropdownData = options.dropdown.find(item => item.label === dropdownLabel);
+        const selectedItem = dropdownData?.values.find((v: any) => v.type === selectedDropdownValue);
+
+        if (!selectedItem) return;
+
+        const loanConfig = selectedItem.loanType.find((l: any) => l.type === selected);
+
+        if (loanConfig && typeof loanConfig.interrest === 'number') {
+            setInterest(loanConfig.interrest);
+        }
     };
 
     const [options, setOptions] = useState<typeof carOptions | typeof homeOptions | null>(null);
@@ -546,11 +565,36 @@ const LoanCalculator: React.FC = () => {
     };
 
 
+    useEffect(() => {
+        const dropdownLabel = loanType === 'car' ? 'Unit Type' : 'Property Type';
+        const selectedDropdownValue = dropdownSelections[0];
+        const selectedLoanType = loanOption;
+
+        if (!options || !selectedDropdownValue || !selectedLoanType) return;
+
+        const dropdownData = options.dropdown.find(item => item.label === dropdownLabel);
+        const selectedItem = dropdownData?.values.find((v: any) => v.type === selectedDropdownValue);
+
+        if (!selectedItem) return;
+
+        const loanConfig = selectedItem.loanType.find((l: any) => l.type === selectedLoanType);
+
+        if (loanConfig && typeof loanConfig.interrest === 'number') {
+            setInterest(loanConfig.interrest);
+        }
+    }, [loanOption, dropdownSelections, options]);
+
+
+
     return (
         <div className="calculator-container">
             <div className="col-md-6">
                 <span className='regular title'>Loan Calculator</span>
-                <p> Tell me about the property </p>
+                {loanType === 'home' ? (
+                    <p> Tell me about the property. </p>
+                ) : (
+                    <p> Tell me about the car details. </p>
+                )}
 
                 {loanType === 'home' && (
                     <div className='option-wrapper'>
@@ -640,6 +684,9 @@ const LoanCalculator: React.FC = () => {
 
             </div>
             <div className="col-md-6">
+                {loanType === 'car' && (
+                    <div>&nbsp;</div>
+                )}
                 <SummaryPanel
                     ammountFinanced={ammountFinanced}
                     purchasePrice={purchasePrice}

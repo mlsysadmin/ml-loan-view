@@ -150,10 +150,27 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   };
 
   const dataHandle = () => {
-    console.log('====::AS:D:AS', barrangay)
-    if (contactNumber === '') setErrorContactNumber('Mobile number is required.');
+    console.log('+:::::::::::::::::::::::::::::::::::::')
+    console.log('First Name:', !!firstName);
+    console.log('Last Name:', !!lastName);
+    console.log('Contact Number:', contactNumber?.length === 11, contactNumber?.length >= 10);
+    console.log('Email:', !!email);
+    console.log('Is Valid Email:', isValidEmail);
+    console.log('Birthdate:', !!birthdate);
+    console.log('Citizenship:', !!citizenship);
+    console.log('Country:', !!country);
+    console.log('City or Town:', !!cityOrTown);
+    console.log('Barangay:', !!barrangay);
+    console.log('Street Name and Specific Address:', !!streetNameAndSpecAddress);
+    console.log('-:::::::::::::::::::::::::::::::::::::')
+
+    const validEmail = emailRegex.test(email);
+    if (Number(contactNumber.length) <= 10) {
+      if (Number(contactNumber.length) === 0 || Number(contactNumber.length === 1)) setErrorContactNumber('Mobile number is required.');
+      else setErrorContactNumber('Ivalid mobile number.');
+    }
     if (email === '') setErrorEmail('Email is required.');
-    if (!isValidEmail && email !== '') setErrorEmail('Invalid email.');
+    if (validEmail === false) setErrorEmail('Invalid email.');
     if (firstName === '') setErrorFirstName('First name is required.');
     if (lastName === '') setErrorLastName('Last name is required.');
     if (birthdate === undefined) setErrorBirthday('Birthday is required.');
@@ -166,9 +183,32 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   };
 
   const handleContinue = () => {
-    setIsValidEmail(emailRegex.test(email));
+    const validEmail = emailRegex.test(email);
+    console.log('::::::-----:::', firstName &&
+      lastName &&
+      Number(contactNumber.length) === 11 &&
+      email &&
+      validEmail &&
+      birthdate &&
+      citizenship &&
+      country &&
+      cityOrTown &&
+      barrangay &&
+      streetNameAndSpecAddress)
 
-    if (firstName && lastName && contactNumber && email && isValidEmail && birthdate && citizenship && country && cityOrTown && barrangay && streetNameAndSpecAddress) {
+    if (
+      firstName &&
+      lastName &&
+      Number(contactNumber.length) === 11 &&
+      email &&
+      validEmail &&
+      birthdate &&
+      citizenship &&
+      country &&
+      cityOrTown &&
+      barrangay &&
+      streetNameAndSpecAddress
+    ) {
       setFinalLoanData({
         contactNumber,
         countryCode,
@@ -194,6 +234,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         applicationTimeStamp: '',
         ref: ''
       });
+
       onNext({
         contactNumber,
         countryCode,
@@ -212,8 +253,11 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         found: ckycData ? true : false,
         ckycData: ckycData
       });
-    } else dataHandle()
+    } else {
+      dataHandle();
+    }
   };
+
 
   async function comapreBirthdates() {
     const bdate = moment(`${birthdate?.year}-${birthdate?.month}-${birthdate?.day}`).format("YYYY-MM-DD");
@@ -230,8 +274,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       const data = await res.json();
       setCKYCData(data.data);
 
-      console.log('+_+_+_', ckycData)
-
       if (data.match) {
         setFound(true);
         setContactNumber(data.data.cellphoneNumber || '');
@@ -241,7 +283,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         setSuffix(data.data.name.suffix || '');
         setBirthdate(birthdate);
         setEmail(data.data.email || '');
-        setCitizenship(ckycData?.nationality || '');
+        setCitizenship(data.data.nationality || '');
         setCountry(data.data.addresses.current.addressL0Name || '');
         setProvinceOrState(data.data.addresses.current.addressL1Name || '');
         setCityOrTown(data.data.addresses.current.addressL2Name || '');

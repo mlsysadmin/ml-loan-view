@@ -32,6 +32,13 @@ const LoanCalculator: React.FC = () => {
     const selectOption = (e: any) => {
         console.log('====', e.target.value)
         setOption(e.target.value)
+        if (e.target.value === 'Buy') {
+            // loanAmount
+            // console.log('++++++++++',)
+            const downPayment = (purchasePrice * downPaymentPercent) / 100;
+            const loanAmount = purchasePrice - downPayment;
+            setMonthlyPayment(loanAmount / loanTerm)
+        }
     };
 
     return (
@@ -55,7 +62,7 @@ const LoanCalculator: React.FC = () => {
                 </div>
 
                 <PropertyDropdown value={propertyType} onChange={setPropertyType} />
-                
+
                 <div className='slider-card'>
 
                     <div className="mb-8">
@@ -122,8 +129,8 @@ const LoanCalculator: React.FC = () => {
                 downPayment={downPaymentAmount}
                 monthlyPayment={monthlyPayment}
                 loanTerm={loanTerm}
-                propertyType={propertyType} 
-                loanOption={loanOption}            
+                propertyType={propertyType}
+                loanOption={loanOption}
             />
         </div>
     );

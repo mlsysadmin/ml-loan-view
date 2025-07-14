@@ -185,7 +185,7 @@ export async function POST(req: Request) {
     const filePath = path.join(process.cwd(), 'templates/LoanCutomerEmailTemplate.html');
     let htmlTemplate = fs.readFileSync(filePath, 'utf-8');
 
-    function capitalizeFullName(name: string): string {
+    function capitalizeName(name: string): string {
       return name
         .toLowerCase()
         .split(' ')
@@ -195,7 +195,7 @@ export async function POST(req: Request) {
 
     // Replace template variables
     htmlTemplate = htmlTemplate
-      .replace('{{firstName}}', capitalizeFullName(firstName))
+      .replace('{{firstName}}', capitalizeName(firstName))
       .replace('{{loanOption}}', loanOption)
       .replace('{{ref}}', ref)
       .replace('{{year}}', currentYear.toString());
@@ -212,9 +212,9 @@ export async function POST(req: Request) {
       },
     });
 
-    await transporter.sendMail({
+    await transporter.sendMail({ // ML emails []
       from: `"ML Loans" <${process.env.EMAIL_USER}>`,
-      to,
+      to: 'kenneth.simbulan@gmail.com',
       cc,
       subject,
       text,
@@ -227,9 +227,9 @@ export async function POST(req: Request) {
       ],
     });
 
-    await transporter.sendMail({
+    await transporter.sendMail({ // Costumer email
       from: `"ML Loans" <${process.env.EMAIL_USER}>`,
-      to,
+      to: email,
       cc,
       subject: `${headerText.charAt(0).toUpperCase() + headerText.slice(1)} Loan Application`,
       html: htmlTemplate,

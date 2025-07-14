@@ -103,9 +103,9 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        to: 'kenneth88877@gmail.com',
-        // cc: 'kenneth.simbulan@mlhuillier.com',
-        cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
+        to: '',
+        cc: 'kenneth.simbulan@mlhuillier.com',
+        // cc: 'kenneth.simbulan@mlhuillier.com, mercy.borlas@mlhuillier.com, jeane.cardiente@mlhuillier.com',
         subject: 'Loan Application',
         text: `Please find the attached loan application from ${firstName} ${lastName} ${suffix || ''}`,
         ...finalData,
@@ -186,7 +186,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     setIsLoading(true)
     setFinalLoanData({
       ref: ref,
-      applicationTimeStamp: new Date().toISOString(),
+      applicationTimeStamp:  moment().format('YYYY-MM-DDTHH:mm:ss.SSS'),
       contactNumber,
       email,
       firstName,
@@ -242,7 +242,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
         </div>
         <div className='form-fields full-width'>
           <input type="text"
-            className='form-control full-width '
+            className='form-control full-width'
             value={grossMonthlyIncome}
             onChange={(e) => {
               const value = e.target.value;

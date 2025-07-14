@@ -9,9 +9,7 @@ import { useRouter } from 'next/navigation';
 export default function PreApprovalPage() {
     const router = useRouter();
     const data = useFinalLoanStore((state) => state.data);
-    const clearFinalLoanData = useFinalLoanStore((state) => state.clearFinalLoanData); // ← Grab the clear method
-
-    console.log('==data:::::::', data)
+    const clearFinalLoanData = useFinalLoanStore((state) => state.clearFinalLoanData); 
     // let qualified = false;
 
     // const birthdate = `${data?.birthdate.month}/${data?.birthdate.day}/${data?.birthdate.year}`;

@@ -173,7 +173,13 @@ export default function CarLoanLandingPage() {
             <div className='car-loan-type-container '>
                 {/* <Col lg="12"> */}
                 <div className="car-loan-type-wrapper container">
-                    <p className="banner-text regular title">{step === 0 ? 'I want to..' : 'Choose a vehicle type'}</p>
+                    {!isMobile ? (
+
+                        <p className="banner-text regular title">I want to..</p>
+                    ) : (
+                        <p className="banner-text regular title">{step === 0 ? 'I want to..' : 'Choose a vehicle type'}</p>
+
+                    )}
                     <div className="">
                         {!isMobile ? (
                             <>
@@ -195,6 +201,7 @@ export default function CarLoanLandingPage() {
                                                             setSelectedTypeCode(item.code)
                                                             setSelectedVehicle(null);
                                                             setShouldWiggle(false);
+                                                            setStep(1);
                                                         }}
                                                         onMouseEnter={() => setHovered(index)}
                                                         onMouseLeave={() => setHovered(null)}
@@ -307,9 +314,12 @@ export default function CarLoanLandingPage() {
 
                     </div>
                     <div className='form-btn-container'>
-                        <button className='__btn btn-white' onClick={() => setStep(0)}>
-                            Back
-                        </button>
+                        {step === 1 && (
+
+                            <button className='__btn btn-white' onClick={() => setStep(0)}>
+                                Back
+                            </button>
+                        )}
                         {(!selectedVehicle || !selectedType || step === 0) ? (
                             <button
                                 className="__btn btn-black"

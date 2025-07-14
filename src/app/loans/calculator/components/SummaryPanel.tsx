@@ -102,6 +102,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
                     </div>
                 </div>
             </div>
+            <hr style={{ border: '0.5px solid black' }} />
             <div className='form-btn-container-summary form-btn-container'>
                 {/* <Link href=${'/loans/forms?type='}> */}
                 <Link href={`${'/loans?type=' + loanType}`}>

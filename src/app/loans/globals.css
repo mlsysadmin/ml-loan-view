@@ -16142,6 +16142,6 @@ a {
 }
 
 .wiggle {
-  border: solid #ff0000;
+  border: solid #ff0000 !important;
   animation: wiggle 0.3s ease-in-out;
 }

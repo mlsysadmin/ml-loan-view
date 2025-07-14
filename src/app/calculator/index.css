@@ -201,7 +201,7 @@ input[type=radio]:checked + .__radio > span {
 .form-btn-container {
     display: flex;
     justify-content: flex-end;
-    border-top: 1px solid #0000004a;
+    /* border-top: 1px solid #0000004a; */
     padding: 25px 0px 15px 0px;
 }
 

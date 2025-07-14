@@ -42,7 +42,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     };
 
     return NextResponse.json(
-      { success: true, data: typeof results === 'object' && 'data' in results ? resData : null },
+      { success: true, data: data !== null ? resData : null },
       { status: 200 }
     );
   } catch (error: unknown) {
