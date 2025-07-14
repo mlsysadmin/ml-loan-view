@@ -170,6 +170,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       if (Number(contactNumber.length) === 0 || Number(contactNumber.length === 1)) setErrorContactNumber('Mobile number is required.');
       else setErrorContactNumber('Invalid mobile number.');
     }
+    if (!/^09\d{9}$/.test(contactNumber)) setErrorContactNumber('Invalid mobile number.');
     if (email === '') setErrorEmail('Email is required.');
     if (validEmail === false) setErrorEmail('Invalid email.');
     if (firstName === '') setErrorFirstName('First name is required.');
@@ -199,10 +200,10 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
 
 
 
-    if (!/^09\d{9}$/.test(contactNumber)) {
-      setErrorContactNumber('Invalid mobile number.');
-    } else {
-      if (
+    // if (!/^09\d{9}$/.test(contactNumber)) {
+    //   setErrorContactNumber('Invalid mobile number.');
+    // } else {
+      if (!/^09\d{9}$/.test(contactNumber) &&
         firstName &&
         lastName &&
         Number(contactNumber.length) === 11 &&
@@ -262,7 +263,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       } else {
         dataHandle();
       }
-    }
+    // }
   };
 
 
