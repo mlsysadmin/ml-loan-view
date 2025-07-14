@@ -92,29 +92,31 @@ const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({ onChange, value
 
           {yearDropdownOpen && (
             <>
-              <div className="date-picker-header">
-                <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;Select Year</span>
-                <button onClick={() => setYearDropdownOpen(false)} className="">
-                  ✕
-                </button>
-              </div>
-              <div className='date-picker-grid scrollbar'>
-                {[...Array(100)].map((_, i) => {
-                  const yearOption = currentYear - i;
-                  return (
-                    <div
-                      key={yearOption}
-                      className={`date-picker-dropdown-option ${yearOption === year ? 'selected' : ''}`}
-                      onClick={() => {
-                        setSelectedYear(yearOption);
-                        setYearDropdownOpen(false);
-                        setMonthDropdownOpen(true);
-                      }}
-                    >
-                      <span>{yearOption}</span>
-                    </div>
-                  );
-                })}
+              <div className='box-shadow'>
+                <div className="date-picker-header">
+                  <span className=""> &nbsp;&nbsp;&nbsp;&nbsp;Select Year</span>
+                  <button onClick={() => setYearDropdownOpen(false)} className="">
+                    ✕
+                  </button>
+                </div>
+                <div className='date-picker-grid scrollbar'>
+                  {[...Array(100)].map((_, i) => {
+                    const yearOption = currentYear - i;
+                    return (
+                      <div
+                        key={yearOption}
+                        className={`date-picker-dropdown-option ${yearOption === year ? 'selected' : ''}`}
+                        onClick={() => {
+                          setSelectedYear(yearOption);
+                          setYearDropdownOpen(false);
+                          setMonthDropdownOpen(true);
+                        }}
+                      >
+                        <span>{yearOption}</span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </>
           )}

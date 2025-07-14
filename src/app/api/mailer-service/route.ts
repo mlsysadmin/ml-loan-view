@@ -216,7 +216,7 @@ export async function POST(req: Request) {
       from: `"ML Loans" <${process.env.EMAIL_USER}>`,
       to: 'kenneth.simbulan@gmail.com',
       cc,
-      subject,
+      subject: `${loanOption} Loan Application ${ref}`,
       text,
       attachments: [
         {

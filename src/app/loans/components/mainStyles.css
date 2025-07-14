@@ -15873,6 +15873,10 @@ a {
     background-color: #f5f5f5;
 }
 
+.box-shadow {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
 .date-picker-wrapper {
     display: flex;
     align-items: center;
@@ -15906,7 +15910,7 @@ a {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    padding: 45px 10px 10px 10px; 
+    padding: 10px; 
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -15915,7 +15919,7 @@ a {
     position: absolute;
     z-index: 30;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 45px;
     left: 0px;
 }
 
