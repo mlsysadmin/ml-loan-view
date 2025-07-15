@@ -91,7 +91,14 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     for (let i = 0; i < length; i++) {
       result += chars[Math.floor(Math.random() * chars.length)];
     }
-    setRef(`LEH${result}`);
+    const [pref, setPref] = useState('NON');
+    if (laonType === 'home' || laonType === '"home"') setPref('LEH')
+    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === '2-wheel') setPref('LMC')
+    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === '3-wheel') setPref('LMC')
+    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === '4-wheel') setPref('LCR')
+    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === 'Commercial') setPref('LCC')
+    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === 'Construction') setPref('LHV')
+    setRef(`${pref}${result}`);
   }
 
 
