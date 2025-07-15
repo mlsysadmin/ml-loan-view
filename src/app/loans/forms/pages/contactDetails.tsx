@@ -90,7 +90,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [errorBarrangay, setErrorBarrangay] = useState('');
   const [errorStreet, setErrorStreet] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   const contactRef = useRef<HTMLInputElement>(null);
   const [found, setFound] = useState(false);
@@ -145,7 +145,13 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   };
 
   const handleDateChange = (date: { month: number; day: number; year: number }) => {
-    setBirthdate(date);
+    setBirthdate(date); 
+    setErrorBdate('');
+    setErrorBirthday('');
+  };
+
+  const handleModalDateChange = (date: { month: number; day: number; year: number }) => {
+    setBirthdateInit(date)
     setErrorBdate('');
     setErrorBirthday('');
   };
@@ -163,16 +169,16 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
     console.log('City or Town:', !!cityOrTown);
     console.log('Barangay:', !!barrangay);
     console.log('Street Name and Specific Address:', !!streetNameAndSpecAddress);
-    console.log('-:::::::::::::::::::::::::::::::::::::')
+    console.log('-:::::::::::::::::::::::::::::::::::::', contactNumber.length)
 
     const validEmail = emailRegex.test(email);
     if (Number(contactNumber.length) <= 10) {
       if (Number(contactNumber.length) === 0 || Number(contactNumber.length === 1)) setErrorContactNumber('Mobile number is required.');
       else setErrorContactNumber('Invalid mobile number.');
     }
-    if (!/^09\d{9}$/.test(contactNumber)) setErrorContactNumber('Invalid mobile number.');
+    if (!/^09\d{9}$/.test(contactNumber) && contactNumber !== '' && Number(contactNumber.length) >= 2) setErrorContactNumber('Invalid mobile number.');
     if (email === '') setErrorEmail('Email is required.');
-    if (validEmail === false) setErrorEmail('Invalid email.');
+    if (validEmail === false && email !== '') setErrorEmail('Invalid email.');
     if (firstName === '') setErrorFirstName('First name is required.');
     if (lastName === '') setErrorLastName('Last name is required.');
     if (birthdate === undefined) setErrorBirthday('Birthday is required.');
@@ -268,7 +274,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
 
 
   async function comapreBirthdates() {
-    const bdate = moment(`${birthdate?.year}-${birthdate?.month}-${birthdate?.day}`).format("YYYY-MM-DD");
+    const bdate = moment(`${birthdateInit?.year}-${birthdateInit?.month}-${birthdateInit?.day}`).format("YYYY-MM-DD");
 
     try {
       const res = await fetch(`/api/ckyc-check-bdate?cellphoneNumber=${contactNumber}&bdate=${bdate}`, {
@@ -289,7 +295,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         setmiddleName(data.data.name.middleName || '');
         setLastName(data.data.name.lastName || '');
         setSuffix(data.data.name.suffix || '');
-        setBirthdate(birthdate);
+        setBirthdate(birthdateInit);
         setEmail(data.data.email || '');
         setCitizenship(data.data.nationality || '');
         setCountry(data.data.addresses.current.addressL0Name || '');
@@ -462,7 +468,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
                   Mobile No.: <span className='medium'>{ckyc?.cellphoneNumber}</span>
                 </div>
                 <div className='smaller'>If this is you, provide your birth date.</div>
-                <DatePicker onChange={handleDateChange} />
+                <DatePicker onChange={handleModalDateChange} />
                 <small className='red text-center'>{errorBdate}</small>
                 <div className='modal-btn-wrapper'>
                   <button className='btn-red modal-btn' onClick={comapreBirthdates}>Confirm</button>
