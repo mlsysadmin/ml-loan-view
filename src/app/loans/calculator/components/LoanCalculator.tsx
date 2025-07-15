@@ -6,16 +6,15 @@ import PropertyDropdown from './Dropdown';
 import { useRouter, useSearchParams } from 'next/navigation';
 // import { notFound } from 'next/navigation';
 import '../../index.css';
+import { useLoanStore } from '@/app/loans/store/dataStore';
 
 const LoanCalculator: React.FC = () => {
     const searchParams = useSearchParams();
 
-
+    const loanData = useLoanStore((state) => state.data);
     const loanType = searchParams.get('type');
     const selectedType = searchParams.get('loanType');
     const selectedVehicle = searchParams.get('vehicle');
-
-
 
     const router = useRouter();
     const [purchasePrice, setPurchasePrice] = useState(0);
@@ -41,13 +40,10 @@ const LoanCalculator: React.FC = () => {
 
     useEffect(() => {
         if (loanType === 'car') {
-            console.log('======>>>>>>>>', loanType)
             if (selectedType === 'Prenda my Vehicle') {
-                console.log('selectedType ::::::::::', selectedType)
                 if (selectedVehicle === '2-wheel') setInterest(1.50)
                 if (selectedVehicle === '3-wheel') setInterest(2)
                 if (selectedVehicle === '4-wheel') setInterest(1.50)
-                console.log('=as=d==a=d=as=d=as=d', interest)
             }
         }
     });
@@ -66,8 +62,22 @@ const LoanCalculator: React.FC = () => {
         setMonthlyPayment(monthlyAmount);
     }, [purchasePrice, downPaymentPercent, loanTerm, interest]);
 
+    useEffect(() => {
+        if (loanData) {
+            console.log('========', loanData)
+            const downPaymentPercent = (loanData.downPayment / loanData.purchasePrice) * 100;
+            setammountFinanced(loanData.ammountFinanced || 0)
+            setLoanTerm(loanData.loanTerm || 0)
+            setPurchasePrice(loanData.purchasePrice || 0)
+            setDownPaymentPercent(downPaymentPercent)
+            setDownPaymentAmount(loanData.downPayment || 0)
+            setOption(loanData.loanOption || '');
+            setPropertyType(loanData.propertyType || '')
+            setUnitType(loanData.unitType || '')
+        }
+    }, []);
+
     const selectOption = (e: any) => {
-        console.log('====', e.target.value)
         // setOption(e.target.value)
         // if (loanType === 'home') setInterest(2)
         const selected = e.target.value;
@@ -93,7 +103,6 @@ const LoanCalculator: React.FC = () => {
 
     const [options, setOptions] = useState<typeof carOptions | typeof homeOptions | null>(null);
     const [dropdownSelections, setDropdownSelections] = useState<Record<number, string>>({});
-
 
     useEffect(() => {
         const dropdownLabel = loanType === 'car' ? 'Unit Type' : 'Property Type';
@@ -138,7 +147,6 @@ const LoanCalculator: React.FC = () => {
 
     useEffect(() => {
         ///////////////// TO DISPLAY DEFAULTS /////////////////
-        console.log('======>>>>', selectedType, selectedVehicle)
         if (!loanType) return;
         if (loanType === 'car') {
             setOptions(carOptions);

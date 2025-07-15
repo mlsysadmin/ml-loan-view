@@ -17,6 +17,7 @@ export default function PreApprovalPage() {
         const salaryLoanData = localStorage.getItem('salaryLoanData');
         if (salaryLoanData) {
             const parsedData = JSON.parse(salaryLoanData);
+            console.log('::::::', parsedData)
             setDataRef(parsedData.ref);
         } else if (data?.ref) {
             setDataRef(data.ref);

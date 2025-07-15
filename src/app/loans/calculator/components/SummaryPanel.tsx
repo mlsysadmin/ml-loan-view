@@ -44,7 +44,6 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         if (searchParams) {
             const query = searchParams.toString();
             const full = `/calculator${query ? `?${query}` : ''}`;
-            console.log('_+_AS_D+_+AS_D', full)
             localStorage.setItem('prevURL', JSON.stringify(full));
         }
     }, [searchParams]);
@@ -80,7 +79,6 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             loanOption,
             unitType
         });
-        console.log('==Caculator summary====', data)
         router.push(`/loans/forms?type=${loanType || 'home'}`);
     }
     return (

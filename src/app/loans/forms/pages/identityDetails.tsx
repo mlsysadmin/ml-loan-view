@@ -16,7 +16,7 @@ interface Props {
 }
 
 const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
-  const [laonType, setLoanType] = useState("");
+  const [loanType, setLoanType] = useState("");
 
   useEffect(() => {
     const stored = localStorage.getItem('loanType');
@@ -38,6 +38,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   const [designation, setDesignation] = useState("");
   const [headerText, setHeaderText] = useState("");
   const [unitOrPropertyType, setUnitOrPropertyType] = useState("");
+  const [pref, setPref] = useState('NON');
 
   const [ref, setRef] = useState('');
   const contactNumber = data.contactNumber;
@@ -62,9 +63,31 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   };
 
   useEffect(() => {
+    console.log('========', loanType)
+    if (loanType === 'car' || loanType === '"car"') {
+      console.log('-=as0d-a0d-as0d-0as-0d-asd0--a', unitOrPropertyType)
+      switch (unitOrPropertyType) {
+        case '2-wheel':
+        case '3-wheel':
+          setPref('LMC');
+          break;
+        case '4-wheel':
+          setPref('LCR');
+          break;
+        case 'Commercial':
+          setPref('LCC');
+          break;
+        case 'Construction':
+          setPref('LHV');
+          break;
+      }
+    } else if (loanType === 'home' || loanType === '"home"') setPref('LEH');
+    console.log('adasdasdasdasdas>>>>>>', pref)
     generateRandomString();
+  }, [unitOrPropertyType, loanType]);
+
+  useEffect(() => {
     if (data.ckycData) {
-      console.log('=== DATA+++++ =', data.birthdate)
       setSourceOfIncome(data.ckycData.occupation.sourceOfIncome);
       setEmpOrBusiness(data.ckycData.occupation.organizationName);
       setDesignation(data.ckycData.occupation.workPosition);
@@ -73,31 +96,25 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   }, []);
 
   useEffect(() => {
-    if (laonType === 'home' || laonType === '"home"') {
+    if (loanType === 'home' || loanType === '"home"') {
       setHeaderText('HOUSING');
       setUnitOrPropertyType(loanData?.propertyType || '')
-    } else if (laonType === 'car' || laonType === '"car"') {
+    } else if (loanType === 'car' || loanType === '"car"') {
       setHeaderText('CAR');
       setUnitOrPropertyType(loanData?.unitType || '')
     }
-  });
+  }, [loanType, loanData]);
 
   const setFinalLoanData = useFinalLoanStore((state) => state.setFinalLoanData);
   const finalLoanStore = useFinalLoanStore((state) => state.data);
 
   function generateRandomString(length = 8) {
+    console.log('=final pref:::', pref)
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let result = '';
     for (let i = 0; i < length; i++) {
       result += chars[Math.floor(Math.random() * chars.length)];
     }
-    const [pref, setPref] = useState('NON');
-    if (laonType === 'home' || laonType === '"home"') setPref('LEH')
-    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === '2-wheel') setPref('LMC')
-    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === '3-wheel') setPref('LMC')
-    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === '4-wheel') setPref('LCR')
-    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === 'Commercial') setPref('LCC')
-    if (laonType === 'car' || laonType === '"car"' && unitOrPropertyType === 'Construction') setPref('LHV')
     setRef(`${pref}${result}`);
   }
 
@@ -128,27 +145,6 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
     });
   }
 
-  // const sendSMS = () => {
-  //   fetch('/api/sms', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({
-  //       mobileno: contactNumber,
-  //       msg: `Dear ${firstName} ${lastName}, 
-
-  //       You have successfully submitted your ${laonType.charAt(0).toUpperCase() + laonType.slice(1)} Loan Application with ref.# ${ref}. 
-
-  //     Your application will be reviewed. We will contact you for any lacking requirements that you may still need to submit. Otherwise, we will proceed processing the approval of your loan application.
-
-  //     Thank you for choosing ML.
-
-
-  //     Sincerely,
-  //     M Lhuillier Financial Services Inc.`,
-  //     }),
-  //   });
-  // }
-
   const sendSMS = () => {
     fetch('/api/sms', {
       method: 'POST',
@@ -157,7 +153,7 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
         mobileno: contactNumber,
         firstName,
         lastName,
-        loanType: laonType,
+        loanType: loanType,
         ref,
       }),
     });
@@ -189,11 +185,10 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   };
 
   async function submitData() {
-    console.log('FINAL DATA :::::::::', finalData)
     setIsLoading(true)
     setFinalLoanData({
       ref: ref,
-      applicationTimeStamp:  moment().format('YYYY-MM-DDTHH:mm:ss.SSS'),
+      applicationTimeStamp: moment().format('YYYY-MM-DDTHH:mm:ss.SSS'),
       contactNumber,
       email,
       firstName,

@@ -58,7 +58,6 @@ export async function POST(req: Request) {
 
     // Construct file path to SMS template
     const filePath = path.join(process.cwd(), 'templates', 'LoanCustomerSMSTemplate.txt');
-    console.log('Reading SMS template from:', filePath);
 
     function capitalize(name: string): string {
       return name
@@ -79,8 +78,6 @@ export async function POST(req: Request) {
       .map(line => line.trim())     
       .filter(line => line.length)
       .join('\n\n');
-      
-    console.log('Prepared SMS message:', msg);
 
     // Send SMS via external API
     const response = await axios.post(smsUrl!, {
@@ -93,7 +90,6 @@ export async function POST(req: Request) {
     });
 
     const data = response.data;
-    console.log('SMS API response:', data);
 
     if (data?.code !== 1) {
       return NextResponse.json({ error: 'Failed to send SMS', details: data }, { status: 500 });

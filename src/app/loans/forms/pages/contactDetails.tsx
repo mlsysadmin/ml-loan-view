@@ -15,6 +15,13 @@ import CustomDropdown from '../../components/Dropdown';
 interface Props {
   onNext: (data: any) => void;
 };
+
+interface Props {
+  data: any;
+  onBack: () => void;
+  loanType?: string;
+}
+
 interface CKYCData {
   cellphoneNumber: string;
   email: string;
@@ -37,7 +44,7 @@ interface CKYCData {
   };
 }
 
-const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
+const ContactDetailsPage: React.FC<Props> = ({ onNext, onBack }) => {
   const [prevURL, setPrevURL] = useState("");
 
   useEffect(() => {
@@ -104,16 +111,17 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   } = useSearchCKYC(contactNumber);
 
   useEffect(() => {
-    console.log('LOAN DATA:::::::', loanData)
+    if (loanData === null) router.push('/loans/' + prevURL)
     const stored = localStorage.getItem("ckycData")
     const parsed = stored ? JSON.parse(stored) : null
-    setContactNumber(parsed?.cellphoneNumber ?? "")
-  }, []);
+    // setContactNumber(parsed?.cellphoneNumber ?? "")
+  }, [prevURL]);
 
   useEffect(() => {
     if (storedData) {
+      console.log('--------', storedData.contactNumber)
       setPhone(storedData.contactNumber.slice(1))
-      setContactNumber(storedData.contactNumber || '');
+      setContactNumber(storedData.contactNumber);
       setEmail(storedData.email || '');
       setFirstName(storedData.firstName || '');
       setmiddleName(storedData.middleName || '');
@@ -145,7 +153,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   };
 
   const handleDateChange = (date: { month: number; day: number; year: number }) => {
-    setBirthdate(date); 
+    setBirthdate(date);
     setErrorBdate('');
     setErrorBirthday('');
   };
@@ -157,20 +165,6 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   };
 
   const dataHandle = () => {
-    console.log('+:::::::::::::::::::::::::::::::::::::')
-    console.log('First Name:', !!firstName);
-    console.log('Last Name:', !!lastName);
-    console.log('Contact Number:', contactNumber?.length === 11, contactNumber?.length >= 10);
-    console.log('Email:', !!email);
-    console.log('Is Valid Email:', isValidEmail);
-    console.log('Birthdate:', !!birthdate);
-    console.log('Citizenship:', !!citizenship);
-    console.log('Country:', !!country);
-    console.log('City or Town:', !!cityOrTown);
-    console.log('Barangay:', !!barrangay);
-    console.log('Street Name and Specific Address:', !!streetNameAndSpecAddress);
-    console.log('-:::::::::::::::::::::::::::::::::::::', contactNumber.length)
-
     const validEmail = emailRegex.test(email);
     if (Number(contactNumber.length) <= 10) {
       if (Number(contactNumber.length) === 0 || Number(contactNumber.length === 1)) setErrorContactNumber('Mobile number is required.');
@@ -192,7 +186,11 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
 
   const handleContinue = () => {
     const validEmail = emailRegex.test(email);
-    console.log('::::::-----:::', firstName &&
+    // if (!/^09\d{9}$/.test(contactNumber)) {
+    //   setErrorContactNumber('Invalid mobile number.');
+    // } else {
+    if (/^09\d{9}$/.test(contactNumber) &&
+      firstName &&
       lastName &&
       Number(contactNumber.length) === 11 &&
       email &&
@@ -202,73 +200,55 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
       country &&
       cityOrTown &&
       barrangay &&
-      streetNameAndSpecAddress)
+      streetNameAndSpecAddress
+    ) {
+      setFinalLoanData({
+        contactNumber,
+        countryCode,
+        email,
+        firstName,
+        middleName,
+        lastName,
+        suffix,
+        birthdate,
+        citizenship,
+        country,
+        provinceOrState,
+        cityOrTown,
+        barrangay,
+        streetNameAndSpecAddress,
+        found: ckycData ? true : false,
+        ckycData,
+        grossMonthlyIncome,
+        sourceOfIncome,
+        empOrBusiness,
+        designation,
+        loanData,
+        applicationTimeStamp: '',
+        ref: ''
+      });
 
-
-
-    // if (!/^09\d{9}$/.test(contactNumber)) {
-    //   setErrorContactNumber('Invalid mobile number.');
-    // } else {
-      if (/^09\d{9}$/.test(contactNumber) &&
-        firstName &&
-        lastName &&
-        Number(contactNumber.length) === 11 &&
-        email &&
-        validEmail &&
-        birthdate &&
-        citizenship &&
-        country &&
-        cityOrTown &&
-        barrangay &&
-        streetNameAndSpecAddress
-      ) {
-        setFinalLoanData({
-          contactNumber,
-          countryCode,
-          email,
-          firstName,
-          middleName,
-          lastName,
-          suffix,
-          birthdate,
-          citizenship,
-          country,
-          provinceOrState,
-          cityOrTown,
-          barrangay,
-          streetNameAndSpecAddress,
-          found: ckycData ? true : false,
-          ckycData,
-          grossMonthlyIncome,
-          sourceOfIncome,
-          empOrBusiness,
-          designation,
-          loanData,
-          applicationTimeStamp: '',
-          ref: ''
-        });
-  
-        onNext({
-          contactNumber,
-          countryCode,
-          email,
-          firstName,
-          middleName,
-          lastName,
-          suffix,
-          birthdate,
-          citizenship,
-          country,
-          provinceOrState,
-          cityOrTown,
-          barrangay,
-          streetNameAndSpecAddress,
-          found: ckycData ? true : false,
-          ckycData: ckycData
-        });
-      } else {
-        dataHandle();
-      }
+      onNext({
+        contactNumber,
+        countryCode,
+        email,
+        firstName,
+        middleName,
+        lastName,
+        suffix,
+        birthdate,
+        citizenship,
+        country,
+        provinceOrState,
+        cityOrTown,
+        barrangay,
+        streetNameAndSpecAddress,
+        found: ckycData ? true : false,
+        ckycData: ckycData
+      });
+    } else {
+      dataHandle();
+    }
     // }
   };
 
@@ -442,7 +422,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
         </div>
       </div>
       <div className='form-btn-container'>
-        <button className='__btn btn-white' onClick={() => router.push('/loans/' + prevURL)} >
+        <button className='__btn btn-white' onClick={() => {onBack; router.push('/loans/' + prevURL)}} >
           Back
         </button>
         <button className="__btn btn-black" onClick={handleContinue}>

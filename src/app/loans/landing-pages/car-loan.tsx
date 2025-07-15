@@ -1,9 +1,8 @@
 'use client';
 import Link from 'next/link';
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { Col, Container, Row } from 'react-bootstrap';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { Row } from 'react-bootstrap';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import router from 'next/router';
 // import { Col, Container, Row } from "react-bootstrap";
@@ -26,7 +25,6 @@ export default function CarLoanLandingPage() {
     const [hovered, setHovered] = useState<number | null>(null);
 
     const handleContinue = () => {
-        console.log('==+++=+', step)
         if (step === 0) {
             if (!selectedType) {
                 setShouldWiggle(true);
@@ -149,7 +147,7 @@ export default function CarLoanLandingPage() {
             <div className="container car-banner">
                 <div className="banner-content-wrapper">
                     <div>
-                        <p className="banner-text regular title">Own your dream starts with a <span className="red">Loan</span> that works you.</p>
+                        <p className="banner-text regular title">Your dream starts with a <span className="red">Loan</span> that works you.</p>
                         <p className="regular readable">Your dream car is just a few clicks away.</p>
 
                     </div>

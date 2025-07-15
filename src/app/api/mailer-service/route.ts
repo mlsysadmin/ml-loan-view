@@ -106,12 +106,11 @@ export async function POST(req: Request) {
     streetNameAndSpecAddress,
     barrangay,
     cityOrTown,
+    provinceOrState,
     country
   } = body;
 
   try {
-
-    console.log('TIME ZONE:::::::', Intl.DateTimeFormat().resolvedOptions().timeZone)
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([595, 842]); // A4
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -179,7 +178,8 @@ export async function POST(req: Request) {
     drawText('Employer/Business', empOrBusiness || '---');
     drawText('Designation', designation || '---');
     drawText('Gross Monthly Income', grossMonthlyIncome ? `PHP ${grossMonthlyIncome}` : '---');
-    drawText('Address', `${streetNameAndSpecAddress}, ${barrangay}, ${cityOrTown}, ${country}`);
+    drawText('Address', `${streetNameAndSpecAddress}, ${barrangay}, ${cityOrTown},`);
+    drawText('', `${provinceOrState}, ${country}`);
 
     const loanOption = `${headerText.charAt(0).toUpperCase() + headerText.toLowerCase().slice(1)}`;
     const currentYear = new Date().getFullYear();

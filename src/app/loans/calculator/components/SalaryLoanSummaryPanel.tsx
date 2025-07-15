@@ -43,7 +43,6 @@ const SalaryLoanSummaryPanel: React.FC<SalaryLoanSummaryPanelProps> = ({
     if (searchParams) {
       const query = searchParams.toString();
       const full = `/calculator${query ? `?${query}` : ""}`;
-      console.log("_+_AS_D+_+AS_D", full);
       localStorage.setItem("prevURL", JSON.stringify(full));
     }
   }, [searchParams]);
@@ -78,7 +77,6 @@ const SalaryLoanSummaryPanel: React.FC<SalaryLoanSummaryPanelProps> = ({
       loanOption,
       unitType,
     });
-    console.log("==Caculator summary====", data);
     // router.push("/loans/forms");
   }
   // Calculate interest and monthly payment with interest
@@ -140,11 +138,11 @@ const SalaryLoanSummaryPanel: React.FC<SalaryLoanSummaryPanelProps> = ({
           </button>
         </Link>
 
-        
-          <button onClick={onConfirm} className="__btn btn-black">
-            Continue
-          </button>
-        
+
+        <button onClick={onConfirm} className="__btn btn-black">
+          Continue
+        </button>
+
       </div>
       {formError && <small className="red">{formError}</small>}
     </div>

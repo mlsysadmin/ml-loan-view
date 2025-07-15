@@ -7,7 +7,7 @@ export interface CKYCData {
   name: string
   dob: string
   [key: string]: any
-}
+};
 
 export function useSearchCKYC(
   searchText: string
@@ -16,7 +16,6 @@ export function useSearchCKYC(
     queryKey: ["search", searchText],
     queryFn: async () => {
       if (isMobileNumber(searchText)) {
-        console.log('naaa ariiiiiiiiiii')
         const res = await axios.get<CKYCData>(
           `/api/ckyc?cellphoneNumber=${searchText}`,
           {
@@ -26,12 +25,10 @@ export function useSearchCKYC(
             },
             timeout: 300000,
           }
-        )
-
-        return res.data.data
+        );
+        return res.data.data;
       }
-
-      return null
+      return null;
     },
     enabled: isMobileNumber(searchText),
     refetchOnWindowFocus: false,
