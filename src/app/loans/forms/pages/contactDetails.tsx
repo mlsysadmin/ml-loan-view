@@ -97,7 +97,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext, onBack }) => {
   const [errorBarrangay, setErrorBarrangay] = useState('');
   const [errorStreet, setErrorStreet] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^(?!.*\.\.)(?!.*--)[a-zA-Z0-9](?!.*\.\.)(?!.*--)[a-zA-Z0-9._%+-]*@gmail\.com$/;
 
   const contactRef = useRef<HTMLInputElement>(null);
   const [found, setFound] = useState(false);
