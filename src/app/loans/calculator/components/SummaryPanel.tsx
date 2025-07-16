@@ -95,7 +95,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
                         ) : (
                             <>
                                 {/* <span className="font-medium">Amount Financed</span> */}
-                                <span className="font-medium">Ammount to Borrow</span>
+                                <span className="font-medium">Amount to Borrow</span>
                             </>
                         )}
                         <span className="font-medium">Loan Term <small></small></span>

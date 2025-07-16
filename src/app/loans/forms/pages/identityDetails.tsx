@@ -246,10 +246,18 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
           <input type="text"
             className='form-control full-width'
             value={grossMonthlyIncome}
+            // onChange={(e) => {
+            //   const value = e.target.value;
+            //   if (/^\d*$/.test(value)) {
+            //     setGrossMonthlyIncome(value);
+            //   }
+            // }}
             onChange={(e) => {
-              const value = e.target.value;
-              if (/^\d*$/.test(value)) {
-                setGrossMonthlyIncome(value);
+              const rawValue = e.target.value.replace(/,/g, ''); // remove commas
+              if (/^\d*$/.test(rawValue)) {
+                const numericValue = Number(rawValue);
+                const formatted = numericValue.toLocaleString(); // add commas
+                setGrossMonthlyIncome(formatted);
               }
             }}
             placeholder='Gross Monthly Income' />

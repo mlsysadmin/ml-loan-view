@@ -227,38 +227,38 @@ export async function POST(req: Request) {
 
     const pdfBytes = await pdfDoc.save();
 
-    // Send email with Nodemailer
-    // const transporter = nodemailer.createTransport({
-    //   service: 'gmail',
-    //   auth: {
-    //     user: process.env.EMAIL_USER!,
-    //     pass: process.env.EMAIL_PASS!,
-    //   },
-    // });
+    Send email with Nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER!,
+        pass: process.env.EMAIL_PASS!,
+      },
+    });
 
-    let transporter: any = null;
-    if (process.env.SMTP_HOST == 'smtp.gmail.com') {
-      transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_USER!,
-          pass: process.env.EMAIL_PASS!,
-        },
-      });
-    } else {
-      transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: Number(process.env.SMTP_PORT) || 0,
-        secure: false,
-        tls: {
-          rejectUnauthorized: false, // do not fail on invalid certs
-        },
-        // auth: {
-        //   user: process.env.SMTP_USER,
-        //   pass: process.env.SMTP_PASSWORD,
-        // },
-      });
-    }
+    // let transporter: any = null;
+    // if (process.env.SMTP_HOST == 'smtp.gmail.com') {
+    //   transporter = nodemailer.createTransport({
+    //     service: 'gmail',
+    //     auth: {
+    //       user: process.env.EMAIL_USER!,
+    //       pass: process.env.EMAIL_PASS!,
+    //     },
+    //   });
+    // } else {
+    //   transporter = nodemailer.createTransport({
+    //     host: process.env.SMTP_HOST,
+    //     port: Number(process.env.SMTP_PORT) || 0,
+    //     secure: false,
+    //     tls: {
+    //       rejectUnauthorized: false, // does not fail on invalid certs
+    //     },
+    //     // auth: {
+    //     //   user: process.env.SMTP_USER,
+    //     //   pass: process.env.SMTP_PASSWORD,
+    //     // },
+    //   });
+    // }
 
 
     await transporter.sendMail({ // ML emails []
