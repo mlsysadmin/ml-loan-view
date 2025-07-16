@@ -50,7 +50,7 @@ function homeContents() {
                 <div className="center-why">
                     <span className="red banner-text regular title">Why M. Lhuillier</span> <br />
                     <div className=" why-text">
-                        <span className="regular readable">We've reinvented the way you get a home loan because you deserve bettter.</span>
+                        <span className="regular readable">We've reinvented the way you get a {referrer} loan because you deserve bettter.</span>
                     </div>
                 </div>
                 <br />
