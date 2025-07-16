@@ -164,7 +164,7 @@ export async function POST(req: Request) {
       // Summary
       page.drawText('Loan Summary', { x: 40, y, size: 14, font: bold, color });
       y -= 20;
-      
+
       if (loanData?.loanOption === 'Prenda' || loanData?.loanOption === 'Prenda my Vehicle') {
         drawText('Amount Financed', `PHP ${loanData?.downPayment.toLocaleString()}`);
         drawText('Monthly Payment', `PHP ${(loanData?.downPayment / loanData?.loanTerm).toLocaleString(undefined, { maximumFractionDigits: 2 })}`);
@@ -174,7 +174,7 @@ export async function POST(req: Request) {
         drawText('Down Payment', `PHP ${loanData?.downPayment.toLocaleString()}`);
         drawText('Monthly Payment', `PHP ${(loanData?.ammountFinanced / loanData?.loanTerm).toLocaleString(undefined, { maximumFractionDigits: 2 })}`);
       }
-      
+
       drawText('Loan Term (months)', `${loanData?.loanTerm}`);
     } else {
       page.drawText('Loan Details', { x: 40, y, size: 14, font: bold, color });
@@ -228,16 +228,41 @@ export async function POST(req: Request) {
     const pdfBytes = await pdfDoc.save();
 
     // Send email with Nodemailer
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER!,
-        pass: process.env.EMAIL_PASS!,
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   service: 'gmail',
+    //   auth: {
+    //     user: process.env.EMAIL_USER!,
+    //     pass: process.env.EMAIL_PASS!,
+    //   },
+    // });
+
+    let transporter: any = null;
+    if (process.env.SMTP_HOST == 'smtp.gmail.com') {
+      transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER!,
+          pass: process.env.EMAIL_PASS!,
+        },
+      });
+    } else {
+      transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT) || 0,
+        secure: false,
+        tls: {
+          rejectUnauthorized: false, // do not fail on invalid certs
+        },
+        // auth: {
+        //   user: process.env.SMTP_USER,
+        //   pass: process.env.SMTP_PASSWORD,
+        // },
+      });
+    }
+
 
     await transporter.sendMail({ // ML emails []
-      from: `"ML Loans" <${process.env.EMAIL_USER}>`,
+      from: `"ML Loans" ml-no-reply@mlhuillier.com`,
       to: 'kenneth.simbulan@gmail.com',
       cc,
       subject: `${loanOption} Loan Application ${ref}`,
@@ -252,7 +277,7 @@ export async function POST(req: Request) {
     });
 
     await transporter.sendMail({ // Costumer email
-      from: `"ML Loans" <${process.env.EMAIL_USER}>`,
+      from: `"ML Loans" ml-no-reply@mlhuillier.com`,
       to: email,
       cc,
       subject: `${headerText.charAt(0).toUpperCase() + headerText.slice(1)} Loan Application`,

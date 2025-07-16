@@ -110,7 +110,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
                         {!(loanOption === 'Prenda' || loanOption === 'Prenda my Vehicle') ? (
                             <span className="font-medium medium">PHP {(ammountFinanced / loanTerm).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                         ) : (
-                            <span className="font-medium medium">PHP {(downPayment / loanTerm).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                            <span className="font-medium medium">PHP {((downPayment / loanTerm) + ((downPayment / loanTerm) * (interest / 100))).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                         )}
                     </div>
                 </div>
