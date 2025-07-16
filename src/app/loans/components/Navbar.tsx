@@ -4,12 +4,12 @@ import Image from 'next/image'
 
 function header() {
     const headerMenuItem = [
-        {name: 'Personal', url: '/personal'}, 
-        {name: 'Business', url: '/business'}, 
-        {name: 'Promos', url: '/promos'}, 
-        {name: 'Learn', url: '/learn'}, 
-        {name: 'About', url: '/about'}, 
-        {name: 'Support', url: '/contact-us'}
+        {name: 'Personal', url: 'https://mlhuillier.com/personal'}, 
+        {name: 'Business', url: 'https://mlhuillier.com/business'}, 
+        {name: 'Promos', url: 'https://mlhuillier.com/promos'}, 
+        {name: 'Learn', url: 'https://mlhuillier.com/learn'}, 
+        {name: 'About', url: 'https://mlhuillier.com/about'}, 
+        {name: 'Support', url: 'https://mlhuillier.com/contact-us'}
     ];
 
     return (
