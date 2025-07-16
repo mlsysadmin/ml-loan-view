@@ -140,9 +140,21 @@ export async function POST(req: Request) {
       page.drawText('Loan Details', { x: 40, y, size: 14, font: bold, color });
       y -= 20;
       drawText('Loan Type', loanData?.loanOption);
+
       drawText('Preferred Unit Type', unitOrPropertyType);
-      drawText('Estimated Price', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
-      drawText('Amount Borrow', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
+
+      console.log('=-=-=-+++>>>', loanData?.loanOption)
+      if (loanData?.loanOption === 'Prenda' || loanData?.loanOption === 'Prenda my Vehicle') {
+        console.log('Prenda')
+        // drawText('Estimated Price', `PHP ${loanData?.downPayment.toLocaleString()}`);
+        drawText('Estimated Price', `PHP ${((loanData?.ammountFinanced ?? 0) + (loanData?.downPayment ?? 0)).toLocaleString()}`);
+        drawText('Amount to Borrow', `PHP ${loanData?.downPayment.toLocaleString()}`);
+      } else {
+        console.log('Dili Prenda')
+        drawText('Price', `PHP ${((loanData?.ammountFinanced ?? 0) + (loanData?.downPayment ?? 0)).toLocaleString()}`);
+        drawText('Amount to Borrow', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
+      }
+
       drawText('Term', `${Number(loanData?.loanTerm) / 12} years`);
 
       y -= 10;
@@ -152,9 +164,17 @@ export async function POST(req: Request) {
       // Summary
       page.drawText('Loan Summary', { x: 40, y, size: 14, font: bold, color });
       y -= 20;
-      drawText('Amount Financed', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
-      drawText('Down Payment', `PHP ${loanData?.downPayment.toLocaleString()}`);
-      drawText('Monthly Payment', `PHP ${loanData?.monthlyPayment.toLocaleString()}`);
+      
+      if (loanData?.loanOption === 'Prenda' || loanData?.loanOption === 'Prenda my Vehicle') {
+        drawText('Amount Financed', `PHP ${loanData?.downPayment.toLocaleString()}`);
+        drawText('Monthly Payment', `PHP ${(loanData?.downPayment / loanData?.loanTerm).toLocaleString(undefined, { maximumFractionDigits: 2 })}`);
+
+      } else {
+        drawText('Amount Financed', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);
+        drawText('Down Payment', `PHP ${loanData?.downPayment.toLocaleString()}`);
+        drawText('Monthly Payment', `PHP ${(loanData?.ammountFinanced / loanData?.loanTerm).toLocaleString(undefined, { maximumFractionDigits: 2 })}`);
+      }
+      
       drawText('Loan Term (months)', `${loanData?.loanTerm}`);
     } else {
       page.drawText('Loan Details', { x: 40, y, size: 14, font: bold, color });

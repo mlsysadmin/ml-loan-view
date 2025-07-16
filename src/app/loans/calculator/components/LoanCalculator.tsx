@@ -358,7 +358,7 @@ const LoanCalculator: React.FC = () => {
                 }, {
                     type: 'Prenda my Vehicle',
                     downPayment: {
-                        min: 0, //%
+                        min: 10, //%
                         max: 70 //%
                     },
                     term: {
@@ -406,7 +406,7 @@ const LoanCalculator: React.FC = () => {
                 }, {
                     type: 'Prenda my Vehicle',
                     downPayment: {
-                        min: 0, //%
+                        min: 10, //%
                         max: 70 //%
                     },
                     term: {
@@ -454,7 +454,7 @@ const LoanCalculator: React.FC = () => {
                 }, {
                     type: 'Prenda my Vehicle',
                     downPayment: {
-                        min: 0, //%
+                        min: 10, //%
                         max: 70 //%
                     },
                     term: {

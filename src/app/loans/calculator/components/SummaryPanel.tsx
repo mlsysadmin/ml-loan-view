@@ -87,16 +87,31 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             <div className="space-y-4">
                 <div className="details-wrapper">
                     <div className='contents'>
-                        <span className="font-medium">Amount Financed</span>
-                        <span className="font-medium">Down Payment</span>
+                        {!(loanOption === 'Prenda' || loanOption === 'Prenda my Vehicle') ? (
+                            <>
+                                <span className="font-medium">Amount Financed</span>
+                                <span className="font-medium">Down Payment</span>
+                            </>
+                        ) : (
+                            <>
+                                {/* <span className="font-medium">Amount Financed</span> */}
+                                <span className="font-medium">Ammount to Borrow</span>
+                            </>
+                        )}
                         <span className="font-medium">Loan Term <small></small></span>
                         <span className="font-medium medium">Monthly Payment</span>
                     </div>
                     <div className='contents'>
-                        <span className="font-medium">PHP {ammountFinanced.toLocaleString()}</span>
+                        {!(loanOption === 'Prenda' || loanOption === 'Prenda my Vehicle') && (
+                            <span className="font-medium">PHP {ammountFinanced.toLocaleString()}</span>
+                        )}
                         <span className="font-medium">PHP {downPayment.toLocaleString()}</span>
                         <span className="font-medium">{loanTerm} months</span>
-                        <span className="font-medium medium">PHP {monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                        {!(loanOption === 'Prenda' || loanOption === 'Prenda my Vehicle') ? (
+                            <span className="font-medium medium">PHP {(ammountFinanced / loanTerm).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                        ) : (
+                            <span className="font-medium medium">PHP {(downPayment / loanTerm).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                        )}
                     </div>
                 </div>
             </div>
