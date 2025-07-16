@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../lib/sequelize';
 
-export const LoanApplication = sequelize.define('loan_requests', {
+export const LoanApplication = sequelize.define('loanRequests', {
   loan_request_id: {
     type: DataTypes.BIGINT,
     autoIncrement: true,
@@ -131,7 +131,7 @@ export const LoanApplication = sequelize.define('loan_requests', {
     defaultValue: DataTypes.NOW,
   },
 }, {
-  tableName: 'loan_requests',
+  tableName: 'loanRequests',
   timestamps: false,
 });
 

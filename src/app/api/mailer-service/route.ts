@@ -167,7 +167,7 @@ export async function POST(req: Request) {
 
       if (loanData?.loanOption === 'Prenda' || loanData?.loanOption === 'Prenda my Vehicle') {
         drawText('Amount Financed', `PHP ${loanData?.downPayment.toLocaleString()}`);
-        drawText('Monthly Payment', `PHP ${(loanData?.downPayment / loanData?.loanTerm).toLocaleString(undefined, { maximumFractionDigits: 2 })}`);
+        drawText('Monthly Payment', `PHP ${(loanData?.downPayment / loanData?.loanTerm + ((loanData?.downPayment / loanData?.loanTerm) * (loanData?.interest / 100))).toLocaleString(undefined, { maximumFractionDigits: 2 })}`);
 
       } else {
         drawText('Amount Financed', `PHP ${loanData?.ammountFinanced.toLocaleString()}`);

@@ -9,6 +9,7 @@ interface LoanData {
     loanTerm: number;
     propertyType: string;
     loanOption: string;
+    interest: number;
 }
 
 interface LoanStore {

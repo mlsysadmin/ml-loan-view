@@ -10,6 +10,7 @@ interface LoanData {
     propertyType: string;
     unitType: string;
     loanOption: string;
+    interest: number;
 }
 
 interface LoanStore {

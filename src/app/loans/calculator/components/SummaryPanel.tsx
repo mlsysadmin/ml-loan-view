@@ -67,7 +67,8 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             loanTerm,
             propertyType,
             loanOption,
-            unitType
+            unitType,
+            interest
         }
         setLoanData({
             ammountFinanced,
@@ -77,7 +78,8 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             loanTerm,
             propertyType,
             loanOption,
-            unitType
+            unitType,
+            interest
         });
         router.push(`/loans/forms?type=${loanType || 'home'}`);
     }
