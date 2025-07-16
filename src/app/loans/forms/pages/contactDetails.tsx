@@ -16,11 +16,11 @@ interface Props {
   onNext: (data: any) => void;
 };
 
-interface Props {
-  data: any;
-  onBack: () => void;
-  loanType?: string;
-}
+// interface Props {
+//   data: any;
+//   onBack: () => void;
+//   loanType?: string;
+// }
 
 interface CKYCData {
   cellphoneNumber: string;
@@ -44,7 +44,16 @@ interface CKYCData {
   };
 }
 
-const ContactDetailsPage: React.FC<Props> = ({ onNext, onBack }) => {
+interface initialCKYCData {
+  name: {
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    suffix: string;
+  }
+}
+
+const ContactDetailsPage: React.FC<Props> = ({ onNext }) => {
   const [prevURL, setPrevURL] = useState("");
 
   useEffect(() => {
@@ -97,11 +106,12 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext, onBack }) => {
   const [errorBarrangay, setErrorBarrangay] = useState('');
   const [errorStreet, setErrorStreet] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
-  const emailRegex = /^(?!.*\.\.)(?!.*--)[a-zA-Z0-9](?!.*\.\.)(?!.*--)[a-zA-Z0-9._%+-]*@gmail\.com$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const contactRef = useRef<HTMLInputElement>(null);
   const [found, setFound] = useState(false);
   const [ckycData, setCKYCData] = useState<CKYCData | null>(null);
+  // const [initialCKYCData, setInitialCKYCData] = useState<initialCKYCData | null>(null);
 
   const {
     data: ckyc,
@@ -271,18 +281,29 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext, onBack }) => {
       if (data.match) {
         setFound(true);
         setContactNumber(data.data.cellphoneNumber || '');
+        data.data.cellphoneNumber && setErrorContactNumber('')
         setFirstName(data.data.name.firstName || '');
+        data.data.name.firstName && setErrorFirstName('')
         setmiddleName(data.data.name.middleName || '');
         setLastName(data.data.name.lastName || '');
+        data.data.name.lastName && setErrorLastName('')
         setSuffix(data.data.name.suffix || '');
         setBirthdate(birthdateInit);
+        birthdateInit && setErrorBirthday('')
         setEmail(data.data.email || '');
+        data.data.email && setErrorEmail('')
         setCitizenship(data.data.nationality || '');
+        data.data.nationality && setErrorCitizenship('')
         setCountry(data.data.addresses.current.addressL0Name || '');
+        data.data.addresses.current.addressL0Name && setErrorCountry('')
         setProvinceOrState(data.data.addresses.current.addressL1Name || '');
+        data.data.addresses.current.addressL1Name && setErrorProvinceOrState('')
         setCityOrTown(data.data.addresses.current.addressL2Name || '');
+        data.data.addresses.current.addressL2Name && setErrorCityOrTown('')
         setBarrangay(data.data.addresses.current.addressL3Name || '');
+        data.data.addresses.current.addressL3Name && setErrorBarrangay('')
         setStreetNameAndSpecAddress(data.data.addresses.current.otherAddress || '');
+        data.data.addresses.current.otherAddress && setErrorStreet('')
         handleClose();
       } else setErrorBdate('Birth date did not match.');
     } catch (err) {
@@ -422,7 +443,7 @@ const ContactDetailsPage: React.FC<Props> = ({ onNext, onBack }) => {
         </div>
       </div>
       <div className='form-btn-container'>
-        <button className='__btn btn-white' onClick={() => {onBack; router.push('/loans/' + prevURL)}} >
+        <button className='__btn btn-white' onClick={() => {router.push('/loans/' + prevURL)}} >
           Back
         </button>
         <button className="__btn btn-black" onClick={handleContinue}>
