@@ -227,7 +227,7 @@ export async function POST(req: Request) {
 
     const pdfBytes = await pdfDoc.save();
 
-    Send email with Nodemailer
+    // Send email with Nodemailer
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
