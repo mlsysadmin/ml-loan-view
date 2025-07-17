@@ -185,7 +185,8 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
   };
 
   async function submitData() {
-    setIsLoading(true)
+    setIsLoading(true);
+
     setFinalLoanData({
       ref: ref,
       applicationTimeStamp: moment().format('YYYY-MM-DDTHH:mm:ss.SSS'),
@@ -209,14 +210,18 @@ const IdentityDetailsPage: React.FC<Props> = ({ data, onBack }) => {
       barrangay,
       streetNameAndSpecAddress,
       countryCode,
-      ckycData: undefined
+      ckycData: undefined,
     });
+
     setShow(true);
-    await submit(); // SAVE TO DB
-    await sendEmail();
-    sendSMS();
+
+    // await submit();     
+    await sendEmail();  
+    sendSMS();          
+
     router.push('/loans/pre-approval');
   }
+
 
   return (
     <Container>
