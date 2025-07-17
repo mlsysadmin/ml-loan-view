@@ -1,0 +1,54 @@
+.tableOuterContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh; /* Center vertically */
+  width: 100vw;
+  padding: 2rem; /* Outer padding */
+  box-sizing: border-box;
+}
+
+.tableContainer {
+  min-width: 100%;
+  max-width: 900px; /* Or whatever you prefer */
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.headerRow {
+  background-color: #ED2024;
+  color: #FFFFFF;
+  height: 10px;
+  font-weight: 400;
+  /* border-start-end-radius: 10; */
+}
+
+.headerCell {
+  font-size: 12px;
+  font-weight: 500;
+  color: #FFFFFF;
+  padding: 8px;
+  border-right: 1px solid #fff;
+  text-align: center;
+  /* border-radius: 12px; */
+}
+
+.bodyRow {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.bodyCell {
+  padding: 10px;
+  color: #222222;
+  border-right: 1px solid #e5e7eb;
+  text-align: center;
+  font-size: 12px;
+}
+
+.addressCell {
+  white-space: pre-line;
+  word-break: break-word;
+  max-width: auto;
+} 
